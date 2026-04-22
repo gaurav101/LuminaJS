@@ -24,10 +24,12 @@ function createOffscreenCanvas(width, height) {
   canvas.height = height;
 
   const ctx = canvas.getContext('2d', {
-    // Hint to the browser that we will be reading pixel data frequently.
-    // Trades GPU-accelerated compositing for faster CPU readback.
     willReadFrequently: true,
   });
+
+  if (!ctx) {
+    throw new Error('LuminaJS [canvas]: Failed to create offscreen canvas context.');
+  }
 
   return { canvas, ctx };
 }
@@ -73,10 +75,11 @@ export function getPixelData(image) {
     const imageData = ctx.getImageData(0, 0, width, height);
     return { imageData, canvas };
   } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
     throw new Error(
       `LuminaJS [canvas]: Unable to read pixel data — canvas may be tainted by a ` +
         `cross-origin image. Ensure the server sends CORS headers and the image is loaded ` +
-        `with crossOrigin="Anonymous". Original error: ${err.message}`
+        `with crossOrigin="Anonymous". Original error: ${message}`
     );
   }
 }
@@ -161,6 +164,9 @@ export function getResizedImageData(image, width, height) {
   canvas.width = width;
   canvas.height = height;
   const ctx = canvas.getContext('2d');
+  if (!ctx) {
+    throw new Error('LuminaJS [canvas]: Failed to obtain a 2D context for resizing.');
+  }
 
   // Use high-quality scaling or discrete sampling
   ctx.drawImage(image, 0, 0, width, height);

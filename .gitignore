@@ -4,12 +4,14 @@ package-lock.json
 
 # Build output
 dist/
+package/
 
 # IDE / System files
 .DS_Store
 .vscode/
 .idea/
 *.log
+*.tgz 
 
 # LuminaJS tracking files (Antigravity artifacts)
 task.md

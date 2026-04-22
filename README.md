@@ -40,7 +40,7 @@ import { loadImage, grayscale } from '@gks101/luminajs';
 ### Script Tag (Browser)
 
 ```html
-<script src="node_modules/luminajs/dist/lumina.min.js"></script>
+<script src="node_modules/@gks101/luminajs/dist/lumina.min.js"></script>
 <script>
   const { loadImage, grayscale } = Lumina;
   // ...
@@ -49,14 +49,14 @@ import { loadImage, grayscale } from '@gks101/luminajs';
 
 ## API Documentation
 
-### Core Utilities (`luminajs/core`)
+### Core Utilities (`@gks101/luminajs/core`)
 
 - **`loadImage(source)`**: Returns a `Promise` resolving to an `HTMLImageElement`. Supports URL strings and `File` objects.
 - **`getPixelData(image)`**: Extracts `ImageData` from an image using an offscreen canvas.
 - **`putPixelData(canvas, imageData)`**: Writes `ImageData` back to a canvas element.
 - **`canvasToBlob(canvas, mimeType, quality)`**: Async conversion of a canvas to a `Blob`.
 
-### Filters (`luminajs/filters`)
+### Filters (`@gks101/luminajs/filters`)
 
 - **`grayscale(imageData)`**: Converts image to grayscale using ITU-R BT.601.
 - **`brightness(imageData, level)`**: Adjusts brightness [-255, 255].
@@ -67,7 +67,7 @@ import { loadImage, grayscale } from '@gks101/luminajs';
 ## ASCII Art Example
 
 ```javascript
-import { loadImage, getResizedImageData, ascii } from 'luminajs';
+import { loadImage, getResizedImageData, ascii } from '@gks101/luminajs';
 
 const img = await loadImage('photo.jpg');
 
