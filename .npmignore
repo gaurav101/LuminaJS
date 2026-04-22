@@ -1,0 +1,19 @@
+# Exclude demo files
+index.html
+index.css
+demo.js
+
+# Exclude documentation and logs
+walkthrough.md
+task.md
+implementation_plan.md
+
+# Exclude IDE and system files
+.DS_Store
+.vscode/
+.idea/
+node_modules/
+package-lock.json
+
+# Only src/ and package.json will be included by default
+# but explicitly ignoring others keeps it clean.

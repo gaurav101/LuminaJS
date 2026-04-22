@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Build output
+dist/
+
+# IDE / System files
+.DS_Store
+.vscode/
+.idea/
+*.log
+
+# LuminaJS tracking files (Antigravity artifacts)
+task.md
+walkthrough.md
+implementation_plan.md
+
+# Temporary files
+temp/
+scratch/

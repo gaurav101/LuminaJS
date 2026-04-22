@@ -1,0 +1,42 @@
+{
+  "name": "luminajs",
+  "version": "1.0.0",
+  "description": "A modular, lightweight JavaScript utility library for browser-based image processing using the HTML5 Canvas API.",
+  "type": "module",
+  "types": "./src/index.d.ts",
+  "main": "./dist/lumina.umd.js",
+  "module": "./dist/lumina.esm.js",
+  "browser": "./dist/lumina.umd.js",
+  "unpkg": "./dist/lumina.min.js",
+  "exports": {
+    ".": {
+      "import": "./src/index.js",
+      "require": "./dist/lumina.umd.js"
+    },
+    "./filters": "./src/filters/index.js",
+    "./core": "./src/core/index.js"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "rollup": "^4.0.0",
+    "@rollup/plugin-terser": "^0.4.0"
+  },
+  "keywords": [
+    "image-processing",
+    "canvas",
+    "filter",
+    "grayscale",
+    "sepia",
+    "browser",
+    "lightweight"
+  ],
+  "author": "LuminaJS and Gaurav",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
