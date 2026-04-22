@@ -12,7 +12,7 @@ LuminaJS is a modular, lightweight JavaScript utility library for browser-based 
 ## Installation
 
 ```bash
-npm install luminajs
+npm install @gks101/luminajs
 ```
 
 ## Building from Source
@@ -34,7 +34,7 @@ The output will be generated in the `dist/` directory.
 ### ES Modules (Modern)
 
 ```javascript
-import { loadImage, grayscale } from 'luminajs';
+import { loadImage, grayscale } from '@gks101/luminajs';
 ```
 
 ### Script Tag (Browser)

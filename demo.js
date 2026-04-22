@@ -9,7 +9,7 @@ import {
   sepia,
   ascii,
   getResizedImageData
-} from 'luminajs';
+} from '@gks101/luminajs';
 
 // DOM Elements
 const dropZone = document.getElementById('dropZone');
