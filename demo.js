@@ -142,7 +142,7 @@ const applyFilters = () => {
     const asciiText = ascii(resizedData);
 
     asciiPreview.textContent = asciiText;
-
+    console.log(asciiText);
     const end = performance.now();
     processTime.textContent = Math.round(end - start);
     return;
