@@ -1,5 +1,5 @@
 # LuminaJS
-
+[Demo]: [https://luminajsdemo.netlify.app/](https://luminajsdemo.netlify.app/)
 LuminaJS is a modular, lightweight JavaScript utility library for browser-based image processing using the HTML5 Canvas API. It provides a functional approach to image manipulation, focusing on performance and ease of use.
 
 ## Features
