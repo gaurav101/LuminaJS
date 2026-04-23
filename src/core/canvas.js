@@ -160,15 +160,48 @@ export function canvasToBlob(canvas, mimeType = 'image/png', quality = 0.92) {
  * @returns {ImageData} The extracted pixel data at the new resolution.
  */
 export function getResizedImageData(image, width, height) {
-  const canvas = document.createElement('canvas');
-  canvas.width = width;
-  canvas.height = height;
+  const canvas = resize(image, width, height);
   const ctx = canvas.getContext('2d');
   if (!ctx) {
-    throw new Error('LuminaJS [canvas]: Failed to obtain a 2D context for resizing.');
+    throw new Error('LuminaJS [canvas]: Failed to obtain a 2D context from the resized canvas.');
   }
-
-  // Use high-quality scaling or discrete sampling
-  ctx.drawImage(image, 0, 0, width, height);
   return ctx.getImageData(0, 0, width, height);
+}
+
+/**
+ * Resizes an image or canvas to new dimensions.
+ * Returns a new canvas with the resized content.
+ *
+ * @param {HTMLImageElement|HTMLCanvasElement} source - The source to resize.
+ * @param {number} width - New width.
+ * @param {number} height - New height.
+ * @returns {HTMLCanvasElement} A new canvas containing the resized image.
+ */
+export function resize(source, width, height) {
+  if (width <= 0 || height <= 0) {
+    throw new Error(`LuminaJS [canvas]: Resize dimensions must be positive (${width}x${height}).`);
+  }
+  const { canvas, ctx } = createOffscreenCanvas(width, height);
+  ctx.drawImage(source, 0, 0, width, height);
+  return canvas;
+}
+
+/**
+ * Crops an image or canvas.
+ * Returns a new canvas with the cropped content.
+ *
+ * @param {HTMLImageElement|HTMLCanvasElement} source - The source to crop.
+ * @param {number} x - Left coordinate.
+ * @param {number} y - Top coordinate.
+ * @param {number} width - Crop width.
+ * @param {number} height - Crop height.
+ * @returns {HTMLCanvasElement} A new canvas containing the cropped image.
+ */
+export function crop(source, x, y, width, height) {
+  if (width <= 0 || height <= 0) {
+    throw new Error(`LuminaJS [canvas]: Crop dimensions must be positive (${width}x${height}).`);
+  }
+  const { canvas, ctx } = createOffscreenCanvas(width, height);
+  ctx.drawImage(source, x, y, width, height, 0, 0, width, height);
+  return canvas;
 }

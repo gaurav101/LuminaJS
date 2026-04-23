@@ -5,7 +5,7 @@
 
 // Core Modules
 export { loadImage } from './core/loader.js';
-export { getPixelData, putPixelData, canvasToBlob, getResizedImageData } from './core/canvas.js';
+export { getPixelData, putPixelData, canvasToBlob, getResizedImageData, resize, crop } from './core/canvas.js';
 
 // Filters
 export { grayscale } from './filters/grayscale.js';

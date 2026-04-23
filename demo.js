@@ -8,7 +8,9 @@ import {
   contrast,
   sepia,
   ascii,
-  getResizedImageData
+  getResizedImageData,
+  resize,
+  crop
 } from '@gks101/luminajs';
 
 // DOM Elements
@@ -29,8 +31,21 @@ const filterBtns = document.querySelectorAll('.filter-btn[data-filter]');
 const downloadBtn = document.getElementById('downloadBtn');
 const resetBtn = document.getElementById('resetBtn');
 
+// Transform Elements
+const tabBtns = document.querySelectorAll('.tab-btn');
+const tabContents = document.querySelectorAll('.tab-content');
+const resizeWidth = document.getElementById('resizeWidth');
+const resizeHeight = document.getElementById('resizeHeight');
+const applyResizeBtn = document.getElementById('applyResize');
+const cropX = document.getElementById('cropX');
+const cropY = document.getElementById('cropY');
+const cropWidth = document.getElementById('cropWidth');
+const cropHeight = document.getElementById('cropHeight');
+const applyCropBtn = document.getElementById('applyCrop');
+
 // App State
 let originalImage = null;
+let transformedCanvas = null;
 let currentFilter = 'original';
 
 /**
@@ -89,7 +104,50 @@ const setupEventListeners = () => {
     contrastVal.textContent = 0;
     filterBtns.forEach(b => b.classList.remove('active'));
     document.querySelector('[data-filter="original"]').classList.add('active');
+    
+    // Reset transformations
+    if (originalImage) {
+      transformedCanvas = resize(originalImage, originalImage.naturalWidth, originalImage.naturalHeight);
+      updateTransformInputs();
+    }
+    
     applyFilters();
+  });
+
+  // Transform Tabs
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabBtns.forEach(b => b.classList.remove('active'));
+      tabContents.forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(`${btn.dataset.tab}Controls`).classList.add('active');
+    });
+  });
+
+  // Apply Resize
+  applyResizeBtn.addEventListener('click', () => {
+    if (!originalImage) return;
+    const w = parseInt(resizeWidth.value);
+    const h = parseInt(resizeHeight.value);
+    if (w > 0 && h > 0) {
+      transformedCanvas = resize(transformedCanvas || originalImage, w, h);
+      updateTransformInputs();
+      applyFilters();
+    }
+  });
+
+  // Apply Crop
+  applyCropBtn.addEventListener('click', () => {
+    if (!originalImage) return;
+    const x = parseInt(cropX.value);
+    const y = parseInt(cropY.value);
+    const w = parseInt(cropWidth.value);
+    const h = parseInt(cropHeight.value);
+    if (w > 0 && h > 0) {
+      transformedCanvas = crop(transformedCanvas || originalImage, x, y, w, h);
+      updateTransformInputs();
+      applyFilters();
+    }
   });
 
   downloadBtn.addEventListener('click', async () => {
@@ -109,16 +167,33 @@ const handleSource = async (file) => {
 
   try {
     originalImage = await loadImage(file);
+    transformedCanvas = resize(originalImage, originalImage.naturalWidth, originalImage.naturalHeight);
+    
     dropZone.style.display = 'none';
     previewContainer.style.display = 'block';
     perfBadge.style.display = 'block';
 
+    updateTransformInputs();
+    
     // Initial draw
     applyFilters();
   } catch (err) {
     console.error(err);
     alert('Failed to load image: ' + err.message);
   }
+};
+
+const updateTransformInputs = () => {
+  if (!transformedCanvas) return;
+  const w = transformedCanvas.width;
+  const h = transformedCanvas.height;
+  
+  resizeWidth.value = w;
+  resizeHeight.value = h;
+  cropWidth.value = w;
+  cropHeight.value = h;
+  cropX.value = 0;
+  cropY.value = 0;
 };
 
 const applyFilters = () => {
@@ -155,7 +230,7 @@ const applyFilters = () => {
   downloadBtn.style.pointerEvents = 'auto';
 
   // 1. Get fresh pixel data from original
-  const { imageData, canvas } = getPixelData(originalImage);
+  const { imageData, canvas } = getPixelData(transformedCanvas);
   let processedData = imageData;
 
   // 2. Apply chosen preset

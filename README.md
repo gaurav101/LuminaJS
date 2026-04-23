@@ -55,6 +55,8 @@ import { loadImage, grayscale } from '@gks101/luminajs';
 - **`getPixelData(image)`**: Extracts `ImageData` from an image using an offscreen canvas.
 - **`putPixelData(canvas, imageData)`**: Writes `ImageData` back to a canvas element.
 - **`canvasToBlob(canvas, mimeType, quality)`**: Async conversion of a canvas to a `Blob`.
+- **`resize(source, width, height)`**: Resizes an image or canvas. Returns a new `HTMLCanvasElement`.
+- **`crop(source, x, y, width, height)`**: Crops an image or canvas. Returns a new `HTMLCanvasElement`.
 
 ### Filters (`@gks101/luminajs/filters`)
 
@@ -79,6 +81,22 @@ const text = ascii(smallData);
 
 // 3. Display
 console.log(text);
+```
+
+## Resize and Crop Example
+
+```javascript
+import { loadImage, resize, crop } from '@gks101/luminajs';
+
+const img = await loadImage('photo.jpg');
+
+// 1. Resize to 800x600
+const resizedCanvas = resize(img, 800, 600);
+
+// 2. Crop a 300x300 square from (100, 100)
+const croppedCanvas = crop(resizedCanvas, 100, 100, 300, 300);
+
+document.body.appendChild(croppedCanvas);
 ```
 
 ## License
