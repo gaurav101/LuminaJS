@@ -9,6 +9,7 @@ import {
   sepia,
   ascii,
   blur,
+  gaussianBlur,
   getResizedImageData,
   resize,
   crop
@@ -250,6 +251,8 @@ const applyFilters = () => {
     processedData = sepia(processedData);
   } else if (currentFilter === 'blur') {
     processedData = blur(processedData, 5); // Default blur for preset
+  } else if (currentFilter === 'gaussian') {
+    processedData = gaussianBlur(processedData, 3); // Default sigma for preset
   }
 
   // 3. Apply adjustments

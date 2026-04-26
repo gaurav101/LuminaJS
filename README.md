@@ -67,6 +67,7 @@ import { loadImage, grayscale } from '@gks101/luminajs';
 - **`sepia(imageData)`**: Applies a classic antique sepia tone.
 - **`ascii(imageData, options)`**: Transforms an image into an ASCII text string. Recommended to use with `getResizedImageData`.
 - **`blur(imageData, radius)`**: Applies a box blur effect. `radius` is the blur intensity (default: 1).
+- **`gaussianBlur(imageData, sigma)`**: Applies a smooth Gaussian blur effect. `sigma` is the standard deviation (default: 2).
 
 ## ASCII Art Example
 
@@ -111,6 +112,22 @@ const { imageData } = getPixelData(img);
 
 // Apply blur with radius 5
 const blurredData = blur(imageData, 5);
+
+// Render back to canvas
+const canvas = document.getElementById('myCanvas');
+putPixelData(canvas, blurredData);
+```
+
+## Gaussian Blur Example
+
+```javascript
+import { loadImage, getPixelData, putPixelData, gaussianBlur } from '@gks101/luminajs';
+
+const img = await loadImage('photo.jpg');
+const { imageData } = getPixelData(img);
+
+// Apply smooth Gaussian blur with sigma 3.5
+const blurredData = gaussianBlur(imageData, 3.5);
 
 // Render back to canvas
 const canvas = document.getElementById('myCanvas');
