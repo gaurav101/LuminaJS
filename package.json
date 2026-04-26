@@ -1,6 +1,6 @@
 {
   "name": "@gks101/luminajs",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "A modular, lightweight JavaScript utility library for browser-based image processing using the HTML5 Canvas API.",
   "type": "module",
   "types": "./dist/types/index.d.ts",
