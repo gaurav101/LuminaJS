@@ -15,6 +15,7 @@ export { sepia } from './filters/sepia.js';
 export { ascii } from './filters/ascii.js';
 export { blur } from './filters/blur.js';
 export { gaussianBlur } from './filters/gaussianBlur.js';
+export { watermark } from './filters/watermark.js';
 
 // Utilities
 export { clamp, isImageFile } from './utils/helpers.js';

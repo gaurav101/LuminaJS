@@ -10,6 +10,7 @@ import {
   ascii,
   blur,
   gaussianBlur,
+  watermark,
   getResizedImageData,
   resize,
   crop
@@ -46,6 +47,14 @@ const cropY = document.getElementById('cropY');
 const cropWidth = document.getElementById('cropWidth');
 const cropHeight = document.getElementById('cropHeight');
 const applyCropBtn = document.getElementById('applyCrop');
+
+const watermarkText = document.getElementById('watermarkText');
+const watermarkX = document.getElementById('watermarkX');
+const watermarkY = document.getElementById('watermarkY');
+const watermarkSize = document.getElementById('watermarkSize');
+const watermarkOpacity = document.getElementById('watermarkOpacity');
+const watermarkColor = document.getElementById('watermarkColor');
+const applyWatermarkBtn = document.getElementById('applyWatermark');
 
 // App State
 let originalImage = null;
@@ -161,6 +170,12 @@ const setupEventListeners = () => {
     }
   });
 
+  // Apply Watermark
+  applyWatermarkBtn.addEventListener('click', () => {
+    if (!originalImage) return;
+    applyFilters();
+  });
+
   downloadBtn.addEventListener('click', async () => {
     if (!originalImage) return;
     const blob = await canvasToBlob(mainCanvas, 'image/png');
@@ -271,7 +286,29 @@ const applyFilters = () => {
     processedData = blur(processedData, radius);
   }
 
-  // 4. Update canvas
+  // 4. Apply Watermark (if text is provided)
+  const text = watermarkText.value;
+  if (text) {
+    const x = parseInt(watermarkX.value) || 0;
+    const y = parseInt(watermarkY.value) || 0;
+    const size = parseInt(watermarkSize.value) || 24;
+    const opacity = parseFloat(watermarkOpacity.value) || 0.5;
+    const color = watermarkColor.value;
+    
+    // Convert hex color to rgba for opacity
+    const r = parseInt(color.slice(1, 3), 16);
+    const g = parseInt(color.slice(3, 5), 16);
+    const b = parseInt(color.slice(5, 7), 16);
+    const rgba = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+
+    processedData = watermark(processedData, text, {
+      x, y,
+      font: `${size}px Inter, sans-serif`,
+      color: rgba
+    });
+  }
+
+  // 5. Update canvas
   mainCanvas.width = canvas.width;
   mainCanvas.height = canvas.height;
   putPixelData(mainCanvas, processedData);

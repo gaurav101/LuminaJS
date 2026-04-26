@@ -68,6 +68,7 @@ import { loadImage, grayscale } from '@gks101/luminajs';
 - **`ascii(imageData, options)`**: Transforms an image into an ASCII text string. Recommended to use with `getResizedImageData`.
 - **`blur(imageData, radius)`**: Applies a box blur effect. `radius` is the blur intensity (default: 1).
 - **`gaussianBlur(imageData, sigma)`**: Applies a smooth Gaussian blur effect. `sigma` is the standard deviation (default: 2).
+- **`watermark(imageData, text, options)`**: Overlays text on the image. Options include `x`, `y`, `font`, `color`.
 
 ## ASCII Art Example
 
@@ -132,6 +133,26 @@ const blurredData = gaussianBlur(imageData, 3.5);
 // Render back to canvas
 const canvas = document.getElementById('myCanvas');
 putPixelData(canvas, blurredData);
+```
+
+## Watermark Example
+
+```javascript
+import { loadImage, getPixelData, putPixelData, watermark } from '@gks101/luminajs';
+
+const img = await loadImage('photo.jpg');
+const { imageData } = getPixelData(img);
+
+// Add a semi-transparent watermark at (20, 20)
+const watermarkedData = watermark(imageData, '© 2024 LuminaJS', {
+  x: 20,
+  y: 20,
+  font: '32px Arial',
+  color: 'rgba(255, 255, 255, 0.5)'
+});
+
+const canvas = document.getElementById('myCanvas');
+putPixelData(canvas, watermarkedData);
 ```
 
 ## License
