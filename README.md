@@ -66,6 +66,7 @@ import { loadImage, grayscale } from '@gks101/luminajs';
 - **`contrast(imageData, level)`**: Adjusts contrast [-100, 100].
 - **`sepia(imageData)`**: Applies a classic antique sepia tone.
 - **`ascii(imageData, options)`**: Transforms an image into an ASCII text string. Recommended to use with `getResizedImageData`.
+- **`blur(imageData, radius)`**: Applies a box blur effect. `radius` is the blur intensity (default: 1).
 
 ## ASCII Art Example
 
@@ -98,6 +99,22 @@ const resizedCanvas = resize(img, 800, 600);
 const croppedCanvas = crop(resizedCanvas, 100, 100, 300, 300);
 
 document.body.appendChild(croppedCanvas);
+```
+
+## Blur Filter Example
+
+```javascript
+import { loadImage, getPixelData, putPixelData, blur } from '@gks101/luminajs';
+
+const img = await loadImage('photo.jpg');
+const { imageData } = getPixelData(img);
+
+// Apply blur with radius 5
+const blurredData = blur(imageData, 5);
+
+// Render back to canvas
+const canvas = document.getElementById('myCanvas');
+putPixelData(canvas, blurredData);
 ```
 
 ## License

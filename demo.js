@@ -8,6 +8,7 @@ import {
   contrast,
   sepia,
   ascii,
+  blur,
   getResizedImageData,
   resize,
   crop
@@ -24,8 +25,10 @@ const processTime = document.getElementById('processTime');
 
 const brightnessRange = document.getElementById('brightnessRange');
 const contrastRange = document.getElementById('contrastRange');
+const blurRange = document.getElementById('blurRange');
 const brightnessVal = document.getElementById('brightnessVal');
 const contrastVal = document.getElementById('contrastVal');
+const blurVal = document.getElementById('blurVal');
 const filterBtns = document.querySelectorAll('.filter-btn[data-filter]');
 
 const downloadBtn = document.getElementById('downloadBtn');
@@ -95,13 +98,20 @@ const setupEventListeners = () => {
     applyFilters();
   });
 
+  blurRange.addEventListener('input', (e) => {
+    blurVal.textContent = e.target.value;
+    applyFilters();
+  });
+
   // Actions
   resetBtn.addEventListener('click', () => {
     currentFilter = 'original';
     brightnessRange.value = 0;
     contrastRange.value = 0;
+    blurRange.value = 0;
     brightnessVal.textContent = 0;
     contrastVal.textContent = 0;
+    blurVal.textContent = 0;
     filterBtns.forEach(b => b.classList.remove('active'));
     document.querySelector('[data-filter="original"]').classList.add('active');
     
@@ -238,6 +248,8 @@ const applyFilters = () => {
     processedData = grayscale(processedData);
   } else if (currentFilter === 'sepia') {
     processedData = sepia(processedData);
+  } else if (currentFilter === 'blur') {
+    processedData = blur(processedData, 5); // Default blur for preset
   }
 
   // 3. Apply adjustments
@@ -249,6 +261,11 @@ const applyFilters = () => {
   const c = parseInt(contrastRange.value);
   if (c !== 0) {
     processedData = contrast(processedData, c);
+  }
+
+  const radius = parseInt(blurRange.value);
+  if (radius > 0) {
+    processedData = blur(processedData, radius);
   }
 
   // 4. Update canvas
