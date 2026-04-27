@@ -70,6 +70,7 @@ import { loadImage, grayscale } from '@gks101/luminajs';
 - **`blur(imageData, radius)`**: Applies a box blur effect. `radius` is the blur intensity (default: 1).
 - **`gaussianBlur(imageData, sigma)`**: Applies a smooth Gaussian blur effect. `sigma` is the standard deviation (default: 2).
 - **`watermark(imageData, text, options)`**: Overlays text on the image. Options include `x`, `y`, `font`, `color`.
+- **`backgroundBlur(imageData, options)`**: Selectively blurs the background. Options include `sigma`, `centerX`, `centerY`, `focusRadius`, `falloff`.
 
 ## ASCII Art Example
 
@@ -154,6 +155,25 @@ const watermarkedData = watermark(imageData, '© 2024 LuminaJS', {
 
 const canvas = document.getElementById('myCanvas');
 putPixelData(canvas, watermarkedData);
+```
+
+## Background Blur (Portrait) Example
+
+```javascript
+import { loadImage, getPixelData, putPixelData, backgroundBlur } from '@gks101/luminajs';
+
+const img = await loadImage('portrait.jpg');
+const { imageData } = getPixelData(img);
+
+// Apply a portrait blur effect (sharp center, blurred background)
+const portraitData = backgroundBlur(imageData, {
+  sigma: 6,
+  focusRadius: 150,
+  falloff: 200
+});
+
+const canvas = document.getElementById('myCanvas');
+putPixelData(canvas, portraitData);
 ```
 
 ## License

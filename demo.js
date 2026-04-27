@@ -11,6 +11,7 @@ import {
   blur,
   gaussianBlur,
   watermark,
+  backgroundBlur,
   getResizedImageData,
   resize,
   crop
@@ -124,13 +125,13 @@ const setupEventListeners = () => {
     blurVal.textContent = 0;
     filterBtns.forEach(b => b.classList.remove('active'));
     document.querySelector('[data-filter="original"]').classList.add('active');
-    
+
     // Reset transformations
     if (originalImage) {
       transformedCanvas = resize(originalImage, originalImage.naturalWidth, originalImage.naturalHeight);
       updateTransformInputs();
     }
-    
+
     applyFilters();
   });
 
@@ -194,13 +195,13 @@ const handleSource = async (file) => {
   try {
     originalImage = await loadImage(file);
     transformedCanvas = resize(originalImage, originalImage.naturalWidth, originalImage.naturalHeight);
-    
+
     dropZone.style.display = 'none';
     previewContainer.style.display = 'block';
     perfBadge.style.display = 'block';
 
     updateTransformInputs();
-    
+
     // Initial draw
     applyFilters();
   } catch (err) {
@@ -213,7 +214,7 @@ const updateTransformInputs = () => {
   if (!transformedCanvas) return;
   const w = transformedCanvas.width;
   const h = transformedCanvas.height;
-  
+
   resizeWidth.value = w;
   resizeHeight.value = h;
   cropWidth.value = w;
@@ -268,6 +269,8 @@ const applyFilters = () => {
     processedData = blur(processedData, 5); // Default blur for preset
   } else if (currentFilter === 'gaussian') {
     processedData = gaussianBlur(processedData, 3); // Default sigma for preset
+  } else if (currentFilter === 'portrait') {
+    processedData = backgroundBlur(processedData, { sigma: 5 });
   }
 
   // 3. Apply adjustments
@@ -294,7 +297,7 @@ const applyFilters = () => {
     const size = parseInt(watermarkSize.value) || 24;
     const opacity = parseFloat(watermarkOpacity.value) || 0.5;
     const color = watermarkColor.value;
-    
+
     // Convert hex color to rgba for opacity
     const r = parseInt(color.slice(1, 3), 16);
     const g = parseInt(color.slice(3, 5), 16);
