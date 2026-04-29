@@ -17,6 +17,10 @@ export { blur } from './filters/blur.js';
 export { gaussianBlur } from './filters/gaussianBlur.js';
 export { watermark } from './filters/watermark.js';
 export { backgroundBlur } from './filters/backgroundBlur.js';
+export { applyConvolution } from './filters/convolution.js';
+export { sharpen } from './filters/sharpen.js';
+export { emboss } from './filters/emboss.js';
+export { edgeDetection } from './filters/edgeDetection.js';
 
 // Utilities
 export { clamp, isImageFile } from './utils/helpers.js';

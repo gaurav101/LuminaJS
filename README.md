@@ -71,7 +71,10 @@ import { loadImage, grayscale } from '@gks101/luminajs';
 - **`gaussianBlur(imageData, sigma)`**: Applies a smooth Gaussian blur effect. `sigma` is the standard deviation (default: 2).
 - **`watermark(imageData, text, options)`**: Overlays text on the image. Options include `x`, `y`, `font`, `color`.
 - **`backgroundBlur(imageData, options)`**: Selectively blurs the background. Options include `sigma`, `centerX`, `centerY`, `focusRadius`, `falloff`.
-
+- **`applyConvolution(data, width, height, kernel)`**: Generic convolution engine for custom matrix operations (e.g., 3x3 kernel).
+- **`sharpen(imageData)`**: Sharpens the image using a convolution kernel.
+- **`emboss(imageData)`**: Applies an emboss effect using a convolution kernel.
+- **`edgeDetection(imageData)`**: Highlights edges using a convolution kernel.
 ## ASCII Art Example
 
 ```javascript
@@ -174,6 +177,53 @@ const portraitData = backgroundBlur(imageData, {
 
 const canvas = document.getElementById('myCanvas');
 putPixelData(canvas, portraitData);
+```
+
+## Convolution Filters Example (Sharpen, Emboss, Edge Detection)
+
+LuminaJS provides a generic convolution engine (`applyConvolution`) along with pre-built convolution filters such as `sharpen`, `emboss`, and `edgeDetection`. These filters modify pixels based on the values of their neighbors using a 3x3 matrix.
+
+### Using Built-in Convolution Filters
+
+```javascript
+import { loadImage, getPixelData, putPixelData, sharpen, emboss, edgeDetection } from '@gks101/luminajs';
+
+const img = await loadImage('photo.jpg');
+const { imageData } = getPixelData(img);
+
+// Apply a built-in sharpen filter
+const sharpenedData = sharpen(imageData);
+
+// Or apply emboss or edge detection
+// const embossedData = emboss(imageData);
+// const edgeData = edgeDetection(imageData);
+
+const canvas = document.getElementById('myCanvas');
+putPixelData(canvas, sharpenedData);
+```
+
+### Using the Generic Convolution Engine
+
+You can also pass your own custom 3x3 kernel (as an array of 9 numbers) to `applyConvolution`.
+
+```javascript
+import { loadImage, getPixelData, putPixelData, applyConvolution } from '@gks101/luminajs';
+
+const img = await loadImage('photo.jpg');
+const { imageData } = getPixelData(img);
+
+// Define a custom 3x3 kernel (e.g., an exaggerated edge detection kernel)
+const customKernel = [
+  -1, -1, -1,
+  -1,  9, -1,
+  -1, -1, -1
+];
+
+// applyConvolution mutates the array data in place
+applyConvolution(imageData.data, imageData.width, imageData.height, customKernel);
+
+const canvas = document.getElementById('myCanvas');
+putPixelData(canvas, imageData);
 ```
 
 ## License

@@ -7,3 +7,7 @@ export { blur } from './blur.js';
 export { gaussianBlur } from './gaussianBlur.js';
 export { watermark } from './watermark.js';
 export { backgroundBlur } from './backgroundBlur.js';
+export { applyConvolution } from './convolution.js';
+export { sharpen } from './sharpen.js';
+export { emboss } from './emboss.js';
+export { edgeDetection } from './edgeDetection.js';

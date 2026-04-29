@@ -12,6 +12,9 @@ import {
   gaussianBlur,
   watermark,
   backgroundBlur,
+  sharpen,
+  emboss,
+  edgeDetection,
   getResizedImageData,
   resize,
   crop
@@ -271,6 +274,12 @@ const applyFilters = () => {
     processedData = gaussianBlur(processedData, 3); // Default sigma for preset
   } else if (currentFilter === 'portrait') {
     processedData = backgroundBlur(processedData, { sigma: 5 });
+  } else if (currentFilter === 'sharpen') {
+    processedData = sharpen(processedData);
+  } else if (currentFilter === 'emboss') {
+    processedData = emboss(processedData);
+  } else if (currentFilter === 'edge') {
+    processedData = edgeDetection(processedData);
   }
 
   // 3. Apply adjustments

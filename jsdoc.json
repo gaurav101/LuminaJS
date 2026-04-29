@@ -1,0 +1,39 @@
+{
+    "tags": {
+        "allowUnknownTags": true,
+        "dictionaries": ["jsdoc", "closure"]
+    },
+    "source": {
+        "include": ["src", "README.md"],
+        "includePattern": ".+\\.js(doc|x)?$",
+        "excludePattern": "(^|\\/|\\\\)_"
+    },
+    "plugins": [
+        "plugins/markdown"
+    ],
+    "opts": {
+        "template": "node_modules/docdash",
+        "encoding": "utf8",
+        "destination": "./docs",
+        "recurse": true,
+        "readme": "README.md",
+        "verbose": true
+    },
+    "templates": {
+        "cleverLinks": false,
+        "monospaceLinks": false
+    },
+    "docdash": {
+        "search": true,
+        "collapse": true,
+        "typedefs": true,
+        "menu": {
+            "Github Repo": {
+                "href": "https://github.com/gaurav101/LuminaJS",
+                "target": "_blank",
+                "class": "menu-item",
+                "id": "repository"
+            }
+        }
+    }
+}
