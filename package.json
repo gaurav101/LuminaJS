@@ -37,7 +37,16 @@
     "grayscale",
     "sepia",
     "browser",
-    "lightweight"
+    "lightweight",
+    "blur",
+    "brightness",
+    "contrast",
+    "emboss",
+    "edgeDetection",
+    "gaussianBlur",
+    "sharpen",
+    "watermark",
+    "backgroundBlur"
   ],
   "author": "LuminaJS and Gaurav",
   "license": "MIT",
