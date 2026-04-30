@@ -3,8 +3,10 @@ LuminaJS is a modular, lightweight JavaScript utility library for browser-based 
 
 ## Features
 
-<a href="https://gaurav101.github.io/LuminaJS/" target="_blank">Live Demo</a>
-<a href="https://github.com/gaurav101/LuminaJS" target="_blank">Code</a>
+- [Demo](https://gaurav101.github.io/LuminaJS/) 
+- [Code](https://github.com/gaurav101/LuminaJS) 
+- [NPM](https://www.npmjs.com/package/@gks101/luminajs)
+- [Documentation](https://gaurav101.github.io/LuminaJS/docs/)  
 
 - **🚀 High Performance**: Optimized `ImageData` loops for fast pixel processing.
 - **🧩 Modular**: Only import the filters and utilities you need.
