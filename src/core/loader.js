@@ -80,7 +80,7 @@ function loadFromFile(file) {
  *
  * @example
  * // Load from URL
- * const img = await loadImage('https://example.com/photo.jpg');
+ * const img = await loadImage('<image url string>');
  *
  * @example
  * // Load from File input
@@ -99,7 +99,7 @@ export async function loadImage(source) {
   return Promise.reject(
     new TypeError(
       `LuminaJS [loader]: Invalid source type "${typeof source}". ` +
-        `Expected a URL string or a File object.`
+      `Expected a URL string or a File object.`
     )
   );
 }

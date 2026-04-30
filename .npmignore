@@ -20,6 +20,6 @@ index.html
 
 # Exclude tarballs
 *.tgz
-
+docs/
 # Only src/ and package.json will be included by default
 # but explicitly ignoring others keeps it clean.

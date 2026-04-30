@@ -29,11 +29,10 @@ export function contrast(imageData, level = 0) {
   const len = data.length;
 
   // Factor calculation formula
-  // See: https://www.dfstudios.co.uk/articles/programming/image-algorithms-part-4-contrast-adjustment/
   const factor = (259 * (level + 255)) / (255 * (259 - level));
 
   for (let i = 0; i < len; i += 4) {
-    data[i]     = clamp(factor * (data[i]     - 128) + 128, 0, 255); // R
+    data[i] = clamp(factor * (data[i] - 128) + 128, 0, 255); // R
     data[i + 1] = clamp(factor * (data[i + 1] - 128) + 128, 0, 255); // G
     data[i + 2] = clamp(factor * (data[i + 2] - 128) + 128, 0, 255); // B
   }

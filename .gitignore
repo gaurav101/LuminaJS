@@ -22,3 +22,4 @@ implementation_plan.md
 temp/
 scratch/
 docs/
+*.tgz
