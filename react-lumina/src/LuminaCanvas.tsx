@@ -54,7 +54,7 @@ export function LuminaCanvas({
     return () => {
       isMounted = false;
     };
-  }, [source, filter, onError, onLoad]);
+  }, [source, filter, onProcessError, onLoad]);
 
   if (error) {
     return <div className="lumina-error">{error.message}</div>;
