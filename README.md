@@ -1,5 +1,10 @@
 # LuminaJS
+[![bundle size](https://badgen.net/bundlephobia/minzip/react)](https://bundlephobia.com/package/@gks101/luminajs) [![license](https://img.shields.io/badge/license-MIT-green)](./LICENSE) [![tree shaking](https://badgen.net/bundlephobia/tree-shaking/react-colorful)](https://bundlephobia.com/package/@gks101/luminajs) [![dependency count](https://badgen.net/bundlephobia/dependency-count/react-colorful)](https://bundlephobia.com/package/@gks101/luminajs)
+
+
 LuminaJS is a modular, lightweight JavaScript utility library for browser-based image processing using the HTML5 Canvas API. It provides a functional approach to image manipulation, focusing on performance and ease of use.
+
+## Fast and small bundle size
 
 ## Features
 
@@ -35,7 +40,29 @@ The output will be generated in the `dist/` directory.
 
 ## Usage
 
-### ES Modules (Modern)
+### 💎 Premium Chainable API (Recommended)
+
+The easiest way to use LuminaJS is via the fluent chainable API. It handles image loading, canvas management, and filter sequencing automatically.
+
+```javascript
+import { lumina } from '@gks101/luminajs';
+
+// Process an image from a URL, apply filters, and draw to a canvas
+await lumina('photo.jpg')
+  .brightness(20)
+  .contrast(10)
+  .grayscale()
+  .sharpen()
+  .toCanvas(document.getElementById('myCanvas'));
+
+// Or get the result as a Blob for uploading
+const blob = await lumina(fileInput.files[0])
+  .resize(800, 600)
+  .sepia()
+  .toBlob('image/jpeg', 0.8);
+```
+
+### ES Modules (Functional)
 
 ```javascript
 import { loadImage, grayscale } from '@gks101/luminajs';
@@ -46,12 +73,33 @@ import { loadImage, grayscale } from '@gks101/luminajs';
 ```html
 <script src="node_modules/@gks101/luminajs/dist/lumina.min.js"></script>
 <script>
-  const { loadImage, grayscale } = Lumina;
-  // ...
+  const { lumina } = Lumina;
+  
+  lumina('photo.jpg')
+    .grayscale()
+    .render()
+    .then(imageData => console.log('Processed!', imageData));
 </script>
 ```
 
 ## API Documentation
+
+### Chainable API (`lumina`)
+
+- **`lumina(source)`**: Initiates a processing chain. `source` can be a URL string, `File` object, `HTMLImageElement`, `HTMLCanvasElement`, or `ImageData`.
+    - **`.grayscale()`**: Applies grayscale.
+    - **`.brightness(level)`**: Adjusts brightness.
+    - **`.contrast(level)`**: Adjusts contrast.
+    - **`.sepia()`**: Applies sepia.
+    - **`.blur(radius)`**: Applies box blur.
+    - **`.gaussianBlur(sigma)`**: Applies Gaussian blur.
+    - **`.watermark(text, options)`**: Adds text watermark.
+    - **`.sharpen()` / `.emboss()` / `.edgeDetection()`**: Convolution filters.
+    - **`.resize(w, h)` / `.crop(x, y, w, h)`**: Transformations.
+    - **`.render()`**: Returns `Promise<ImageData>`.
+    - **`.toCanvas(canvas)`**: Draws to canvas and returns `Promise<HTMLCanvasElement>`.
+    - **`.toBlob(mime, quality)`**: Returns `Promise<Blob>`.
+    - **`.toDataURL(mime, quality)`**: Returns `Promise<string>`.
 
 ### Core Utilities (`@gks101/luminajs/core`)
 

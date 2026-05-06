@@ -1,20 +1,8 @@
 import {
+  lumina,
   loadImage,
-  getPixelData,
-  putPixelData,
   canvasToBlob,
-  grayscale,
-  brightness,
-  contrast,
-  sepia,
   ascii,
-  blur,
-  gaussianBlur,
-  watermark,
-  backgroundBlur,
-  sharpen,
-  emboss,
-  edgeDetection,
   getResizedImageData,
   resize,
   crop
@@ -226,7 +214,7 @@ const updateTransformInputs = () => {
   cropY.value = 0;
 };
 
-const applyFilters = () => {
+const applyFilters = async () => {
   if (!originalImage) return;
 
   const start = performance.now();
@@ -238,8 +226,7 @@ const applyFilters = () => {
     downloadBtn.style.opacity = '0.5';
     downloadBtn.style.pointerEvents = 'none';
 
-    // Calculate dimensions: 100 chars wide, maintain aspect ratio
-    // We adjust height by 0.5 because font characters are taller than they are wide
+    // Calculate dimensions
     const asciiWidth = 100;
     const asciiHeight = Math.round((asciiWidth * (originalImage.naturalHeight / originalImage.naturalWidth)) * 0.5);
 
@@ -247,7 +234,6 @@ const applyFilters = () => {
     const asciiText = ascii(resizedData);
 
     asciiPreview.textContent = asciiText;
-    console.log(asciiText);
     const end = performance.now();
     processTime.textContent = Math.round(end - start);
     return;
@@ -259,46 +245,30 @@ const applyFilters = () => {
   downloadBtn.style.opacity = '1';
   downloadBtn.style.pointerEvents = 'auto';
 
-  // 1. Get fresh pixel data from original
-  const { imageData, canvas } = getPixelData(transformedCanvas);
-  let processedData = imageData;
+  // --- Use the new Chainable API ---
+  let chain = lumina(transformedCanvas || originalImage);
 
-  // 2. Apply chosen preset
-  if (currentFilter === 'grayscale') {
-    processedData = grayscale(processedData);
-  } else if (currentFilter === 'sepia') {
-    processedData = sepia(processedData);
-  } else if (currentFilter === 'blur') {
-    processedData = blur(processedData, 5); // Default blur for preset
-  } else if (currentFilter === 'gaussian') {
-    processedData = gaussianBlur(processedData, 3); // Default sigma for preset
-  } else if (currentFilter === 'portrait') {
-    processedData = backgroundBlur(processedData, { sigma: 5 });
-  } else if (currentFilter === 'sharpen') {
-    processedData = sharpen(processedData);
-  } else if (currentFilter === 'emboss') {
-    processedData = emboss(processedData);
-  } else if (currentFilter === 'edge') {
-    processedData = edgeDetection(processedData);
-  }
+  // Apply chosen preset
+  if (currentFilter === 'grayscale') chain.grayscale();
+  else if (currentFilter === 'sepia') chain.sepia();
+  else if (currentFilter === 'blur') chain.blur(5);
+  else if (currentFilter === 'gaussian') chain.gaussianBlur(3);
+  else if (currentFilter === 'portrait') chain.backgroundBlur({ sigma: 5 });
+  else if (currentFilter === 'sharpen') chain.sharpen();
+  else if (currentFilter === 'emboss') chain.emboss();
+  else if (currentFilter === 'edge') chain.edgeDetection();
 
-  // 3. Apply adjustments
+  // Apply adjustments
   const b = parseInt(brightnessRange.value);
-  if (b !== 0) {
-    processedData = brightness(processedData, b);
-  }
+  if (b !== 0) chain.brightness(b);
 
   const c = parseInt(contrastRange.value);
-  if (c !== 0) {
-    processedData = contrast(processedData, c);
-  }
+  if (c !== 0) chain.contrast(c);
 
   const radius = parseInt(blurRange.value);
-  if (radius > 0) {
-    processedData = blur(processedData, radius);
-  }
+  if (radius > 0) chain.blur(radius);
 
-  // 4. Apply Watermark (if text is provided)
+  // Apply Watermark
   const text = watermarkText.value;
   if (text) {
     const x = parseInt(watermarkX.value) || 0;
@@ -307,23 +277,20 @@ const applyFilters = () => {
     const opacity = parseFloat(watermarkOpacity.value) || 0.5;
     const color = watermarkColor.value;
 
-    // Convert hex color to rgba for opacity
     const r = parseInt(color.slice(1, 3), 16);
     const g = parseInt(color.slice(3, 5), 16);
     const b = parseInt(color.slice(5, 7), 16);
     const rgba = `rgba(${r}, ${g}, ${b}, ${opacity})`;
 
-    processedData = watermark(processedData, text, {
+    chain.watermark(text, {
       x, y,
       font: `${size}px Inter, sans-serif`,
       color: rgba
     });
   }
 
-  // 5. Update canvas
-  mainCanvas.width = canvas.width;
-  mainCanvas.height = canvas.height;
-  putPixelData(mainCanvas, processedData);
+  // Render to canvas
+  await chain.toCanvas(mainCanvas);
 
   const end = performance.now();
   processTime.textContent = Math.round(end - start);

@@ -22,5 +22,18 @@ export { sharpen } from './filters/sharpen.js';
 export { emboss } from './filters/emboss.js';
 export { edgeDetection } from './filters/edgeDetection.js';
 
+// Chainable API
+import { Lumina } from './core/chain.js';
+export { Lumina };
+
+/**
+ * Initiates a chainable processing sequence.
+ * @param {string|File|HTMLImageElement|HTMLCanvasElement|ImageData} source - The image source.
+ * @returns {Lumina} A new Lumina chain instance.
+ */
+export function lumina(source) {
+  return new Lumina(source);
+}
+
 // Utilities
 export { clamp, isImageFile } from './utils/helpers.js';

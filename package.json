@@ -46,7 +46,15 @@
     "gaussianBlur",
     "sharpen",
     "watermark",
-    "backgroundBlur"
+    "backgroundBlur",
+    "instagram-filters",
+    "image-manipulation",
+    "fast-blur",
+    "ascii",
+    "ascii art",
+    "image-editor",
+    "canvas-filters",
+    "fast-gaussian-blur"
   ],
   "author": "LuminaJS and Gaurav",
   "license": "MIT",
