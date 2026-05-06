@@ -321,6 +321,54 @@ const canvas = document.getElementById('myCanvas');
 putPixelData(canvas, imageData);
 ```
 
+## React Integration
+
+LuminaJS provides a dedicated React entry point with hooks and components.
+
+### `useLumina` Hook
+
+The `useLumina` hook manages the image processing lifecycle, providing `result`, `loading`, and `error` states.
+
+```jsx
+import { useLumina } from '@gks101/luminajs/react';
+
+function ImagePreview({ file }) {
+  const { result, loading, error } = useLumina({
+    source: file,
+    operations: (l) => l.grayscale().brightness(20).sharpen(),
+    outputType: 'dataUrl', // 'imageData' | 'dataUrl' | 'blob'
+    deps: [file]
+  });
+
+  if (loading) return <div>Processing image...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+
+  return <img src={result} alt="Processed preview" />;
+}
+```
+
+### `LuminaCanvas` Component
+
+A declarative way to render processed images directly onto a canvas element.
+
+```jsx
+import { LuminaCanvas } from '@gks101/luminajs/react';
+
+function App() {
+  return (
+    <LuminaCanvas
+      source="portrait.jpg"
+      filter={(l) => l.gaussianBlur(3).sepia()}
+      width={800}
+      height={600}
+      className="my-custom-canvas"
+      onLoad={() => console.log('Image rendered!')}
+      onProcessError={(err) => console.error(err)}
+    />
+  );
+}
+```
+
 ## License
 
 MIT © LuminaJS Team
