@@ -14,7 +14,7 @@ function App() {
   const [watermarkFont, setWatermarkFont] = useState('Inter')
   const [bgBlur, setBgBlur] = useState(false)
   const [showAscii, setShowAscii] = useState(false)
-  
+
   // Transformation states
   const [width, setWidth] = useState(600)
   const [height, setHeight] = useState(400)
@@ -41,10 +41,10 @@ function App() {
 
   const getFilter = (l: any) => {
     let chain = l.brightness(brightness).contrast(contrast);
-    
+
     if (isResized) chain = chain.resize(width, height);
     if (isCropped) chain = chain.crop(cropX, cropY, cropW, cropH);
-    
+
     // Apply filters
     if (filterType === 'grayscale') chain = chain.grayscale();
     if (filterType === 'sepia') chain = chain.sepia();
@@ -52,15 +52,15 @@ function App() {
     if (filterType === 'sharpen') chain = chain.sharpen();
     if (filterType === 'emboss') chain = chain.emboss();
     if (filterType === 'edge') chain = chain.edgeDetection();
-    
+
     if (bgBlur) chain = chain.backgroundBlur({ sigma: 6, focusRadius: 150, falloff: 200 });
-    if (watermarkText) chain = chain.watermark(watermarkText, { 
-      x: watermarkX, y: watermarkY, 
+    if (watermarkText) chain = chain.watermark(watermarkText, {
+      x: watermarkX, y: watermarkY,
       fontSize: watermarkSize,
       fontFace: watermarkFont,
       color: watermarkColor
     });
-    
+
     return chain;
   };
 
@@ -80,7 +80,7 @@ function App() {
                 {showAscii ? 'Show Image' : 'Show ASCII'}
               </button>
             </div>
-            
+
             <div className="display-area">
               {showAscii ? (
                 <pre className="ascii-box">
@@ -125,9 +125,9 @@ function App() {
             <h3>Filters</h3>
             <div className="filter-grid">
               {['none', 'grayscale', 'sepia', 'blur', 'sharpen', 'emboss', 'edge'].map(f => (
-                <button 
-                  key={f} 
-                  className={filterType === f ? 'active' : ''} 
+                <button
+                  key={f}
+                  className={filterType === f ? 'active' : ''}
                   onClick={() => setFilterType(f)}
                 >
                   {f.charAt(0).toUpperCase() + f.slice(1)}
