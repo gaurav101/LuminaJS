@@ -1,10 +1,16 @@
 {
     "tags": {
         "allowUnknownTags": true,
-        "dictionaries": ["jsdoc", "closure"]
+        "dictionaries": [
+            "jsdoc",
+            "closure"
+        ]
     },
     "source": {
-        "include": ["src", "README.md"],
+        "include": [
+            "src",
+            "README.md"
+        ],
         "includePattern": ".+\\.js(doc|x)?$",
         "excludePattern": "(^|\\/|\\\\)_"
     },
@@ -33,6 +39,12 @@
                 "target": "_blank",
                 "class": "menu-item",
                 "id": "repository"
+            },
+            "Demo": {
+                "href": "https://gaurav101.github.io/LuminaJS/",
+                "target": "_blank",
+                "class": "menu-item",
+                "id": "demo"
             }
         }
     }

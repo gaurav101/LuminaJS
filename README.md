@@ -2,7 +2,7 @@
 [![bundle size](https://badgen.net/bundlephobia/minzip/react)](https://bundlephobia.com/package/@gks101/luminajs) [![license](https://img.shields.io/badge/license-MIT-green)](./LICENSE) [![tree shaking](https://badgen.net/bundlephobia/tree-shaking/react-colorful)](https://bundlephobia.com/package/@gks101/luminajs) [![dependency count](https://badgen.net/bundlephobia/dependency-count/react-colorful)](https://bundlephobia.com/package/@gks101/luminajs)
 
 
-LuminaJS is a modular, lightweight JavaScript utility library for browser-based image processing using the HTML5 Canvas API. It provides a functional approach to image manipulation, focusing on performance and ease of use.
+LuminaJS is a modular, chainable,lightweight, zero-dependency JavaScript utility library for browser-based image processing using the HTML5 Canvas API. It provides a functional approach to image manipulation, focusing on performance and ease of use.
 
 ## Fast and small bundle size
 
@@ -55,6 +55,11 @@ await lumina('photo.jpg')
   .sharpen()
   .toCanvas(document.getElementById('myCanvas'));
 
+// Quick display in an <img> tag using an ID
+await lumina('photo.jpg')
+  .sepia()
+  .toHtmlElement('myImageElement');
+
 // Or get the result as a Blob for uploading
 const blob = await lumina(fileInput.files[0])
   .resize(800, 600)
@@ -97,8 +102,9 @@ import { loadImage, grayscale } from '@gks101/luminajs';
     - **`.sharpen()` / `.emboss()` / `.edgeDetection()`**: Convolution filters.
     - **`.resize(w, h)` / `.crop(x, y, w, h)`**: Transformations.
     - **`.render()`**: Returns `Promise<ImageData>`.
-    - **`.toCanvas(canvas)`**: Draws to canvas and returns `Promise<HTMLCanvasElement>`.
-    - **`.toBlob(mime, quality)`**: Returns `Promise<Blob>`.
+    - `.toCanvas(canvas)`: Draws to canvas and returns `Promise<HTMLCanvasElement>`.
+    - `.toHtmlElement(elementOrId)`: Displays result in an `<img>` (src) or `<canvas>` element.
+    - `.toBlob(mime, quality)`: Returns `Promise<Blob>`.
     - **`.toDataURL(mime, quality)`**: Returns `Promise<string>`.
 
 ### Core Utilities (`@gks101/luminajs/core`)
@@ -127,6 +133,22 @@ import { loadImage, grayscale } from '@gks101/luminajs';
 - **`edgeDetection(imageData)`**: Highlights edges using a convolution kernel.
 ## ASCII Art Example
 
+### 💎 Chainable API (Recommended)
+
+```javascript
+import { lumina } from '@gks101/luminajs';
+
+// 100 characters wide, auto-calculated height
+const text = await lumina('photo.jpg')
+  .resize(100, 50)
+  .ascii()
+  .render();
+
+console.log(text);
+```
+
+### Functional Approach
+
 ```javascript
 import { loadImage, getResizedImageData, ascii } from '@gks101/luminajs';
 
@@ -143,6 +165,20 @@ console.log(text);
 ```
 
 ## Resize and Crop Example
+
+### 💎 Chainable API (Recommended)
+
+```javascript
+import { lumina } from '@gks101/luminajs';
+
+// Resize and then crop in one go
+await lumina('photo.jpg')
+  .resize(800, 600)
+  .crop(100, 100, 300, 300)
+  .toCanvas(document.getElementById('myCanvas'));
+```
+
+### Functional Approach
 
 ```javascript
 import { loadImage, resize, crop } from '@gks101/luminajs';
