@@ -19,6 +19,14 @@ export interface UseLuminaResult {
 
 /**
  * React hook to process images using LuminaJS.
+ * 
+ * @example
+ * const { result, loading } = useLumina({
+ *   source: 'photo.jpg',
+ *   operations: (l) => l.grayscale().brightness(20),
+ *   outputType: 'dataUrl',
+ *   deps: []
+ * });
  */
 export function useLumina({
   source,

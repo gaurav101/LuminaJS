@@ -10,6 +10,13 @@ export interface LuminaCanvasProps extends Omit<CanvasHTMLAttributes<HTMLCanvasE
 
 /**
  * A declarative React component to render LuminaJS processed images on a canvas.
+ * 
+ * @example
+ * <LuminaCanvas 
+ *   source="photo.jpg" 
+ *   filter={(l) => l.sepia()} 
+ *   width={500} 
+ * />
  */
 export function LuminaCanvas({
   source,

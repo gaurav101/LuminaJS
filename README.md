@@ -23,7 +23,7 @@ npm install @gks101/luminajs
 ```
 
 ### React Support
-LuminaJS includes first-class React support via hooks and components.
+LuminaJS includes first-class React support via hooks and components. See the [React Integration](#react-integration) section for full examples.
 
 ```bash
 npm install @gks101/luminajs
