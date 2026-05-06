@@ -51,8 +51,8 @@ export class Lumina {
     return this._addOp(filters.sepia);
   }
 
-  /** @param {any} options - ASCII options. @returns {this} */
-  ascii(options) {
+  /** @param {any} [options] - ASCII options. @returns {this} */
+  ascii(options = {}) {
     return this._addOp(filters.ascii, options);
   }
 

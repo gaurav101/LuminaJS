@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { lumina, Lumina } from '../index.js';
+import { lumina, type Lumina } from '../index.js';
 
 export type LuminaSource = string | File | HTMLImageElement | HTMLCanvasElement | ImageData;
 export type LuminaOutputType = 'imageData' | 'dataUrl' | 'blob';
@@ -50,7 +50,7 @@ export function useLumina({
       setError(null);
       try {
         let chain = lumina(source);
-        
+
         if (typeof operations === 'function') {
           chain = operations(chain);
         }
