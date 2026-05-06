@@ -14,7 +14,6 @@ function App() {
   const [watermarkFont, setWatermarkFont] = useState('Inter')
   const [bgBlur, setBgBlur] = useState(false)
   const [showAscii, setShowAscii] = useState(false)
-
   // Transformation states
   const [width, setWidth] = useState(600)
   const [height, setHeight] = useState(400)
@@ -123,7 +122,7 @@ function App() {
             <hr />
 
             <h3>Filters</h3>
-            <div className="filter-grid">
+            <div className="fil ter-grid">
               {['none', 'grayscale', 'sepia', 'blur', 'sharpen', 'emboss', 'edge'].map(f => (
                 <button
                   key={f}
