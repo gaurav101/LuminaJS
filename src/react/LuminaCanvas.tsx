@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, CanvasHTMLAttributes } from 'react';
-import { lumina, Lumina } from '@gks101/luminajs';
+import { lumina, Lumina } from '../index.js';
 
 export interface LuminaCanvasProps extends Omit<CanvasHTMLAttributes<HTMLCanvasElement>, 'onError'> {
   source: string | File | HTMLImageElement | HTMLCanvasElement | ImageData | null;

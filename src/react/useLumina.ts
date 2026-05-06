@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { lumina, Lumina } from '@gks101/luminajs';
+import { lumina, Lumina } from '../index.js';
 
 export type LuminaSource = string | File | HTMLImageElement | HTMLCanvasElement | ImageData;
 export type LuminaOutputType = 'imageData' | 'dataUrl' | 'blob';

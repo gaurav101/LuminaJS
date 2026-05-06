@@ -23,10 +23,14 @@ npm install @gks101/luminajs
 ```
 
 ### React Support
-Using React? Check out [@gks101/react-lumina](./react-lumina) for hooks and components.
+LuminaJS includes first-class React support via hooks and components.
 
 ```bash
-npm install @gks101/react-lumina
+npm install @gks101/luminajs
+```
+
+```jsx
+import { useLumina, LuminaCanvas } from '@gks101/luminajs/react';
 ```
 
 ## Building from Source

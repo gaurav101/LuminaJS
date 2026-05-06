@@ -29,21 +29,35 @@
     "./core": {
       "types": "./dist/types/core/index.d.ts",
       "import": "./src/core/index.js"
+    },
+    "./react": {
+      "types": "./dist/types/react/index.ts",
+      "import": "./src/react/index.ts"
     }
   },
   "scripts": {
-    "build": "npm run build:core && npm run build:react",
-    "build:core": "rollup -c && npm run build:types && npm run generate-docs",
-    "build:react": "npm run build --prefix react-lumina",
+    "build": "rollup -c && npm run build:types && npm run generate-docs",
     "build:types": "tsc",
     "dev": "rollup -c -w",
     "test": "echo \"Error: no test specified\" && exit 1",
     "generate-docs": "jsdoc -c jsdoc.json"
   },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
+  },
+  "peerDependenciesMeta": {
+    "react": { "optional": true },
+    "react-dom": { "optional": true }
+  },
   "devDependencies": {
     "@rollup/plugin-terser": "^1.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "docdash": "^2.0.2",
     "jsdoc": "^4.0.5",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "rollup": "^4.0.0",
     "typescript": "^6.0.3"
   },
