@@ -1,7 +1,7 @@
 {
   "name": "@gks101/luminajs",
-  "version": "1.4.1",
-  "description": "A modular, lightweight JavaScript utility library for browser-based image processing using the HTML5 Canvas API.",
+  "version": "2.0.0",
+  "description": "A modular, lightweight JavaScript and react utility library and hooks/components for browser-based image processing using the HTML5 Canvas API. suppport react, typescript and vanilla js",
   "homepage": "https://gaurav101.github.io/LuminaJS/",
   "repository": {
     "type": "git",
@@ -47,8 +47,12 @@
     "react-dom": ">=16.8.0"
   },
   "peerDependenciesMeta": {
-    "react": { "optional": true },
-    "react-dom": { "optional": true }
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@rollup/plugin-terser": "^1.0.0",
@@ -62,6 +66,15 @@
     "typescript": "^6.0.3"
   },
   "keywords": [
+    "react",
+    "react-hooks",
+    "react-component-image-filter",
+    "react-hooks-image-filter",
+    "react-image-processing",
+    "react-filters",
+    "react-canvas",
+    "react-canvas-filters",
+    "react-image-editor",
     "image-processing",
     "canvas",
     "filter",
