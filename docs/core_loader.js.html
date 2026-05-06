@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>core/loader.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.com/gaurav101/LuminaJS" target="_blank" class="menu-item" id="repository" >Github Repo</a></h2><h2><a href="https://gaurav101.github.io/LuminaJS/" target="_blank" class="menu-item" id="demo" >Demo</a></h2><h3>Classes</h3><ul><li><a href="Lumina_Lumina.html">Lumina</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CanvasContext">CanvasContext</a></li><li><a href="global.html#DEFAULT_CHARSET">DEFAULT_CHARSET</a></li><li><a href="global.html#LUMA_B">LUMA_B</a></li><li><a href="global.html#LUMA_G">LUMA_G</a></li><li><a href="global.html#LUMA_R">LUMA_R</a></li><li><a href="global.html#applyConvolution">applyConvolution</a></li><li><a href="global.html#ascii">ascii</a></li><li><a href="global.html#backgroundBlur">backgroundBlur</a></li><li><a href="global.html#blur">blur</a></li><li><a href="global.html#brightness">brightness</a></li><li><a href="global.html#canvasToBlob">canvasToBlob</a></li><li><a href="global.html#clamp">clamp</a></li><li><a href="global.html#contrast">contrast</a></li><li><a href="global.html#createOffscreenCanvas">createOffscreenCanvas</a></li><li><a href="global.html#crop">crop</a></li><li><a href="global.html#edgeDetection">edgeDetection</a></li><li><a href="global.html#emboss">emboss</a></li><li><a href="global.html#gaussianBlur">gaussianBlur</a></li><li><a href="global.html#getPixelData">getPixelData</a></li><li><a href="global.html#getResizedImageData">getResizedImageData</a></li><li><a href="global.html#grayscale">grayscale</a></li><li><a href="global.html#isImageFile">isImageFile</a></li><li><a href="global.html#loadFromFile">loadFromFile</a></li><li><a href="global.html#loadFromURL">loadFromURL</a></li><li><a href="global.html#loadImage">loadImage</a></li><li><a href="global.html#lumina">lumina</a></li><li><a href="global.html#putPixelData">putPixelData</a></li><li><a href="global.html#resize">resize</a></li><li><a href="global.html#sepia">sepia</a></li><li><a href="global.html#sharpen">sharpen</a></li><li><a href="global.html#watermark">watermark</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">core/loader.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileoverview LuminaJS Core - Image Loader
+ * Handles ingestion of image sources (URL strings or File objects)
+ * and resolves them to HTMLImageElement instances.
+ */
+
+/**
+ * Loads an image from a URL string.
+ *
+ * @param {string} url - A fully-qualified image URL or a data URL.
+ * @returns {Promise&lt;HTMLImageElement>} Resolves with a fully loaded HTMLImageElement.
+ * @throws {Error} Rejects if the image fails to load (e.g. 404, CORS block).
+ */
+function loadFromURL(url) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+
+    // Required for cross-origin images to allow canvas pixel access.
+    // The server must respond with appropriate CORS headers.
+    img.crossOrigin = 'Anonymous';
+
+    img.onload = () => resolve(img);
+    img.onerror = () =>
+      reject(new Error(`LuminaJS [loader]: Failed to load image from URL — "${url}"`));
+
+    img.src = url;
+  });
+}
+
+/**
+ * Loads an image from a File object by creating a temporary object URL.
+ * The object URL is revoked automatically after the image has loaded
+ * to prevent memory leaks.
+ *
+ * @param {File} file - A File object, typically from an &lt;input type="file"> element.
+ * @returns {Promise&lt;HTMLImageElement>} Resolves with a fully loaded HTMLImageElement.
+ * @throws {TypeError} Rejects if the provided File is not a valid image MIME type.
+ * @throws {Error} Rejects if the image fails to load from the generated object URL.
+ */
+function loadFromFile(file) {
+  if (!file.type.startsWith('image/')) {
+    return Promise.reject(
+      new TypeError(
+        `LuminaJS [loader]: Expected an image File, but received MIME type "${file.type}".`
+      )
+    );
+  }
+
+  const objectURL = URL.createObjectURL(file);
+
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+
+    img.onload = () => {
+      URL.revokeObjectURL(objectURL); // Release memory immediately after load
+      resolve(img);
+    };
+
+    img.onerror = () => {
+      URL.revokeObjectURL(objectURL); // Also release on failure
+      reject(new Error(`LuminaJS [loader]: Failed to load image from File — "${file.name}".`));
+    };
+
+    img.src = objectURL;
+  });
+}
+
+/**
+ * Loads an image from either a URL string or a File object,
+ * returning a Promise that resolves to an HTMLImageElement.
+ *
+ * This is the primary entry point for image ingestion in LuminaJS.
+ *
+ * @param {string | File} source - The image source. Accepts:
+ *   - `string`: A URL (absolute, relative, or data URL).
+ *   - `File`: A File object from the browser File API.
+ * @returns {Promise&lt;HTMLImageElement>} A promise that resolves to
+ *   a fully loaded `HTMLImageElement`, ready for canvas drawing.
+ * @throws {TypeError} Rejects if `source` is neither a string nor a File.
+ *
+ * @example
+ * // Load from URL
+ * const img = await loadImage('&lt;image url string>');
+ *
+ * @example
+ * // Load from File input
+ * const [file] = event.target.files;
+ * const img = await loadImage(file);
+ */
+export async function loadImage(source) {
+  if (typeof source === 'string') {
+    return loadFromURL(source);
+  }
+
+  if (source instanceof File) {
+    return loadFromFile(source);
+  }
+
+  return Promise.reject(
+    new TypeError(
+      `LuminaJS [loader]: Invalid source type "${typeof source}". ` +
+      `Expected a URL string or a File object.`
+    )
+  );
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Wed May 06 2026 19:11:17 GMT+0530 (India Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>

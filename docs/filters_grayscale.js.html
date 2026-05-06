@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>filters/grayscale.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.com/gaurav101/LuminaJS" target="_blank" class="menu-item" id="repository" >Github Repo</a></h2><h2><a href="https://gaurav101.github.io/LuminaJS/" target="_blank" class="menu-item" id="demo" >Demo</a></h2><h3>Classes</h3><ul><li><a href="Lumina_Lumina.html">Lumina</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CanvasContext">CanvasContext</a></li><li><a href="global.html#DEFAULT_CHARSET">DEFAULT_CHARSET</a></li><li><a href="global.html#LUMA_B">LUMA_B</a></li><li><a href="global.html#LUMA_G">LUMA_G</a></li><li><a href="global.html#LUMA_R">LUMA_R</a></li><li><a href="global.html#applyConvolution">applyConvolution</a></li><li><a href="global.html#ascii">ascii</a></li><li><a href="global.html#backgroundBlur">backgroundBlur</a></li><li><a href="global.html#blur">blur</a></li><li><a href="global.html#brightness">brightness</a></li><li><a href="global.html#canvasToBlob">canvasToBlob</a></li><li><a href="global.html#clamp">clamp</a></li><li><a href="global.html#contrast">contrast</a></li><li><a href="global.html#createOffscreenCanvas">createOffscreenCanvas</a></li><li><a href="global.html#crop">crop</a></li><li><a href="global.html#edgeDetection">edgeDetection</a></li><li><a href="global.html#emboss">emboss</a></li><li><a href="global.html#gaussianBlur">gaussianBlur</a></li><li><a href="global.html#getPixelData">getPixelData</a></li><li><a href="global.html#getResizedImageData">getResizedImageData</a></li><li><a href="global.html#grayscale">grayscale</a></li><li><a href="global.html#isImageFile">isImageFile</a></li><li><a href="global.html#loadFromFile">loadFromFile</a></li><li><a href="global.html#loadFromURL">loadFromURL</a></li><li><a href="global.html#loadImage">loadImage</a></li><li><a href="global.html#lumina">lumina</a></li><li><a href="global.html#putPixelData">putPixelData</a></li><li><a href="global.html#resize">resize</a></li><li><a href="global.html#sepia">sepia</a></li><li><a href="global.html#sharpen">sharpen</a></li><li><a href="global.html#watermark">watermark</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">filters/grayscale.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileoverview LuminaJS Filters - Grayscale
+ * Converts an image to grayscale using the ITU-R BT.601 luminance formula:
+ *   Y = 0.299R + 0.587G + 0.114B
+ *
+ * These weights reflect human perception of color brightness:
+ * green channels appear brightest, blue channels the darkest.
+ */
+
+/** @constant {number} - Luminance weight for the Red channel */
+const LUMA_R = 0.299;
+
+/** @constant {number} - Luminance weight for the Green channel */
+const LUMA_G = 0.587;
+
+/** @constant {number} - Luminance weight for the Blue channel */
+const LUMA_B = 0.114;
+
+/**
+ * Applies a grayscale filter to a cloned copy of the provided `ImageData`.
+ *
+ * Each pixel's RGB channels are replaced with the luminance value `Y`,
+ * computed via the BT.601 formula. The alpha channel is preserved unchanged.
+ *
+ * Performance notes:
+ * - Pixel array length is cached before the loop to avoid repeated property lookups.
+ * - The loop increments by 4 on every iteration (one full RGBA pixel per step),
+ *   eliminating redundant index arithmetic.
+ * - A new `ImageData` is returned; the original is never mutated.
+ *
+ * @param {ImageData} imageData - The source pixel data, as returned by `getPixelData`.
+ * @returns {ImageData} A new `ImageData` object with all pixels converted to grayscale.
+ *
+ * @example
+ * import { loadImage }    from '../core/loader.js';
+ * import { getPixelData, putPixelData, canvasToBlob } from '../core/canvas.js';
+ * import { grayscale }    from '../filters/grayscale.js';
+ *
+ * const img              = await loadImage(file);
+ * const { imageData, canvas } = getPixelData(img);
+ * const grayData         = grayscale(imageData);
+ *
+ * putPixelData(canvas, grayData);
+ * const blob = await canvasToBlob(canvas);
+ */
+export function grayscale(imageData) {
+  // Clone the source data so the original ImageData is never mutated.
+  const output = new ImageData(
+    new Uint8ClampedArray(imageData.data),
+    imageData.width,
+    imageData.height
+  );
+
+  const data = output.data;
+  const len = data.length; // Cache length — avoids re-evaluation each iteration
+
+  // Iterate in 4-step increments: each group of 4 bytes = [R, G, B, A]
+  for (let i = 0; i &lt; len; i += 4) {
+    const r = data[i];       // Red
+    const g = data[i + 1];   // Green
+    const b = data[i + 2];   // Blue
+    // data[i + 3] = Alpha   // Untouched
+
+    // BT.601 Luma — result is automatically clamped to [0, 255] by Uint8ClampedArray
+    const y = LUMA_R * r + LUMA_G * g + LUMA_B * b;
+
+    data[i]     = y; // R ← Y
+    data[i + 1] = y; // G ← Y
+    data[i + 2] = y; // B ← Y
+  }
+
+  return output;
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Wed May 06 2026 19:11:17 GMT+0530 (India Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>

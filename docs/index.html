@@ -1,0 +1,1914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>Home - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.com/gaurav101/LuminaJS" target="_blank" class="menu-item" id="repository" >Github Repo</a></h2><h2><a href="https://gaurav101.github.io/LuminaJS/" target="_blank" class="menu-item" id="demo" >Demo</a></h2><h3>Classes</h3><ul><li><a href="Lumina_Lumina.html">Lumina</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CanvasContext">CanvasContext</a></li><li><a href="global.html#DEFAULT_CHARSET">DEFAULT_CHARSET</a></li><li><a href="global.html#LUMA_B">LUMA_B</a></li><li><a href="global.html#LUMA_G">LUMA_G</a></li><li><a href="global.html#LUMA_R">LUMA_R</a></li><li><a href="global.html#applyConvolution">applyConvolution</a></li><li><a href="global.html#ascii">ascii</a></li><li><a href="global.html#backgroundBlur">backgroundBlur</a></li><li><a href="global.html#blur">blur</a></li><li><a href="global.html#brightness">brightness</a></li><li><a href="global.html#canvasToBlob">canvasToBlob</a></li><li><a href="global.html#clamp">clamp</a></li><li><a href="global.html#contrast">contrast</a></li><li><a href="global.html#createOffscreenCanvas">createOffscreenCanvas</a></li><li><a href="global.html#crop">crop</a></li><li><a href="global.html#edgeDetection">edgeDetection</a></li><li><a href="global.html#emboss">emboss</a></li><li><a href="global.html#gaussianBlur">gaussianBlur</a></li><li><a href="global.html#getPixelData">getPixelData</a></li><li><a href="global.html#getResizedImageData">getResizedImageData</a></li><li><a href="global.html#grayscale">grayscale</a></li><li><a href="global.html#isImageFile">isImageFile</a></li><li><a href="global.html#loadFromFile">loadFromFile</a></li><li><a href="global.html#loadFromURL">loadFromURL</a></li><li><a href="global.html#loadImage">loadImage</a></li><li><a href="global.html#lumina">lumina</a></li><li><a href="global.html#putPixelData">putPixelData</a></li><li><a href="global.html#resize">resize</a></li><li><a href="global.html#sepia">sepia</a></li><li><a href="global.html#sharpen">sharpen</a></li><li><a href="global.html#watermark">watermark</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+
+    
+
+
+
+    
+
+
+    <section class="package">
+        <h3> </h3>		
+    </section>
+
+
+
+
+
+
+
+
+
+    
+
+
+
+    <section class="readme usertext">
+        <article><h1>LuminaJS</h1>
+<p><a href="https://bundlephobia.com/package/@gks101/luminajs"><img src="https://badgen.net/bundlephobia/minzip/react" alt="bundle size"></a> <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="license"></a> <a href="https://bundlephobia.com/package/@gks101/luminajs"><img src="https://badgen.net/bundlephobia/tree-shaking/react-colorful" alt="tree shaking"></a> <a href="https://bundlephobia.com/package/@gks101/luminajs"><img src="https://badgen.net/bundlephobia/dependency-count/react-colorful" alt="dependency count"></a></p>
+<p>LuminaJS is a modular, chainable,lightweight, zero-dependency JavaScript utility library for browser-based image processing using the HTML5 Canvas API. It provides a functional approach to image manipulation, focusing on performance and ease of use.</p>
+<h2>Fast and small bundle size</h2>
+<h2>Features</h2>
+<ul>
+<li>
+<p><a href="https://gaurav101.github.io/LuminaJS/">Demo</a></p>
+</li>
+<li>
+<p><a href="https://github.com/gaurav101/LuminaJS">Code</a></p>
+</li>
+<li>
+<p><a href="https://www.npmjs.com/package/@gks101/luminajs">NPM</a></p>
+</li>
+<li>
+<p><a href="https://gaurav101.github.io/LuminaJS/docs/">Documentation</a></p>
+</li>
+<li>
+<p><strong>🚀 High Performance</strong>: Optimized <code>ImageData</code> loops for fast pixel processing.</p>
+</li>
+<li>
+<p><strong>🧩 Modular</strong>: Only import the filters and utilities you need.</p>
+</li>
+<li>
+<p><strong>🖼️ Canvas-Powered</strong>: Leverages the HTML5 Canvas API for seamless browser integration.</p>
+</li>
+<li>
+<p><strong>📦 Lightweight</strong>: Zero external dependencies (no jQuery, no Lodash).</p>
+</li>
+</ul>
+<pre class="prettyprint source lang-bash"><code>npm install @gks101/luminajs
+</code></pre>
+<h3>React Support</h3>
+<p>LuminaJS includes first-class React support via hooks and components. See the <a href="#react-integration">React Integration</a> section for full examples.</p>
+<pre class="prettyprint source lang-bash"><code>npm install @gks101/luminajs
+</code></pre>
+<pre class="prettyprint source lang-jsx"><code>import { useLumina, LuminaCanvas } from '@gks101/luminajs/react';
+</code></pre>
+<h2>Building from Source</h2>
+<p>If you want to generate the optimized distributable files locally:</p>
+<pre class="prettyprint source lang-bash"><code># 1. Install dependencies
+npm install
+
+# 2. Run the build command
+npm run build
+</code></pre>
+<p>The output will be generated in the <code>dist/</code> directory.</p>
+<h2>Usage</h2>
+<h3>💎 Premium Chainable API (Recommended)</h3>
+<p>The easiest way to use LuminaJS is via the fluent chainable API. It handles image loading, canvas management, and filter sequencing automatically.</p>
+<pre class="prettyprint source lang-javascript"><code>import { lumina } from '@gks101/luminajs';
+
+// Process an image from a URL, apply filters, and draw to a canvas
+await lumina('photo.jpg')
+  .brightness(20)
+  .contrast(10)
+  .grayscale()
+  .sharpen()
+  .toCanvas(document.getElementById('myCanvas'));
+
+// Quick display in an &lt;img> tag using an ID
+await lumina('photo.jpg')
+  .sepia()
+  .toHtmlElement('myImageElement');
+
+// Or get the result as a Blob for uploading
+const blob = await lumina(fileInput.files[0])
+  .resize(800, 600)
+  .sepia()
+  .toBlob('image/jpeg', 0.8);
+</code></pre>
+<h3>ES Modules (Functional)</h3>
+<pre class="prettyprint source lang-javascript"><code>import { loadImage, grayscale } from '@gks101/luminajs';
+</code></pre>
+<h3>Script Tag (Browser)</h3>
+<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;node_modules/@gks101/luminajs/dist/lumina.min.js&quot;>&lt;/script>
+&lt;script>
+  const { lumina } = Lumina;
+  
+  lumina('photo.jpg')
+    .grayscale()
+    .render()
+    .then(imageData => console.log('Processed!', imageData));
+&lt;/script>
+</code></pre>
+<h2>API Documentation</h2>
+<h3>Chainable API (<code>lumina</code>)</h3>
+<ul>
+<li><strong><code>lumina(source)</code></strong>: Initiates a processing chain. <code>source</code> can be a URL string, <code>File</code> object, <code>HTMLImageElement</code>, <code>HTMLCanvasElement</code>, or <code>ImageData</code>.
+<ul>
+<li><strong><code>.grayscale()</code></strong>: Applies grayscale.</li>
+<li><strong><code>.brightness(level)</code></strong>: Adjusts brightness.</li>
+<li><strong><code>.contrast(level)</code></strong>: Adjusts contrast.</li>
+<li><strong><code>.sepia()</code></strong>: Applies sepia.</li>
+<li><strong><code>.blur(radius)</code></strong>: Applies box blur.</li>
+<li><strong><code>.gaussianBlur(sigma)</code></strong>: Applies Gaussian blur.</li>
+<li><strong><code>.watermark(text, options)</code></strong>: Adds text watermark.</li>
+<li><strong><code>.sharpen()</code> / <code>.emboss()</code> / <code>.edgeDetection()</code></strong>: Convolution filters.</li>
+<li><strong><code>.resize(w, h)</code> / <code>.crop(x, y, w, h)</code></strong>: Transformations.</li>
+<li><strong><code>.render()</code></strong>: Returns <code>Promise&lt;ImageData&gt;</code>.</li>
+<li><code>.toCanvas(canvas)</code>: Draws to canvas and returns <code>Promise&lt;HTMLCanvasElement&gt;</code>.</li>
+<li><code>.toHtmlElement(elementOrId)</code>: Displays result in an <code>&lt;img&gt;</code> (src) or <code>&lt;canvas&gt;</code> element.</li>
+<li><code>.toBlob(mime, quality)</code>: Returns <code>Promise&lt;Blob&gt;</code>.</li>
+<li><strong><code>.toDataURL(mime, quality)</code></strong>: Returns <code>Promise&lt;string&gt;</code>.</li>
+</ul>
+</li>
+</ul>
+<h3>Core Utilities (<code>@gks101/luminajs/core</code>)</h3>
+<ul>
+<li><strong><code>loadImage(source)</code></strong>: Returns a <code>Promise</code> resolving to an <code>HTMLImageElement</code>. Supports URL strings and <code>File</code> objects.</li>
+<li><strong><code>getPixelData(image)</code></strong>: Extracts <code>ImageData</code> from an image using an offscreen canvas.</li>
+<li><strong><code>putPixelData(canvas, imageData)</code></strong>: Writes <code>ImageData</code> back to a canvas element.</li>
+<li><strong><code>canvasToBlob(canvas, mimeType, quality)</code></strong>: Async conversion of a canvas to a <code>Blob</code>.</li>
+<li><strong><code>resize(source, width, height)</code></strong>: Resizes an image or canvas. Returns a new <code>HTMLCanvasElement</code>.</li>
+<li><strong><code>crop(source, x, y, width, height)</code></strong>: Crops an image or canvas. Returns a new <code>HTMLCanvasElement</code>.</li>
+</ul>
+<h3>Filters (<code>@gks101/luminajs/filters</code>)</h3>
+<ul>
+<li><strong><code>grayscale(imageData)</code></strong>: Converts image to grayscale using ITU-R BT.601.</li>
+<li><strong><code>brightness(imageData, level)</code></strong>: Adjusts brightness [-255, 255].</li>
+<li><strong><code>contrast(imageData, level)</code></strong>: Adjusts contrast [-100, 100].</li>
+<li><strong><code>sepia(imageData)</code></strong>: Applies a classic antique sepia tone.</li>
+<li><strong><code>ascii(imageData, options)</code></strong>: Transforms an image into an ASCII text string. Recommended to use with <code>getResizedImageData</code>.</li>
+<li><strong><code>blur(imageData, radius)</code></strong>: Applies a box blur effect. <code>radius</code> is the blur intensity (default: 1).</li>
+<li><strong><code>gaussianBlur(imageData, sigma)</code></strong>: Applies a smooth Gaussian blur effect. <code>sigma</code> is the standard deviation (default: 2).</li>
+<li><strong><code>watermark(imageData, text, options)</code></strong>: Overlays text on the image. Options include <code>x</code>, <code>y</code>, <code>font</code>, <code>color</code>.</li>
+<li><strong><code>backgroundBlur(imageData, options)</code></strong>: Selectively blurs the background. Options include <code>sigma</code>, <code>centerX</code>, <code>centerY</code>, <code>focusRadius</code>, <code>falloff</code>.</li>
+<li><strong><code>applyConvolution(data, width, height, kernel)</code></strong>: Generic convolution engine for custom matrix operations (e.g., 3x3 kernel).</li>
+<li><strong><code>sharpen(imageData)</code></strong>: Sharpens the image using a convolution kernel.</li>
+<li><strong><code>emboss(imageData)</code></strong>: Applies an emboss effect using a convolution kernel.</li>
+<li><strong><code>edgeDetection(imageData)</code></strong>: Highlights edges using a convolution kernel.</li>
+</ul>
+<h2>ASCII Art Example</h2>
+<h3>💎 Chainable API (Recommended)</h3>
+<pre class="prettyprint source lang-javascript"><code>import { lumina } from '@gks101/luminajs';
+
+// 100 characters wide, auto-calculated height
+const text = await lumina('photo.jpg')
+  .resize(100, 50)
+  .ascii()
+  .render();
+
+console.log(text);
+</code></pre>
+<h3>Functional Approach</h3>
+<pre class="prettyprint source lang-javascript"><code>import { loadImage, getResizedImageData, ascii } from '@gks101/luminajs';
+
+const img = await loadImage('photo.jpg');
+
+// 1. Downsample for text (e.g., 100 characters wide)
+const smallData = getResizedImageData(img, 100, 50);
+
+// 2. Convert to ASCII
+const text = ascii(smallData);
+
+// 3. Display
+console.log(text);
+</code></pre>
+<h2>Resize and Crop Example</h2>
+<h3>💎 Chainable API (Recommended)</h3>
+<pre class="prettyprint source lang-javascript"><code>import { lumina } from '@gks101/luminajs';
+
+// Resize and then crop in one go
+await lumina('photo.jpg')
+  .resize(800, 600)
+  .crop(100, 100, 300, 300)
+  .toCanvas(document.getElementById('myCanvas'));
+</code></pre>
+<h3>Functional Approach</h3>
+<pre class="prettyprint source lang-javascript"><code>import { loadImage, resize, crop } from '@gks101/luminajs';
+
+const img = await loadImage('photo.jpg');
+
+// 1. Resize to 800x600
+const resizedCanvas = resize(img, 800, 600);
+
+// 2. Crop a 300x300 square from (100, 100)
+const croppedCanvas = crop(resizedCanvas, 100, 100, 300, 300);
+
+document.body.appendChild(croppedCanvas);
+</code></pre>
+<h2>Blur Filter Example</h2>
+<pre class="prettyprint source lang-javascript"><code>import { loadImage, getPixelData, putPixelData, blur } from '@gks101/luminajs';
+
+const img = await loadImage('photo.jpg');
+const { imageData } = getPixelData(img);
+
+// Apply blur with radius 5
+const blurredData = blur(imageData, 5);
+
+// Render back to canvas
+const canvas = document.getElementById('myCanvas');
+putPixelData(canvas, blurredData);
+</code></pre>
+<h2>Gaussian Blur Example</h2>
+<pre class="prettyprint source lang-javascript"><code>import { loadImage, getPixelData, putPixelData, gaussianBlur } from '@gks101/luminajs';
+
+const img = await loadImage('photo.jpg');
+const { imageData } = getPixelData(img);
+
+// Apply smooth Gaussian blur with sigma 3.5
+const blurredData = gaussianBlur(imageData, 3.5);
+
+// Render back to canvas
+const canvas = document.getElementById('myCanvas');
+putPixelData(canvas, blurredData);
+</code></pre>
+<h2>Watermark Example</h2>
+<pre class="prettyprint source lang-javascript"><code>import { loadImage, getPixelData, putPixelData, watermark } from '@gks101/luminajs';
+
+const img = await loadImage('photo.jpg');
+const { imageData } = getPixelData(img);
+
+// Add a semi-transparent watermark at (20, 20)
+const watermarkedData = watermark(imageData, '© 2024 LuminaJS', {
+  x: 20,
+  y: 20,
+  font: '32px Arial',
+  color: 'rgba(255, 255, 255, 0.5)'
+});
+
+const canvas = document.getElementById('myCanvas');
+putPixelData(canvas, watermarkedData);
+</code></pre>
+<h2>Background Blur (Portrait) Example</h2>
+<pre class="prettyprint source lang-javascript"><code>import { loadImage, getPixelData, putPixelData, backgroundBlur } from '@gks101/luminajs';
+
+const img = await loadImage('portrait.jpg');
+const { imageData } = getPixelData(img);
+
+// Apply a portrait blur effect (sharp center, blurred background)
+const portraitData = backgroundBlur(imageData, {
+  sigma: 6,
+  focusRadius: 150,
+  falloff: 200
+});
+
+const canvas = document.getElementById('myCanvas');
+putPixelData(canvas, portraitData);
+</code></pre>
+<h2>Convolution Filters Example (Sharpen, Emboss, Edge Detection)</h2>
+<p>LuminaJS provides a generic convolution engine (<code>applyConvolution</code>) along with pre-built convolution filters such as <code>sharpen</code>, <code>emboss</code>, and <code>edgeDetection</code>. These filters modify pixels based on the values of their neighbors using a 3x3 matrix.</p>
+<h3>Using Built-in Convolution Filters</h3>
+<pre class="prettyprint source lang-javascript"><code>import { loadImage, getPixelData, putPixelData, sharpen, emboss, edgeDetection } from '@gks101/luminajs';
+
+const img = await loadImage('photo.jpg');
+const { imageData } = getPixelData(img);
+
+// Apply a built-in sharpen filter
+const sharpenedData = sharpen(imageData);
+
+// Or apply emboss or edge detection
+// const embossedData = emboss(imageData);
+// const edgeData = edgeDetection(imageData);
+
+const canvas = document.getElementById('myCanvas');
+putPixelData(canvas, sharpenedData);
+</code></pre>
+<h3>Using the Generic Convolution Engine</h3>
+<p>You can also pass your own custom 3x3 kernel (as an array of 9 numbers) to <code>applyConvolution</code>.</p>
+<pre class="prettyprint source lang-javascript"><code>import { loadImage, getPixelData, putPixelData, applyConvolution } from '@gks101/luminajs';
+
+const img = await loadImage('photo.jpg');
+const { imageData } = getPixelData(img);
+
+// Define a custom 3x3 kernel (e.g., an exaggerated edge detection kernel)
+const customKernel = [
+  -1, -1, -1,
+  -1,  9, -1,
+  -1, -1, -1
+];
+
+// applyConvolution mutates the array data in place
+applyConvolution(imageData.data, imageData.width, imageData.height, customKernel);
+
+const canvas = document.getElementById('myCanvas');
+putPixelData(canvas, imageData);
+</code></pre>
+<h2>React Integration</h2>
+<p>LuminaJS provides a dedicated React entry point with hooks and components.</p>
+<h3><code>useLumina</code> Hook</h3>
+<p>The <code>useLumina</code> hook manages the image processing lifecycle, providing <code>result</code>, <code>loading</code>, and <code>error</code> states.</p>
+<pre class="prettyprint source lang-jsx"><code>import { useLumina } from '@gks101/luminajs/react';
+
+function ImagePreview({ file }) {
+  const { result, loading, error } = useLumina({
+    source: file,
+    operations: (l) => l.grayscale().brightness(20).sharpen(),
+    outputType: 'dataUrl', // 'imageData' | 'dataUrl' | 'blob'
+    deps: [file]
+  });
+
+  if (loading) return &lt;div>Processing image...&lt;/div>;
+  if (error) return &lt;div>Error: {error.message}&lt;/div>;
+
+  return &lt;img src={result} alt=&quot;Processed preview&quot; />;
+}
+</code></pre>
+<h3><code>LuminaCanvas</code> Component</h3>
+<p>A declarative way to render processed images directly onto a canvas element.</p>
+<pre class="prettyprint source lang-jsx"><code>import { LuminaCanvas } from '@gks101/luminajs/react';
+
+function App() {
+  return (
+    &lt;LuminaCanvas
+      source=&quot;portrait.jpg&quot;
+      filter={(l) => l.gaussianBlur(3).sepia()}
+      width={800}
+      height={600}
+      className=&quot;my-custom-canvas&quot;
+      onLoad={() => console.log('Image rendered!')}
+      onProcessError={(err) => console.error(err)}
+    />
+  );
+}
+</code></pre>
+<h2>License</h2>
+<p>MIT © LuminaJS Team</p></article>
+    </section>
+
+
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+        
+            src/core/canvas.js
+        
+        </h2>
+        
+    
+</header>
+
+<article>
+    
+        <div class="container-overview">
+        
+            
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><p>LuminaJS Core - Canvas Bridge
+Provides the bridge between HTMLImageElement instances and raw pixel data
+via the HTML5 Canvas API. All canvas operations use offscreen (non-attached)
+canvas elements to avoid any DOM side-effects.</p></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="core_canvas.js.html">core/canvas.js</a>, <a href="core_canvas.js.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+            
+                <div class="description usertext"><p>LuminaJS Core - Canvas Bridge
+Provides the bridge between HTMLImageElement instances and raw pixel data
+via the HTML5 Canvas API. All canvas operations use offscreen (non-attached)
+canvas elements to avoid any DOM side-effects.</p></div>
+            
+
+            
+        
+        </div>
+    
+
+    
+
+    
+
+    
+    
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+        
+            src/core/chain.js
+        
+        </h2>
+        
+    
+</header>
+
+<article>
+    
+        <div class="container-overview">
+        
+            
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><p>LuminaJS Core - Chainable API
+Provides a premium, fluent interface for image processing.</p></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="core_chain.js.html">core/chain.js</a>, <a href="core_chain.js.html#line5">line 5</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+            
+                <div class="description usertext"><p>LuminaJS Core - Chainable API
+Provides a premium, fluent interface for image processing.</p></div>
+            
+
+            
+        
+        </div>
+    
+
+    
+
+    
+
+    
+    
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+        
+            src/core/loader.js
+        
+        </h2>
+        
+    
+</header>
+
+<article>
+    
+        <div class="container-overview">
+        
+            
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><p>LuminaJS Core - Image Loader
+Handles ingestion of image sources (URL strings or File objects)
+and resolves them to HTMLImageElement instances.</p></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="core_loader.js.html">core/loader.js</a>, <a href="core_loader.js.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+            
+                <div class="description usertext"><p>LuminaJS Core - Image Loader
+Handles ingestion of image sources (URL strings or File objects)
+and resolves them to HTMLImageElement instances.</p></div>
+            
+
+            
+        
+        </div>
+    
+
+    
+
+    
+
+    
+    
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+        
+            src/filters/ascii.js
+        
+        </h2>
+        
+    
+</header>
+
+<article>
+    
+        <div class="container-overview">
+        
+            
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><p>LuminaJS Filters - ASCII Art
+Converts an image to a string of ASCII characters based on pixel luminance.</p></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="filters_ascii.js.html">filters/ascii.js</a>, <a href="filters_ascii.js.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+            
+                <div class="description usertext"><p>LuminaJS Filters - ASCII Art
+Converts an image to a string of ASCII characters based on pixel luminance.</p></div>
+            
+
+            
+        
+        </div>
+    
+
+    
+
+    
+
+    
+    
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+        
+            src/filters/backgroundBlur.js
+        
+        </h2>
+        
+    
+</header>
+
+<article>
+    
+        <div class="container-overview">
+        
+            
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><p>LuminaJS Filters - Background Blur
+Applies a selective blur to the background while keeping a focus area sharp.
+Mimics the &quot;Portrait&quot; or &quot;Bokeh&quot; effect.</p></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="filters_backgroundBlur.js.html">filters/backgroundBlur.js</a>, <a href="filters_backgroundBlur.js.html#line3">line 3</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+            
+                <div class="description usertext"><p>LuminaJS Filters - Background Blur
+Applies a selective blur to the background while keeping a focus area sharp.
+Mimics the &quot;Portrait&quot; or &quot;Bokeh&quot; effect.</p></div>
+            
+
+            
+        
+        </div>
+    
+
+    
+
+    
+
+    
+    
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+        
+            src/filters/blur.js
+        
+        </h2>
+        
+    
+</header>
+
+<article>
+    
+        <div class="container-overview">
+        
+            
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><p>LuminaJS Filters - Blur
+Applies a box blur effect to an image.</p></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="filters_blur.js.html">filters/blur.js</a>, <a href="filters_blur.js.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+            
+                <div class="description usertext"><p>LuminaJS Filters - Blur
+Applies a box blur effect to an image.</p></div>
+            
+
+            
+        
+        </div>
+    
+
+    
+
+    
+
+    
+    
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+        
+            src/filters/brightness.js
+        
+        </h2>
+        
+    
+</header>
+
+<article>
+    
+        <div class="container-overview">
+        
+            
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><p>LuminaJS Filters - Brightness
+Adjusts the brightness of an image by adding a fixed level to each color channel.</p></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="filters_brightness.js.html">filters/brightness.js</a>, <a href="filters_brightness.js.html#line3">line 3</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+            
+                <div class="description usertext"><p>LuminaJS Filters - Brightness
+Adjusts the brightness of an image by adding a fixed level to each color channel.</p></div>
+            
+
+            
+        
+        </div>
+    
+
+    
+
+    
+
+    
+    
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+        
+            src/filters/contrast.js
+        
+        </h2>
+        
+    
+</header>
+
+<article>
+    
+        <div class="container-overview">
+        
+            
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><p>LuminaJS Filters - Contrast
+Adjusts the contrast of an image using a non-linear scaling factor.</p></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="filters_contrast.js.html">filters/contrast.js</a>, <a href="filters_contrast.js.html#line3">line 3</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+            
+                <div class="description usertext"><p>LuminaJS Filters - Contrast
+Adjusts the contrast of an image using a non-linear scaling factor.</p></div>
+            
+
+            
+        
+        </div>
+    
+
+    
+
+    
+
+    
+    
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+        
+            src/filters/gaussianBlur.js
+        
+        </h2>
+        
+    
+</header>
+
+<article>
+    
+        <div class="container-overview">
+        
+            
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><p>LuminaJS Filters - Gaussian Blur
+Applies a smooth Gaussian blur effect to an image.</p></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="filters_gaussianBlur.js.html">filters/gaussianBlur.js</a>, <a href="filters_gaussianBlur.js.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+            
+                <div class="description usertext"><p>LuminaJS Filters - Gaussian Blur
+Applies a smooth Gaussian blur effect to an image.</p></div>
+            
+
+            
+        
+        </div>
+    
+
+    
+
+    
+
+    
+    
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+        
+            src/filters/grayscale.js
+        
+        </h2>
+        
+    
+</header>
+
+<article>
+    
+        <div class="container-overview">
+        
+            
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><p>LuminaJS Filters - Grayscale
+Converts an image to grayscale using the ITU-R BT.601 luminance formula:
+Y = 0.299R + 0.587G + 0.114B</p>
+<p>These weights reflect human perception of color brightness:
+green channels appear brightest, blue channels the darkest.</p></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="filters_grayscale.js.html">filters/grayscale.js</a>, <a href="filters_grayscale.js.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+            
+                <div class="description usertext"><p>LuminaJS Filters - Grayscale
+Converts an image to grayscale using the ITU-R BT.601 luminance formula:
+Y = 0.299R + 0.587G + 0.114B</p>
+<p>These weights reflect human perception of color brightness:
+green channels appear brightest, blue channels the darkest.</p></div>
+            
+
+            
+        
+        </div>
+    
+
+    
+
+    
+
+    
+    
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+        
+            src/filters/sepia.js
+        
+        </h2>
+        
+    
+</header>
+
+<article>
+    
+        <div class="container-overview">
+        
+            
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><p>LuminaJS Filters - Sepia
+Applies a classic sepia (antique) tone using standard weighting factors.</p></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="filters_sepia.js.html">filters/sepia.js</a>, <a href="filters_sepia.js.html#line3">line 3</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+            
+                <div class="description usertext"><p>LuminaJS Filters - Sepia
+Applies a classic sepia (antique) tone using standard weighting factors.</p></div>
+            
+
+            
+        
+        </div>
+    
+
+    
+
+    
+
+    
+    
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+        
+            src/filters/watermark.js
+        
+        </h2>
+        
+    
+</header>
+
+<article>
+    
+        <div class="container-overview">
+        
+            
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><p>LuminaJS Filters - Watermark
+Overlays text on top of an image.</p></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="filters_watermark.js.html">filters/watermark.js</a>, <a href="filters_watermark.js.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+            
+                <div class="description usertext"><p>LuminaJS Filters - Watermark
+Overlays text on top of an image.</p></div>
+            
+
+            
+        
+        </div>
+    
+
+    
+
+    
+
+    
+    
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+        
+            src/index.js
+        
+        </h2>
+        
+    
+</header>
+
+<article>
+    
+        <div class="container-overview">
+        
+            
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><p>LuminaJS Main Entry Point
+Exports all modular components for the LuminaJS image processing library.</p></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+            
+                <div class="description usertext"><p>LuminaJS Main Entry Point
+Exports all modular components for the LuminaJS image processing library.</p></div>
+            
+
+            
+        
+        </div>
+    
+
+    
+
+    
+
+    
+    
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+        
+            src/utils/helpers.js
+        
+        </h2>
+        
+    
+</header>
+
+<article>
+    
+        <div class="container-overview">
+        
+            
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><p>LuminaJS Utils
+Shared utility helpers for the LuminaJS library.
+Populate this module with reusable, stateless helpers as the library grows —
+e.g. type guards, math helpers, or output format converters.</p></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="utils_helpers.js.html">utils/helpers.js</a>, <a href="utils_helpers.js.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+            
+                <div class="description usertext"><p>LuminaJS Utils
+Shared utility helpers for the LuminaJS library.
+Populate this module with reusable, stateless helpers as the library grows —
+e.g. type guards, math helpers, or output format converters.</p></div>
+            
+
+            
+        
+        </div>
+    
+
+    
+
+    
+
+    
+    
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Wed May 06 2026 19:11:17 GMT+0530 (India Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>

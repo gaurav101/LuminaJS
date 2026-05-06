@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>filters/ascii.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.com/gaurav101/LuminaJS" target="_blank" class="menu-item" id="repository" >Github Repo</a></h2><h2><a href="https://gaurav101.github.io/LuminaJS/" target="_blank" class="menu-item" id="demo" >Demo</a></h2><h3>Classes</h3><ul><li><a href="Lumina_Lumina.html">Lumina</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CanvasContext">CanvasContext</a></li><li><a href="global.html#DEFAULT_CHARSET">DEFAULT_CHARSET</a></li><li><a href="global.html#LUMA_B">LUMA_B</a></li><li><a href="global.html#LUMA_G">LUMA_G</a></li><li><a href="global.html#LUMA_R">LUMA_R</a></li><li><a href="global.html#applyConvolution">applyConvolution</a></li><li><a href="global.html#ascii">ascii</a></li><li><a href="global.html#backgroundBlur">backgroundBlur</a></li><li><a href="global.html#blur">blur</a></li><li><a href="global.html#brightness">brightness</a></li><li><a href="global.html#canvasToBlob">canvasToBlob</a></li><li><a href="global.html#clamp">clamp</a></li><li><a href="global.html#contrast">contrast</a></li><li><a href="global.html#createOffscreenCanvas">createOffscreenCanvas</a></li><li><a href="global.html#crop">crop</a></li><li><a href="global.html#edgeDetection">edgeDetection</a></li><li><a href="global.html#emboss">emboss</a></li><li><a href="global.html#gaussianBlur">gaussianBlur</a></li><li><a href="global.html#getPixelData">getPixelData</a></li><li><a href="global.html#getResizedImageData">getResizedImageData</a></li><li><a href="global.html#grayscale">grayscale</a></li><li><a href="global.html#isImageFile">isImageFile</a></li><li><a href="global.html#loadFromFile">loadFromFile</a></li><li><a href="global.html#loadFromURL">loadFromURL</a></li><li><a href="global.html#loadImage">loadImage</a></li><li><a href="global.html#lumina">lumina</a></li><li><a href="global.html#putPixelData">putPixelData</a></li><li><a href="global.html#resize">resize</a></li><li><a href="global.html#sepia">sepia</a></li><li><a href="global.html#sharpen">sharpen</a></li><li><a href="global.html#watermark">watermark</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">filters/ascii.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileoverview LuminaJS Filters - ASCII Art
+ * Converts an image to a string of ASCII characters based on pixel luminance.
+ */
+
+/**
+ * Standard character set ordered from densest (darkest) to sparsest (lightest).
+ * @constant {string}
+ */
+const DEFAULT_CHARSET = '@%#*+=-:. ';
+
+/**
+ * Converts the provided ImageData into an ASCII string representation.
+ * 
+ * Note: For best results, the input ImageData should be relatively low resolution 
+ * (e.g., 50-100 pixels wide), as each pixel maps to a single character.
+ *
+ * @param {ImageData} imageData - The source pixel data. 
+ * @param {Object} [options={}] - Transformation options.
+ * @param {string} [options.charSet='@%#*+=-:. '] - A string of characters ordered from dark to light.
+ * @param {boolean} [options.invert=false] - If true, treats the first character as the lightest.
+ * @returns {string} A string containing the ASCII representation of the image, including newlines.
+ *
+ * @example
+ * const { getResizedImageData } = Lumina;
+ * const smallData = getResizedImageData(image, 80, 40);
+ * const textOutput = ascii(smallData);
+ * console.log(textOutput);
+ */
+export function ascii(imageData, options = {}) {
+  const {
+    charSet = DEFAULT_CHARSET,
+    invert = false
+  } = options;
+
+  const chars = invert ? charSet.split('').reverse().join('') : charSet;
+  const data = imageData.data;
+  const width = imageData.width;
+  const height = imageData.height;
+  let result = '';
+
+  for (let y = 0; y &lt; height; y++) {
+    for (let x = 0; x &lt; width; x++) {
+      const offset = (y * width + x) * 4;
+      
+      const r = data[offset];
+      const g = data[offset + 1];
+      const b = data[offset + 2];
+      // data[offset + 3] is Alpha (ignored in basic ASCII)
+
+      // BT.601 Luminance
+      const luma = 0.299 * r + 0.587 * g + 0.114 * b;
+      
+      // Map luma [0-255] to charIndex [0, chars.length - 1]
+      // Use (1 - charIndex) logic implicitly by charSet ordering (dark to light)
+      const charIndex = Math.floor((luma / 255) * (chars.length - 1));
+      
+      result += chars[charIndex];
+    }
+    result += '\n'; // Row transition
+  }
+
+  return result;
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Wed May 06 2026 19:11:17 GMT+0530 (India Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>

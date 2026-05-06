@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>filters/gaussianBlur.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.com/gaurav101/LuminaJS" target="_blank" class="menu-item" id="repository" >Github Repo</a></h2><h2><a href="https://gaurav101.github.io/LuminaJS/" target="_blank" class="menu-item" id="demo" >Demo</a></h2><h3>Classes</h3><ul><li><a href="Lumina_Lumina.html">Lumina</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CanvasContext">CanvasContext</a></li><li><a href="global.html#DEFAULT_CHARSET">DEFAULT_CHARSET</a></li><li><a href="global.html#LUMA_B">LUMA_B</a></li><li><a href="global.html#LUMA_G">LUMA_G</a></li><li><a href="global.html#LUMA_R">LUMA_R</a></li><li><a href="global.html#applyConvolution">applyConvolution</a></li><li><a href="global.html#ascii">ascii</a></li><li><a href="global.html#backgroundBlur">backgroundBlur</a></li><li><a href="global.html#blur">blur</a></li><li><a href="global.html#brightness">brightness</a></li><li><a href="global.html#canvasToBlob">canvasToBlob</a></li><li><a href="global.html#clamp">clamp</a></li><li><a href="global.html#contrast">contrast</a></li><li><a href="global.html#createOffscreenCanvas">createOffscreenCanvas</a></li><li><a href="global.html#crop">crop</a></li><li><a href="global.html#edgeDetection">edgeDetection</a></li><li><a href="global.html#emboss">emboss</a></li><li><a href="global.html#gaussianBlur">gaussianBlur</a></li><li><a href="global.html#getPixelData">getPixelData</a></li><li><a href="global.html#getResizedImageData">getResizedImageData</a></li><li><a href="global.html#grayscale">grayscale</a></li><li><a href="global.html#isImageFile">isImageFile</a></li><li><a href="global.html#loadFromFile">loadFromFile</a></li><li><a href="global.html#loadFromURL">loadFromURL</a></li><li><a href="global.html#loadImage">loadImage</a></li><li><a href="global.html#lumina">lumina</a></li><li><a href="global.html#putPixelData">putPixelData</a></li><li><a href="global.html#resize">resize</a></li><li><a href="global.html#sepia">sepia</a></li><li><a href="global.html#sharpen">sharpen</a></li><li><a href="global.html#watermark">watermark</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">filters/gaussianBlur.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileoverview LuminaJS Filters - Gaussian Blur
+ * Applies a smooth Gaussian blur effect to an image.
+ */
+
+/**
+ * Applies a Gaussian blur filter to a copy of the provided `ImageData`.
+ * This implementation uses a two-pass separable convolution for better performance.
+ *
+ * @param {ImageData} imageData - The source pixel data.
+ * @param {number} sigma - The standard deviation of the Gaussian distribution.
+ *   Larger values result in more blurring. Default is 2.
+ * @returns {ImageData} A new `ImageData` object with Gaussian blur applied.
+ *
+ * @example
+ * const blurredData = gaussianBlur(imageData, 3.5);
+ */
+export function gaussianBlur(imageData, sigma = 2) {
+  const width = imageData.width;
+  const height = imageData.height;
+  const input = imageData.data;
+  const output = new Uint8ClampedArray(input.length);
+  const temp = new Uint8ClampedArray(input.length);
+
+  if (sigma &lt;= 0) {
+    return new ImageData(new Uint8ClampedArray(input), width, height);
+  }
+
+  // Calculate kernel radius (3 * sigma is standard for Gaussian)
+  const radius = Math.ceil(sigma * 3);
+  const size = radius * 2 + 1;
+  const kernel = new Float32Array(size);
+  
+  // Pre-calculate Gaussian kernel
+  let sum = 0;
+  for (let i = 0; i &lt; size; i++) {
+    const x = i - radius;
+    kernel[i] = Math.exp(-(x * x) / (2 * sigma * sigma));
+    sum += kernel[i];
+  }
+  // Normalize kernel
+  for (let i = 0; i &lt; size; i++) {
+    kernel[i] /= sum;
+  }
+
+  // Horizontal pass
+  for (let y = 0; y &lt; height; y++) {
+    for (let x = 0; x &lt; width; x++) {
+      let r = 0, g = 0, b = 0, a = 0;
+      for (let k = 0; k &lt; size; k++) {
+        const nx = x + (k - radius);
+        // Edge handling: clamping to nearest pixel
+        const ix = Math.max(0, Math.min(width - 1, nx));
+        const offset = (y * width + ix) * 4;
+        const weight = kernel[k];
+        
+        r += input[offset] * weight;
+        g += input[offset + 1] * weight;
+        b += input[offset + 2] * weight;
+        a += input[offset + 3] * weight;
+      }
+      const offset = (y * width + x) * 4;
+      temp[offset]     = r;
+      temp[offset + 1] = g;
+      temp[offset + 2] = b;
+      temp[offset + 3] = a;
+    }
+  }
+
+  // Vertical pass
+  for (let x = 0; x &lt; width; x++) {
+    for (let y = 0; y &lt; height; y++) {
+      let r = 0, g = 0, b = 0, a = 0;
+      for (let k = 0; k &lt; size; k++) {
+        const ny = y + (k - radius);
+        const iy = Math.max(0, Math.min(height - 1, ny));
+        const offset = (iy * width + x) * 4;
+        const weight = kernel[k];
+        
+        r += temp[offset] * weight;
+        g += temp[offset + 1] * weight;
+        b += temp[offset + 2] * weight;
+        a += temp[offset + 3] * weight;
+      }
+      const offset = (y * width + x) * 4;
+      output[offset]     = r;
+      output[offset + 1] = g;
+      output[offset + 2] = b;
+      output[offset + 3] = a;
+    }
+  }
+
+  return new ImageData(output, width, height);
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Wed May 06 2026 19:11:17 GMT+0530 (India Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>
