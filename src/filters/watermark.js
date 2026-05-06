@@ -24,7 +24,9 @@ export function watermark(imageData, text, options = {}) {
   const {
     x = 10,
     y = 10,
-    font = '24px Arial',
+    fontSize = 24,
+    fontFace = 'Arial',
+    font = `${fontSize}px ${fontFace}`,
     color = 'rgba(255, 255, 255, 0.5)',
     align = 'left',
     baseline = 'top'

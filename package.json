@@ -39,6 +39,7 @@
     "build": "rollup -c && npm run build:types && npm run generate-docs",
     "build:types": "tsc",
     "dev": "rollup -c -w",
+    "start:demo": "npm run dev --prefix react-demo",
     "test": "echo \"Error: no test specified\" && exit 1",
     "generate-docs": "jsdoc -c jsdoc.json"
   },
