@@ -122,7 +122,7 @@ function App() {
             <hr />
 
             <h3>Filters</h3>
-            <div className="fil ter-grid">
+            <div className="filter-grid">
               {['none', 'grayscale', 'sepia', 'blur', 'sharpen', 'emboss', 'edge'].map(f => (
                 <button
                   key={f}
