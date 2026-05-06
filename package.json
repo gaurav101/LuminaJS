@@ -1,6 +1,6 @@
 {
   "name": "@gks101/luminajs",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "A modular, lightweight JavaScript utility library for browser-based image processing using the HTML5 Canvas API.",
   "homepage": "https://gaurav101.github.io/LuminaJS/",
   "repository": {
@@ -18,14 +18,23 @@
   "unpkg": "./dist/lumina.min.js",
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./src/index.js",
       "require": "./dist/lumina.umd.js"
     },
-    "./filters": "./src/filters/index.js",
-    "./core": "./src/core/index.js"
+    "./filters": {
+      "types": "./dist/types/filters/index.d.ts",
+      "import": "./src/filters/index.js"
+    },
+    "./core": {
+      "types": "./dist/types/core/index.d.ts",
+      "import": "./src/core/index.js"
+    }
   },
   "scripts": {
-    "build": "rollup -c && npm run build:types && npm run generate-docs",
+    "build": "npm run build:core && npm run build:react",
+    "build:core": "rollup -c && npm run build:types && npm run generate-docs",
+    "build:react": "npm run build --prefix react-lumina",
     "build:types": "tsc",
     "dev": "rollup -c -w",
     "test": "echo \"Error: no test specified\" && exit 1",

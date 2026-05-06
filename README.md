@@ -18,10 +18,15 @@ LuminaJS is a modular, chainable,lightweight, zero-dependency JavaScript utility
 - **🖼️ Canvas-Powered**: Leverages the HTML5 Canvas API for seamless browser integration.
 - **📦 Lightweight**: Zero external dependencies (no jQuery, no Lodash).
 
-## Installation
-
 ```bash
 npm install @gks101/luminajs
+```
+
+### React Support
+Using React? Check out [@gks101/react-lumina](./react-lumina) for hooks and components.
+
+```bash
+npm install @gks101/react-lumina
 ```
 
 ## Building from Source

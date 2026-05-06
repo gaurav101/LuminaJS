@@ -1,0 +1,29 @@
+{
+  "name": "@gks101/react-lumina",
+  "version": "1.0.0",
+  "description": "React hooks and components for LuminaJS image processing.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc"
+  },
+  "peerDependencies": {
+    "@gks101/luminajs": "file:..",
+    "react": ">=16.8.0"
+  },
+  "keywords": [
+    "react",
+    "hooks",
+    "image-processing",
+    "luminajs",
+    "canvas"
+  ],
+  "author": "LuminaJS Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/react": ">=16.8.0",
+    "react": ">=16.8.0",
+    "typescript": "^5.0.0"
+  }
+}
