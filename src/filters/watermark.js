@@ -11,7 +11,9 @@
  * @param {Object} [options={}] - Customization options.
  * @param {number} [options.x=10] - X coordinate for the text.
  * @param {number} [options.y=10] - Y coordinate for the text.
- * @param {string} [options.font='24px Arial'] - CSS font string.
+ * @param {number} [options.fontSize=24] - Font size in pixels.
+ * @param {string} [options.fontFace='Arial'] - Font family name.
+ * @param {string} [options.font='24px Arial'] - CSS font string (overrides fontSize/fontFace).
  * @param {string} [options.color='rgba(255, 255, 255, 0.5)'] - CSS color string.
  * @param {CanvasTextAlign} [options.align='left'] - Text alignment ('left', 'center', 'right', 'start', 'end').
  * @param {CanvasTextBaseline} [options.baseline='top'] - Text baseline ('top', 'hanging', 'middle', 'alphabetic', 'ideographic', 'bottom').

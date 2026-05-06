@@ -1,0 +1,17 @@
+{
+  "name": "vanila-js",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@gks101/luminajs": "file:../../"
+  },
+  "devDependencies": {
+    "vite": "^6.3.5"
+  }
+}

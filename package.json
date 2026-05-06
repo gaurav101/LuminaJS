@@ -31,8 +31,9 @@
       "import": "./src/core/index.js"
     },
     "./react": {
-      "types": "./dist/types/react/index.ts",
-      "import": "./src/react/index.ts"
+      "types": "./dist/react/index.d.ts",
+      "import": "./dist/react/index.js",
+      "require": "./dist/react/index.js"
     }
   },
   "scripts": {
