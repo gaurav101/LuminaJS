@@ -25,14 +25,14 @@ function App() {
   const [cropH, setCropH] = useState(400);
 
   // ASCII logic
-  const { result: asciiText, loading: asciiLoading } = useLumina({
+  const { result: asciiText, loading: asciiLoading } = useLumina<string>({
     source: '/sample.png',
     operations: (l) => l.resize(100, 50).ascii(),
     deps: [showAscii],
   });
 
   // Thumbnail preview
-  const { result: thumbnail } = useLumina({
+  const { result: thumbnail } = useLumina<string>({
     source: '/sample.png',
     operations: (l) => l.resize(200, 150).grayscale(),
     outputType: 'dataUrl',
