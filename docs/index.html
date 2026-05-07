@@ -124,9 +124,7 @@ await lumina('photo.jpg')
   .toCanvas(document.getElementById('myCanvas'));
 
 // Quick display in an &lt;img> tag using an ID
-await lumina('photo.jpg')
-  .sepia()
-  .toHtmlElement('myImageElement');
+await lumina('photo.jpg').sepia().toHtmlElement('myImageElement');
 
 // Or get the result as a Blob for uploading
 const blob = await lumina(fileInput.files[0])
@@ -141,11 +139,11 @@ const blob = await lumina(fileInput.files[0])
 <pre class="prettyprint source lang-html"><code>&lt;script src=&quot;node_modules/@gks101/luminajs/dist/lumina.min.js&quot;>&lt;/script>
 &lt;script>
   const { lumina } = Lumina;
-  
+
   lumina('photo.jpg')
     .grayscale()
     .render()
-    .then(imageData => console.log('Processed!', imageData));
+    .then((imageData) => console.log('Processed!', imageData));
 &lt;/script>
 </code></pre>
 <h2>API Documentation</h2>
@@ -200,10 +198,7 @@ const blob = await lumina(fileInput.files[0])
 <pre class="prettyprint source lang-javascript"><code>import { lumina } from '@gks101/luminajs';
 
 // 100 characters wide, auto-calculated height
-const text = await lumina('photo.jpg')
-  .resize(100, 50)
-  .ascii()
-  .render();
+const text = await lumina('photo.jpg').resize(100, 50).ascii().render();
 
 console.log(text);
 </code></pre>
@@ -258,7 +253,12 @@ const canvas = document.getElementById('myCanvas');
 putPixelData(canvas, blurredData);
 </code></pre>
 <h2>Gaussian Blur Example</h2>
-<pre class="prettyprint source lang-javascript"><code>import { loadImage, getPixelData, putPixelData, gaussianBlur } from '@gks101/luminajs';
+<pre class="prettyprint source lang-javascript"><code>import {
+  loadImage,
+  getPixelData,
+  putPixelData,
+  gaussianBlur,
+} from '@gks101/luminajs';
 
 const img = await loadImage('photo.jpg');
 const { imageData } = getPixelData(img);
@@ -271,7 +271,12 @@ const canvas = document.getElementById('myCanvas');
 putPixelData(canvas, blurredData);
 </code></pre>
 <h2>Watermark Example</h2>
-<pre class="prettyprint source lang-javascript"><code>import { loadImage, getPixelData, putPixelData, watermark } from '@gks101/luminajs';
+<pre class="prettyprint source lang-javascript"><code>import {
+  loadImage,
+  getPixelData,
+  putPixelData,
+  watermark,
+} from '@gks101/luminajs';
 
 const img = await loadImage('photo.jpg');
 const { imageData } = getPixelData(img);
@@ -281,14 +286,19 @@ const watermarkedData = watermark(imageData, '© 2024 LuminaJS', {
   x: 20,
   y: 20,
   font: '32px Arial',
-  color: 'rgba(255, 255, 255, 0.5)'
+  color: 'rgba(255, 255, 255, 0.5)',
 });
 
 const canvas = document.getElementById('myCanvas');
 putPixelData(canvas, watermarkedData);
 </code></pre>
 <h2>Background Blur (Portrait) Example</h2>
-<pre class="prettyprint source lang-javascript"><code>import { loadImage, getPixelData, putPixelData, backgroundBlur } from '@gks101/luminajs';
+<pre class="prettyprint source lang-javascript"><code>import {
+  loadImage,
+  getPixelData,
+  putPixelData,
+  backgroundBlur,
+} from '@gks101/luminajs';
 
 const img = await loadImage('portrait.jpg');
 const { imageData } = getPixelData(img);
@@ -297,7 +307,7 @@ const { imageData } = getPixelData(img);
 const portraitData = backgroundBlur(imageData, {
   sigma: 6,
   focusRadius: 150,
-  falloff: 200
+  falloff: 200,
 });
 
 const canvas = document.getElementById('myCanvas');
@@ -306,7 +316,14 @@ putPixelData(canvas, portraitData);
 <h2>Convolution Filters Example (Sharpen, Emboss, Edge Detection)</h2>
 <p>LuminaJS provides a generic convolution engine (<code>applyConvolution</code>) along with pre-built convolution filters such as <code>sharpen</code>, <code>emboss</code>, and <code>edgeDetection</code>. These filters modify pixels based on the values of their neighbors using a 3x3 matrix.</p>
 <h3>Using Built-in Convolution Filters</h3>
-<pre class="prettyprint source lang-javascript"><code>import { loadImage, getPixelData, putPixelData, sharpen, emboss, edgeDetection } from '@gks101/luminajs';
+<pre class="prettyprint source lang-javascript"><code>import {
+  loadImage,
+  getPixelData,
+  putPixelData,
+  sharpen,
+  emboss,
+  edgeDetection,
+} from '@gks101/luminajs';
 
 const img = await loadImage('photo.jpg');
 const { imageData } = getPixelData(img);
@@ -323,20 +340,26 @@ putPixelData(canvas, sharpenedData);
 </code></pre>
 <h3>Using the Generic Convolution Engine</h3>
 <p>You can also pass your own custom 3x3 kernel (as an array of 9 numbers) to <code>applyConvolution</code>.</p>
-<pre class="prettyprint source lang-javascript"><code>import { loadImage, getPixelData, putPixelData, applyConvolution } from '@gks101/luminajs';
+<pre class="prettyprint source lang-javascript"><code>import {
+  loadImage,
+  getPixelData,
+  putPixelData,
+  applyConvolution,
+} from '@gks101/luminajs';
 
 const img = await loadImage('photo.jpg');
 const { imageData } = getPixelData(img);
 
 // Define a custom 3x3 kernel (e.g., an exaggerated edge detection kernel)
-const customKernel = [
-  -1, -1, -1,
-  -1,  9, -1,
-  -1, -1, -1
-];
+const customKernel = [-1, -1, -1, -1, 9, -1, -1, -1, -1];
 
 // applyConvolution mutates the array data in place
-applyConvolution(imageData.data, imageData.width, imageData.height, customKernel);
+applyConvolution(
+  imageData.data,
+  imageData.width,
+  imageData.height,
+  customKernel,
+);
 
 const canvas = document.getElementById('myCanvas');
 putPixelData(canvas, imageData);
@@ -352,7 +375,7 @@ function ImagePreview({ file }) {
     source: file,
     operations: (l) => l.grayscale().brightness(20).sharpen(),
     outputType: 'dataUrl', // 'imageData' | 'dataUrl' | 'blob'
-    deps: [file]
+    deps: [file],
   });
 
   if (loading) return &lt;div>Processing image...&lt;/div>;
@@ -530,7 +553,7 @@ Provides a premium, fluent interface for image processing.</p></li></ul></dd>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_chain.js.html">core/chain.js</a>, <a href="core_chain.js.html#line5">line 5</a>
+        <a href="core_chain.js.html">core/chain.js</a>, <a href="core_chain.js.html#line11">line 11</a>
     </li></ul></dd>
     
 
@@ -1897,7 +1920,7 @@ e.g. type guards, math helpers, or output format converters.</p></div>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Wed May 06 2026 19:11:17 GMT+0530 (India Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Thu May 07 2026 18:24:06 GMT+0530 (India Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
