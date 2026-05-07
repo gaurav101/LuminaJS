@@ -12,12 +12,12 @@ export type LuminaOutputType = 'imageData' | 'dataUrl' | 'blob';
 export interface UseLuminaOptions {
   source: LuminaSource | null;
   operations?: (chain: Lumina) => Lumina;
-  deps?: any[];
+  deps?: unknown[];
   outputType?: LuminaOutputType;
 }
 
-export interface UseLuminaResult {
-  result: any;
+export interface UseLuminaResult<T = unknown> {
+  result: T | null;
   loading: boolean;
   error: Error | null;
 }
@@ -33,24 +33,25 @@ export interface UseLuminaResult {
  *   deps: []
  * });
  */
-export function useLumina({
+export function useLumina<T = unknown>({
   source,
   operations,
   deps = [],
   outputType = 'imageData',
-}: UseLuminaOptions): UseLuminaResult {
-  const [result, setResult] = useState<any>(null);
+}: UseLuminaOptions): UseLuminaResult<T> {
+  const [result, setResult] = useState<T | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    if (!source) {
-      setResult(null);
-      return;
-    }
-
     let isMounted = true;
+
     const process = async () => {
+      if (!source) {
+        setResult(null);
+        return;
+      }
+
       setLoading(true);
       setError(null);
       try {
@@ -60,20 +61,20 @@ export function useLumina({
           chain = operations(chain);
         }
 
-        let data;
+        let data: T;
         switch (outputType) {
           case 'dataUrl':
-            data = await chain.toDataURL();
+            data = (await chain.toDataURL()) as unknown as T;
             break;
           case 'blob':
-            data = await chain.toBlob();
+            data = (await chain.toBlob()) as unknown as T;
             break;
           default:
-            data = await chain.render();
+            data = (await chain.render()) as unknown as T;
         }
 
         if (isMounted) {
-          setResult(data);
+          setResult(data as T);
         }
       } catch (err) {
         if (isMounted) {
@@ -91,7 +92,10 @@ export function useLumina({
     return () => {
       isMounted = false;
     };
-  }, [source, outputType, ...deps]);
+    // We include operations and outputType, and spread deps. 
+    // We disable the rule for the spread as it's intended for user-provided dependencies.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [source, outputType, operations, ...deps]);
 
   return { result, loading, error };
 }

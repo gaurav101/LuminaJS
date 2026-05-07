@@ -7,7 +7,13 @@ import prettier from 'eslint-config-prettier';
 
 export default tseslint.config(
   {
-    ignores: ['**/dist/**', '**/node_modules/**', '**/docs/**', '**/*.min.js'],
+    ignores: [
+      '**/dist/**',
+      '**/node_modules/**',
+      '**/docs/**',
+      '**/*.min.js',
+      '**/examples/**',
+    ],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
@@ -23,10 +29,6 @@ export default tseslint.config(
         ...globals.browser,
         ...globals.es2020,
       },
-      parserOptions: {
-        project: ['./tsconfig.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
     },
     settings: {
       react: {
@@ -41,6 +43,16 @@ export default tseslint.config(
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       'no-undef': 'error',
+    },
+  },
+  {
+    // Apply type-aware rules only to src files
+    files: ['src/**/*.{ts,tsx,js,jsx}'],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
     },
   },
   {
