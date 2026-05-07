@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { clamp, isImageFile } from './helpers.js';
+import { clamp, isImageFile } from '../../src/utils/helpers.js';
 
 describe('helpers', () => {
   describe('clamp', () => {
