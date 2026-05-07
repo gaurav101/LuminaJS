@@ -48,7 +48,7 @@ export function grayscale(imageData) {
   const output = new ImageData(
     new Uint8ClampedArray(imageData.data),
     imageData.width,
-    imageData.height
+    imageData.height,
   );
 
   const data = output.data;
@@ -56,15 +56,15 @@ export function grayscale(imageData) {
 
   // Iterate in 4-step increments: each group of 4 bytes = [R, G, B, A]
   for (let i = 0; i < len; i += 4) {
-    const r = data[i];       // Red
-    const g = data[i + 1];   // Green
-    const b = data[i + 2];   // Blue
+    const r = data[i]; // Red
+    const g = data[i + 1]; // Green
+    const b = data[i + 2]; // Blue
     // data[i + 3] = Alpha   // Untouched
 
     // BT.601 Luma — result is automatically clamped to [0, 255] by Uint8ClampedArray
     const y = LUMA_R * r + LUMA_G * g + LUMA_B * b;
 
-    data[i]     = y; // R ← Y
+    data[i] = y; // R ← Y
     data[i + 1] = y; // G ← Y
     data[i + 2] = y; // B ← Y
   }

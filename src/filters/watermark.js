@@ -11,7 +11,9 @@
  * @param {Object} [options={}] - Customization options.
  * @param {number} [options.x=10] - X coordinate for the text.
  * @param {number} [options.y=10] - Y coordinate for the text.
- * @param {string} [options.font='24px Arial'] - CSS font string.
+ * @param {number} [options.fontSize=24] - Font size in pixels.
+ * @param {string} [options.fontFace='Arial'] - Font family name.
+ * @param {string} [options.font='24px Arial'] - CSS font string (overrides fontSize/fontFace).
  * @param {string} [options.color='rgba(255, 255, 255, 0.5)'] - CSS color string.
  * @param {CanvasTextAlign} [options.align='left'] - Text alignment ('left', 'center', 'right', 'start', 'end').
  * @param {CanvasTextBaseline} [options.baseline='top'] - Text baseline ('top', 'hanging', 'middle', 'alphabetic', 'ideographic', 'bottom').
@@ -24,10 +26,12 @@ export function watermark(imageData, text, options = {}) {
   const {
     x = 10,
     y = 10,
-    font = '24px Arial',
+    fontSize = 24,
+    fontFace = 'Arial',
+    font = `${fontSize}px ${fontFace}`,
     color = 'rgba(255, 255, 255, 0.5)',
     align = 'left',
-    baseline = 'top'
+    baseline = 'top',
   } = options;
 
   // Create a temporary canvas to draw the text
@@ -37,7 +41,9 @@ export function watermark(imageData, text, options = {}) {
   const ctx = canvas.getContext('2d');
 
   if (!ctx) {
-    throw new Error('LuminaJS [watermark]: Failed to obtain 2D context for temporary canvas.');
+    throw new Error(
+      'LuminaJS [watermark]: Failed to obtain 2D context for temporary canvas.',
+    );
   }
 
   // Draw the original image data onto the canvas

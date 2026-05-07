@@ -28,7 +28,9 @@ function createOffscreenCanvas(width, height) {
   });
 
   if (!ctx) {
-    throw new Error('LuminaJS [canvas]: Failed to create offscreen canvas context.');
+    throw new Error(
+      'LuminaJS [canvas]: Failed to create offscreen canvas context.',
+    );
   }
 
   return { canvas, ctx };
@@ -61,7 +63,7 @@ export function getPixelData(image) {
   if (width === 0 || height === 0) {
     throw new Error(
       `LuminaJS [canvas]: Cannot extract pixel data from an image with zero dimensions ` +
-        `(${width}x${height}). Ensure the image is fully loaded before calling getPixelData.`
+        `(${width}x${height}). Ensure the image is fully loaded before calling getPixelData.`,
     );
   }
 
@@ -79,7 +81,7 @@ export function getPixelData(image) {
     throw new Error(
       `LuminaJS [canvas]: Unable to read pixel data — canvas may be tainted by a ` +
         `cross-origin image. Ensure the server sends CORS headers and the image is loaded ` +
-        `with crossOrigin="Anonymous". Original error: ${message}`
+        `with crossOrigin="Anonymous". Original error: ${message}`,
     );
   }
 }
@@ -108,7 +110,7 @@ export function putPixelData(canvas, imageData) {
   if (!ctx) {
     throw new Error(
       `LuminaJS [canvas]: Failed to obtain a 2D context from the provided canvas element. ` +
-        `The canvas may already have a context of a different type (e.g. "webgl").`
+        `The canvas may already have a context of a different type (e.g. "webgl").`,
     );
   }
 
@@ -139,13 +141,13 @@ export function canvasToBlob(canvas, mimeType = 'image/png', quality = 0.92) {
           reject(
             new Error(
               `LuminaJS [canvas]: canvas.toBlob returned null. ` +
-                `The canvas may be empty or the MIME type "${mimeType}" is unsupported.`
-            )
+                `The canvas may be empty or the MIME type "${mimeType}" is unsupported.`,
+            ),
           );
         }
       },
       mimeType,
-      quality
+      quality,
     );
   });
 }
@@ -163,7 +165,9 @@ export function getResizedImageData(image, width, height) {
   const canvas = resize(image, width, height);
   const ctx = canvas.getContext('2d');
   if (!ctx) {
-    throw new Error('LuminaJS [canvas]: Failed to obtain a 2D context from the resized canvas.');
+    throw new Error(
+      'LuminaJS [canvas]: Failed to obtain a 2D context from the resized canvas.',
+    );
   }
   return ctx.getImageData(0, 0, width, height);
 }
@@ -179,7 +183,9 @@ export function getResizedImageData(image, width, height) {
  */
 export function resize(source, width, height) {
   if (width <= 0 || height <= 0) {
-    throw new Error(`LuminaJS [canvas]: Resize dimensions must be positive (${width}x${height}).`);
+    throw new Error(
+      `LuminaJS [canvas]: Resize dimensions must be positive (${width}x${height}).`,
+    );
   }
   const { canvas, ctx } = createOffscreenCanvas(width, height);
   ctx.drawImage(source, 0, 0, width, height);
@@ -199,7 +205,9 @@ export function resize(source, width, height) {
  */
 export function crop(source, x, y, width, height) {
   if (width <= 0 || height <= 0) {
-    throw new Error(`LuminaJS [canvas]: Crop dimensions must be positive (${width}x${height}).`);
+    throw new Error(
+      `LuminaJS [canvas]: Crop dimensions must be positive (${width}x${height}).`,
+    );
   }
   const { canvas, ctx } = createOffscreenCanvas(width, height);
   ctx.drawImage(source, x, y, width, height, 0, 0, width, height);

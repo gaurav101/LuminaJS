@@ -1,6 +1,6 @@
 # LuminaJS
-[![bundle size](https://badgen.net/bundlephobia/minzip/react)](https://bundlephobia.com/package/@gks101/luminajs) [![license](https://img.shields.io/badge/license-MIT-green)](./LICENSE) [![tree shaking](https://badgen.net/bundlephobia/tree-shaking/react-colorful)](https://bundlephobia.com/package/@gks101/luminajs) [![dependency count](https://badgen.net/bundlephobia/dependency-count/react-colorful)](https://bundlephobia.com/package/@gks101/luminajs)
 
+[![bundle size](https://badgen.net/bundlephobia/minzip/react)](https://bundlephobia.com/package/@gks101/luminajs) [![license](https://img.shields.io/badge/license-MIT-green)](./LICENSE) [![tree shaking](https://badgen.net/bundlephobia/tree-shaking/react-colorful)](https://bundlephobia.com/package/@gks101/luminajs) [![dependency count](https://badgen.net/bundlephobia/dependency-count/react-colorful)](https://bundlephobia.com/package/@gks101/luminajs)
 
 LuminaJS is a modular, chainable,lightweight, zero-dependency JavaScript utility library for browser-based image processing using the HTML5 Canvas API. It provides a functional approach to image manipulation, focusing on performance and ease of use.
 
@@ -8,20 +8,30 @@ LuminaJS is a modular, chainable,lightweight, zero-dependency JavaScript utility
 
 ## Features
 
-- [Demo](https://gaurav101.github.io/LuminaJS/) 
-- [Code](https://github.com/gaurav101/LuminaJS) 
+- [Demo](https://gaurav101.github.io/LuminaJS/)
+- [Code](https://github.com/gaurav101/LuminaJS)
 - [NPM](https://www.npmjs.com/package/@gks101/luminajs)
-- [Documentation](https://gaurav101.github.io/LuminaJS/docs/)  
+- [Documentation](https://gaurav101.github.io/LuminaJS/docs/)
 
 - **🚀 High Performance**: Optimized `ImageData` loops for fast pixel processing.
 - **🧩 Modular**: Only import the filters and utilities you need.
 - **🖼️ Canvas-Powered**: Leverages the HTML5 Canvas API for seamless browser integration.
 - **📦 Lightweight**: Zero external dependencies (no jQuery, no Lodash).
 
-## Installation
+```bash
+npm install @gks101/luminajs
+```
+
+### React Support
+
+LuminaJS includes first-class React support via hooks and components. See the [React Integration](#react-integration) section for full examples.
 
 ```bash
 npm install @gks101/luminajs
+```
+
+```jsx
+import { useLumina, LuminaCanvas } from '@gks101/luminajs/react';
 ```
 
 ## Building from Source
@@ -56,9 +66,7 @@ await lumina('photo.jpg')
   .toCanvas(document.getElementById('myCanvas'));
 
 // Quick display in an <img> tag using an ID
-await lumina('photo.jpg')
-  .sepia()
-  .toHtmlElement('myImageElement');
+await lumina('photo.jpg').sepia().toHtmlElement('myImageElement');
 
 // Or get the result as a Blob for uploading
 const blob = await lumina(fileInput.files[0])
@@ -79,11 +87,11 @@ import { loadImage, grayscale } from '@gks101/luminajs';
 <script src="node_modules/@gks101/luminajs/dist/lumina.min.js"></script>
 <script>
   const { lumina } = Lumina;
-  
+
   lumina('photo.jpg')
     .grayscale()
     .render()
-    .then(imageData => console.log('Processed!', imageData));
+    .then((imageData) => console.log('Processed!', imageData));
 </script>
 ```
 
@@ -92,20 +100,20 @@ import { loadImage, grayscale } from '@gks101/luminajs';
 ### Chainable API (`lumina`)
 
 - **`lumina(source)`**: Initiates a processing chain. `source` can be a URL string, `File` object, `HTMLImageElement`, `HTMLCanvasElement`, or `ImageData`.
-    - **`.grayscale()`**: Applies grayscale.
-    - **`.brightness(level)`**: Adjusts brightness.
-    - **`.contrast(level)`**: Adjusts contrast.
-    - **`.sepia()`**: Applies sepia.
-    - **`.blur(radius)`**: Applies box blur.
-    - **`.gaussianBlur(sigma)`**: Applies Gaussian blur.
-    - **`.watermark(text, options)`**: Adds text watermark.
-    - **`.sharpen()` / `.emboss()` / `.edgeDetection()`**: Convolution filters.
-    - **`.resize(w, h)` / `.crop(x, y, w, h)`**: Transformations.
-    - **`.render()`**: Returns `Promise<ImageData>`.
-    - `.toCanvas(canvas)`: Draws to canvas and returns `Promise<HTMLCanvasElement>`.
-    - `.toHtmlElement(elementOrId)`: Displays result in an `<img>` (src) or `<canvas>` element.
-    - `.toBlob(mime, quality)`: Returns `Promise<Blob>`.
-    - **`.toDataURL(mime, quality)`**: Returns `Promise<string>`.
+  - **`.grayscale()`**: Applies grayscale.
+  - **`.brightness(level)`**: Adjusts brightness.
+  - **`.contrast(level)`**: Adjusts contrast.
+  - **`.sepia()`**: Applies sepia.
+  - **`.blur(radius)`**: Applies box blur.
+  - **`.gaussianBlur(sigma)`**: Applies Gaussian blur.
+  - **`.watermark(text, options)`**: Adds text watermark.
+  - **`.sharpen()` / `.emboss()` / `.edgeDetection()`**: Convolution filters.
+  - **`.resize(w, h)` / `.crop(x, y, w, h)`**: Transformations.
+  - **`.render()`**: Returns `Promise<ImageData>`.
+  - `.toCanvas(canvas)`: Draws to canvas and returns `Promise<HTMLCanvasElement>`.
+  - `.toHtmlElement(elementOrId)`: Displays result in an `<img>` (src) or `<canvas>` element.
+  - `.toBlob(mime, quality)`: Returns `Promise<Blob>`.
+  - **`.toDataURL(mime, quality)`**: Returns `Promise<string>`.
 
 ### Core Utilities (`@gks101/luminajs/core`)
 
@@ -131,6 +139,7 @@ import { loadImage, grayscale } from '@gks101/luminajs';
 - **`sharpen(imageData)`**: Sharpens the image using a convolution kernel.
 - **`emboss(imageData)`**: Applies an emboss effect using a convolution kernel.
 - **`edgeDetection(imageData)`**: Highlights edges using a convolution kernel.
+
 ## ASCII Art Example
 
 ### 💎 Chainable API (Recommended)
@@ -139,10 +148,7 @@ import { loadImage, grayscale } from '@gks101/luminajs';
 import { lumina } from '@gks101/luminajs';
 
 // 100 characters wide, auto-calculated height
-const text = await lumina('photo.jpg')
-  .resize(100, 50)
-  .ascii()
-  .render();
+const text = await lumina('photo.jpg').resize(100, 50).ascii().render();
 
 console.log(text);
 ```
@@ -213,7 +219,12 @@ putPixelData(canvas, blurredData);
 ## Gaussian Blur Example
 
 ```javascript
-import { loadImage, getPixelData, putPixelData, gaussianBlur } from '@gks101/luminajs';
+import {
+  loadImage,
+  getPixelData,
+  putPixelData,
+  gaussianBlur,
+} from '@gks101/luminajs';
 
 const img = await loadImage('photo.jpg');
 const { imageData } = getPixelData(img);
@@ -229,7 +240,12 @@ putPixelData(canvas, blurredData);
 ## Watermark Example
 
 ```javascript
-import { loadImage, getPixelData, putPixelData, watermark } from '@gks101/luminajs';
+import {
+  loadImage,
+  getPixelData,
+  putPixelData,
+  watermark,
+} from '@gks101/luminajs';
 
 const img = await loadImage('photo.jpg');
 const { imageData } = getPixelData(img);
@@ -239,7 +255,7 @@ const watermarkedData = watermark(imageData, '© 2024 LuminaJS', {
   x: 20,
   y: 20,
   font: '32px Arial',
-  color: 'rgba(255, 255, 255, 0.5)'
+  color: 'rgba(255, 255, 255, 0.5)',
 });
 
 const canvas = document.getElementById('myCanvas');
@@ -249,7 +265,12 @@ putPixelData(canvas, watermarkedData);
 ## Background Blur (Portrait) Example
 
 ```javascript
-import { loadImage, getPixelData, putPixelData, backgroundBlur } from '@gks101/luminajs';
+import {
+  loadImage,
+  getPixelData,
+  putPixelData,
+  backgroundBlur,
+} from '@gks101/luminajs';
 
 const img = await loadImage('portrait.jpg');
 const { imageData } = getPixelData(img);
@@ -258,7 +279,7 @@ const { imageData } = getPixelData(img);
 const portraitData = backgroundBlur(imageData, {
   sigma: 6,
   focusRadius: 150,
-  falloff: 200
+  falloff: 200,
 });
 
 const canvas = document.getElementById('myCanvas');
@@ -272,7 +293,14 @@ LuminaJS provides a generic convolution engine (`applyConvolution`) along with p
 ### Using Built-in Convolution Filters
 
 ```javascript
-import { loadImage, getPixelData, putPixelData, sharpen, emboss, edgeDetection } from '@gks101/luminajs';
+import {
+  loadImage,
+  getPixelData,
+  putPixelData,
+  sharpen,
+  emboss,
+  edgeDetection,
+} from '@gks101/luminajs';
 
 const img = await loadImage('photo.jpg');
 const { imageData } = getPixelData(img);
@@ -293,27 +321,79 @@ putPixelData(canvas, sharpenedData);
 You can also pass your own custom 3x3 kernel (as an array of 9 numbers) to `applyConvolution`.
 
 ```javascript
-import { loadImage, getPixelData, putPixelData, applyConvolution } from '@gks101/luminajs';
+import {
+  loadImage,
+  getPixelData,
+  putPixelData,
+  applyConvolution,
+} from '@gks101/luminajs';
 
 const img = await loadImage('photo.jpg');
 const { imageData } = getPixelData(img);
 
 // Define a custom 3x3 kernel (e.g., an exaggerated edge detection kernel)
-const customKernel = [
-  -1, -1, -1,
-  -1,  9, -1,
-  -1, -1, -1
-];
+const customKernel = [-1, -1, -1, -1, 9, -1, -1, -1, -1];
 
 // applyConvolution mutates the array data in place
-applyConvolution(imageData.data, imageData.width, imageData.height, customKernel);
+applyConvolution(
+  imageData.data,
+  imageData.width,
+  imageData.height,
+  customKernel,
+);
 
 const canvas = document.getElementById('myCanvas');
 putPixelData(canvas, imageData);
 ```
 
+## React Integration
+
+LuminaJS provides a dedicated React entry point with hooks and components.
+
+### `useLumina` Hook
+
+The `useLumina` hook manages the image processing lifecycle, providing `result`, `loading`, and `error` states.
+
+```jsx
+import { useLumina } from '@gks101/luminajs/react';
+
+function ImagePreview({ file }) {
+  const { result, loading, error } = useLumina({
+    source: file,
+    operations: (l) => l.grayscale().brightness(20).sharpen(),
+    outputType: 'dataUrl', // 'imageData' | 'dataUrl' | 'blob'
+    deps: [file],
+  });
+
+  if (loading) return <div>Processing image...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+
+  return <img src={result} alt="Processed preview" />;
+}
+```
+
+### `LuminaCanvas` Component
+
+A declarative way to render processed images directly onto a canvas element.
+
+```jsx
+import { LuminaCanvas } from '@gks101/luminajs/react';
+
+function App() {
+  return (
+    <LuminaCanvas
+      source="portrait.jpg"
+      filter={(l) => l.gaussianBlur(3).sepia()}
+      width={800}
+      height={600}
+      className="my-custom-canvas"
+      onLoad={() => console.log('Image rendered!')}
+      onProcessError={(err) => console.error(err)}
+    />
+  );
+}
+```
+
 ## License
 
 MIT © LuminaJS Team
-
-

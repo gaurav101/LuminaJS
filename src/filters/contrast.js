@@ -22,7 +22,7 @@ export function contrast(imageData, level = 0) {
   const output = new ImageData(
     new Uint8ClampedArray(imageData.data),
     imageData.width,
-    imageData.height
+    imageData.height,
   );
 
   const data = output.data;

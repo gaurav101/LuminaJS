@@ -1,0 +1,6 @@
+dist
+node_modules
+docs
+*.min.js
+package-lock.json
+.DS_Store

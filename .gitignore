@@ -13,7 +13,7 @@ package/
 *.log
 
 
-# LuminaJS tracking files (Antigravity artifacts)
+# LuminaJS tracking files 
 task.md
 walkthrough.md
 implementation_plan.md

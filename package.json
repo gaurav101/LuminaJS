@@ -1,7 +1,7 @@
 {
   "name": "@gks101/luminajs",
-  "version": "1.4.0",
-  "description": "A modular, lightweight JavaScript utility library for browser-based image processing using the HTML5 Canvas API.",
+  "version": "2.0.0",
+  "description": "A modular, lightweight JavaScript and react utility library and hooks/components for browser-based image processing using the HTML5 Canvas API. suppport react, typescript and vanilla js",
   "homepage": "https://gaurav101.github.io/LuminaJS/",
   "repository": {
     "type": "git",
@@ -18,27 +18,79 @@
   "unpkg": "./dist/lumina.min.js",
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./src/index.js",
       "require": "./dist/lumina.umd.js"
     },
-    "./filters": "./src/filters/index.js",
-    "./core": "./src/core/index.js"
+    "./filters": {
+      "types": "./dist/types/filters/index.d.ts",
+      "import": "./src/filters/index.js"
+    },
+    "./core": {
+      "types": "./dist/types/core/index.d.ts",
+      "import": "./src/core/index.js"
+    },
+    "./react": {
+      "types": "./dist/react/index.d.ts",
+      "import": "./dist/react/index.js",
+      "require": "./dist/react/index.js"
+    }
   },
   "scripts": {
     "build": "rollup -c && npm run build:types && npm run generate-docs",
     "build:types": "tsc",
     "dev": "rollup -c -w",
+    "start:demo": "npm run dev --prefix react-demo",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "generate-docs": "jsdoc -c jsdoc.json"
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "generate-docs": "jsdoc -c jsdoc.json",
+    "prepare": "husky"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.4",
     "@rollup/plugin-terser": "^1.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "docdash": "^2.0.2",
+    "eslint": "^9.39.4",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.6.0",
+    "husky": "^9.1.7",
     "jsdoc": "^4.0.5",
+    "prettier": "^3.8.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "rollup": "^4.0.0",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.59.2"
   },
   "keywords": [
+    "react",
+    "react-hooks",
+    "react-component-image-filter",
+    "react-hooks-image-filter",
+    "react-image-processing",
+    "react-filters",
+    "react-canvas",
+    "react-canvas-filters",
+    "react-image-editor",
     "image-processing",
     "canvas",
     "filter",

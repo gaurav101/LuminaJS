@@ -5,7 +5,7 @@ import {
   ascii,
   getResizedImageData,
   resize,
-  crop
+  crop,
 } from '@gks101/luminajs';
 
 // DOM Elements
@@ -71,7 +71,9 @@ const setupEventListeners = () => {
     dropZone.classList.add('active');
   });
 
-  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('active'));
+  dropZone.addEventListener('dragleave', () =>
+    dropZone.classList.remove('active'),
+  );
 
   dropZone.addEventListener('drop', (e) => {
     e.preventDefault();
@@ -80,9 +82,9 @@ const setupEventListeners = () => {
   });
 
   // Filter selection
-  filterBtns.forEach(btn => {
+  filterBtns.forEach((btn) => {
     btn.addEventListener('click', () => {
-      filterBtns.forEach(b => b.classList.remove('active'));
+      filterBtns.forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
       currentFilter = btn.dataset.filter;
       applyFilters();
@@ -114,12 +116,16 @@ const setupEventListeners = () => {
     brightnessVal.textContent = 0;
     contrastVal.textContent = 0;
     blurVal.textContent = 0;
-    filterBtns.forEach(b => b.classList.remove('active'));
+    filterBtns.forEach((b) => b.classList.remove('active'));
     document.querySelector('[data-filter="original"]').classList.add('active');
 
     // Reset transformations
     if (originalImage) {
-      transformedCanvas = resize(originalImage, originalImage.naturalWidth, originalImage.naturalHeight);
+      transformedCanvas = resize(
+        originalImage,
+        originalImage.naturalWidth,
+        originalImage.naturalHeight,
+      );
       updateTransformInputs();
     }
 
@@ -127,12 +133,14 @@ const setupEventListeners = () => {
   });
 
   // Transform Tabs
-  tabBtns.forEach(btn => {
+  tabBtns.forEach((btn) => {
     btn.addEventListener('click', () => {
-      tabBtns.forEach(b => b.classList.remove('active'));
-      tabContents.forEach(c => c.classList.remove('active'));
+      tabBtns.forEach((b) => b.classList.remove('active'));
+      tabContents.forEach((c) => c.classList.remove('active'));
       btn.classList.add('active');
-      document.getElementById(`${btn.dataset.tab}Controls`).classList.add('active');
+      document
+        .getElementById(`${btn.dataset.tab}Controls`)
+        .classList.add('active');
     });
   });
 
@@ -185,7 +193,11 @@ const handleSource = async (file) => {
 
   try {
     originalImage = await loadImage(file);
-    transformedCanvas = resize(originalImage, originalImage.naturalWidth, originalImage.naturalHeight);
+    transformedCanvas = resize(
+      originalImage,
+      originalImage.naturalWidth,
+      originalImage.naturalHeight,
+    );
 
     dropZone.style.display = 'none';
     previewContainer.style.display = 'block';
@@ -228,9 +240,17 @@ const applyFilters = async () => {
 
     // Calculate dimensions
     const asciiWidth = 100;
-    const asciiHeight = Math.round((asciiWidth * (originalImage.naturalHeight / originalImage.naturalWidth)) * 0.5);
+    const asciiHeight = Math.round(
+      asciiWidth *
+        (originalImage.naturalHeight / originalImage.naturalWidth) *
+        0.5,
+    );
 
-    const resizedData = getResizedImageData(originalImage, asciiWidth, asciiHeight);
+    const resizedData = getResizedImageData(
+      originalImage,
+      asciiWidth,
+      asciiHeight,
+    );
     const asciiText = ascii(resizedData);
 
     asciiPreview.textContent = asciiText;
@@ -283,9 +303,10 @@ const applyFilters = async () => {
     const rgba = `rgba(${r}, ${g}, ${b}, ${opacity})`;
 
     chain.watermark(text, {
-      x, y,
+      x,
+      y,
       font: `${size}px Inter, sans-serif`,
-      color: rgba
+      color: rgba,
     });
   }
 

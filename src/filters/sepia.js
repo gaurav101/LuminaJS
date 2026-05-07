@@ -18,7 +18,7 @@ export function sepia(imageData) {
   const output = new ImageData(
     new Uint8ClampedArray(imageData.data),
     imageData.width,
-    imageData.height
+    imageData.height,
   );
 
   const data = output.data;
@@ -30,9 +30,9 @@ export function sepia(imageData) {
     const b = data[i + 2];
 
     // Standard Sepia formula
-    data[i]     = clamp((r * 0.393) + (g * 0.769) + (b * 0.189), 0, 255); // New R
-    data[i + 1] = clamp((r * 0.349) + (g * 0.686) + (b * 0.168), 0, 255); // New G
-    data[i + 2] = clamp((r * 0.272) + (g * 0.534) + (b * 0.131), 0, 255); // New B
+    data[i] = clamp(r * 0.393 + g * 0.769 + b * 0.189, 0, 255); // New R
+    data[i + 1] = clamp(r * 0.349 + g * 0.686 + b * 0.168, 0, 255); // New G
+    data[i + 2] = clamp(r * 0.272 + g * 0.534 + b * 0.131, 0, 255); // New B
   }
 
   return output;

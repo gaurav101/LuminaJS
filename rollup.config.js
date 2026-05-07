@@ -7,16 +7,16 @@ export default [
       // ES Module for modern bundlers
       {
         file: 'dist/lumina.esm.js',
-        format: 'es'
+        format: 'es',
       },
       // UMD Bundle for universal use (Script tags or Node)
       {
         file: 'dist/lumina.umd.js',
         format: 'umd',
         name: 'Lumina',
-        noConflict: true
-      }
-    ]
+        noConflict: true,
+      },
+    ],
   },
   {
     input: 'src/index.js',
@@ -26,8 +26,8 @@ export default [
         file: 'dist/lumina.min.js',
         format: 'umd',
         name: 'Lumina',
-        plugins: [terser()]
-      }
-    ]
-  }
+        plugins: [terser()],
+      },
+    ],
+  },
 ];

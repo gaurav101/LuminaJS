@@ -21,7 +21,11 @@ function loadFromURL(url) {
 
     img.onload = () => resolve(img);
     img.onerror = () =>
-      reject(new Error(`LuminaJS [loader]: Failed to load image from URL — "${url}"`));
+      reject(
+        new Error(
+          `LuminaJS [loader]: Failed to load image from URL — "${url}"`,
+        ),
+      );
 
     img.src = url;
   });
@@ -41,8 +45,8 @@ function loadFromFile(file) {
   if (!file.type.startsWith('image/')) {
     return Promise.reject(
       new TypeError(
-        `LuminaJS [loader]: Expected an image File, but received MIME type "${file.type}".`
-      )
+        `LuminaJS [loader]: Expected an image File, but received MIME type "${file.type}".`,
+      ),
     );
   }
 
@@ -58,7 +62,11 @@ function loadFromFile(file) {
 
     img.onerror = () => {
       URL.revokeObjectURL(objectURL); // Also release on failure
-      reject(new Error(`LuminaJS [loader]: Failed to load image from File — "${file.name}".`));
+      reject(
+        new Error(
+          `LuminaJS [loader]: Failed to load image from File — "${file.name}".`,
+        ),
+      );
     };
 
     img.src = objectURL;
@@ -99,7 +107,7 @@ export async function loadImage(source) {
   return Promise.reject(
     new TypeError(
       `LuminaJS [loader]: Invalid source type "${typeof source}". ` +
-      `Expected a URL string or a File object.`
-    )
+        `Expected a URL string or a File object.`,
+    ),
   );
 }

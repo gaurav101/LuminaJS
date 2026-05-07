@@ -22,14 +22,14 @@ export function brightness(imageData, level = 0) {
   const output = new ImageData(
     new Uint8ClampedArray(imageData.data),
     imageData.width,
-    imageData.height
+    imageData.height,
   );
 
   const data = output.data;
   const len = data.length;
 
   for (let i = 0; i < len; i += 4) {
-    data[i]     = clamp(data[i]     + level, 0, 255); // R
+    data[i] = clamp(data[i] + level, 0, 255); // R
     data[i + 1] = clamp(data[i + 1] + level, 0, 255); // G
     data[i + 2] = clamp(data[i + 2] + level, 0, 255); // B
     // Alpha remains untouched
