@@ -41,7 +41,8 @@
     "build:types": "tsc",
     "dev": "rollup -c -w",
     "start:demo": "npm run dev --prefix react-demo",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
@@ -79,7 +80,8 @@
     "react-dom": "^19.0.0",
     "rollup": "^4.0.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.59.2"
+    "typescript-eslint": "^8.59.2",
+    "vitest": "^4.1.5"
   },
   "keywords": [
     "react",
