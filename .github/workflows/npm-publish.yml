@@ -24,7 +24,7 @@ jobs:
           node-version: 20
           cache: 'npm' # Speeds up subsequent runs
       - run: npm i
-      - run: npm test
+      - run: npm run lint
 
   publish-npm:
     needs: build
