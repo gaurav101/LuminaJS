@@ -5,8 +5,12 @@ name: Node.js Package
 on:
   release:
     types: [created]
+  push:
+    branches: [main]
+  workflow_dispatch:
+    # Allows you to manually trigger the workflow
 
-# Set default permissions to minimum
+    # Set default permissions to minimum
 permissions:
   contents: read
 
