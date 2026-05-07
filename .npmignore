@@ -17,6 +17,15 @@ package-lock.json
 demo.js
 index.css
 index.html
+examples/
+.github
+.gitignore
+.npmignore
+.prettierignore
+.prettierrc
+jsdoc.json
+WhyLumina.md
+
 
 # Exclude tarballs
 *.tgz
