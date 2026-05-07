@@ -107,7 +107,7 @@ function App() {
 
           <div className="thumbnail-card">
             <h4>Generated Thumbnail (useLumina Hook)</h4>
-            <img src={thumbnail} alt="Preview" />
+            {thumbnail && <img src={thumbnail} alt="Preview" />}
           </div>
         </section>
 
