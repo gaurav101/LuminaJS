@@ -1,7 +1,12 @@
 import { useState, useEffect } from 'react';
 import { lumina, type Lumina } from '../index.js';
 
-export type LuminaSource = string | File | HTMLImageElement | HTMLCanvasElement | ImageData;
+export type LuminaSource =
+  | string
+  | File
+  | HTMLImageElement
+  | HTMLCanvasElement
+  | ImageData;
 export type LuminaOutputType = 'imageData' | 'dataUrl' | 'blob';
 
 export interface UseLuminaOptions {
@@ -19,7 +24,7 @@ export interface UseLuminaResult {
 
 /**
  * React hook to process images using LuminaJS.
- * 
+ *
  * @example
  * const { result, loading } = useLumina({
  *   source: 'photo.jpg',
@@ -32,7 +37,7 @@ export function useLumina({
   source,
   operations,
   deps = [],
-  outputType = 'imageData'
+  outputType = 'imageData',
 }: UseLuminaOptions): UseLuminaResult {
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);

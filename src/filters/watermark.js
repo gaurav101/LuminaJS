@@ -31,7 +31,7 @@ export function watermark(imageData, text, options = {}) {
     font = `${fontSize}px ${fontFace}`,
     color = 'rgba(255, 255, 255, 0.5)',
     align = 'left',
-    baseline = 'top'
+    baseline = 'top',
   } = options;
 
   // Create a temporary canvas to draw the text
@@ -41,7 +41,9 @@ export function watermark(imageData, text, options = {}) {
   const ctx = canvas.getContext('2d');
 
   if (!ctx) {
-    throw new Error('LuminaJS [watermark]: Failed to obtain 2D context for temporary canvas.');
+    throw new Error(
+      'LuminaJS [watermark]: Failed to obtain 2D context for temporary canvas.',
+    );
   }
 
   // Draw the original image data onto the canvas

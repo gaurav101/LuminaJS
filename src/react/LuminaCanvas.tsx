@@ -1,8 +1,17 @@
 import { useRef, useEffect, useState, type CanvasHTMLAttributes } from 'react';
 import { lumina, type Lumina } from '../index.js';
 
-export interface LuminaCanvasProps extends Omit<CanvasHTMLAttributes<HTMLCanvasElement>, 'onError'> {
-  source: string | File | HTMLImageElement | HTMLCanvasElement | ImageData | null;
+export interface LuminaCanvasProps extends Omit<
+  CanvasHTMLAttributes<HTMLCanvasElement>,
+  'onError'
+> {
+  source:
+    | string
+    | File
+    | HTMLImageElement
+    | HTMLCanvasElement
+    | ImageData
+    | null;
   filter?: (chain: Lumina) => Lumina;
   onProcessError?: (error: Error) => void;
   onLoad?: () => void;
@@ -10,12 +19,12 @@ export interface LuminaCanvasProps extends Omit<CanvasHTMLAttributes<HTMLCanvasE
 
 /**
  * A declarative React component to render LuminaJS processed images on a canvas.
- * 
+ *
  * @example
- * <LuminaCanvas 
- *   source="photo.jpg" 
- *   filter={(l) => l.sepia()} 
- *   width={500} 
+ * <LuminaCanvas
+ *   source="photo.jpg"
+ *   filter={(l) => l.sepia()}
+ *   width={500}
  * />
  */
 export function LuminaCanvas({
@@ -32,18 +41,18 @@ export function LuminaCanvas({
     if (!source || !canvasRef.current) return;
 
     let isMounted = true;
-    
+
     const applyFilter = async () => {
       try {
         let chain = lumina(source);
         if (typeof filter === 'function') {
           chain = filter(chain);
         }
-        
+
         if (canvasRef.current) {
           await chain.toCanvas(canvasRef.current);
         }
-        
+
         if (isMounted && onLoad) {
           onLoad();
         }

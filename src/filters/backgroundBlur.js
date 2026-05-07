@@ -30,12 +30,12 @@ export function backgroundBlur(imageData, options = {}) {
     centerX = width / 2,
     centerY = height / 2,
     focusRadius = minDim * 0.2,
-    falloff = minDim * 0.4
+    falloff = minDim * 0.4,
   } = options;
 
   // 1. Get a fully blurred version of the image
   const blurredData = gaussianBlur(imageData, sigma);
-  
+
   const original = imageData.data;
   const blurred = blurredData.data;
   const output = new Uint8ClampedArray(original.length);
@@ -56,9 +56,11 @@ export function backgroundBlur(imageData, options = {}) {
       const offset = (y * width + x) * 4;
       const invWeight = 1 - weight;
 
-      output[offset]     = original[offset]     * invWeight + blurred[offset]     * weight;
-      output[offset + 1] = original[offset + 1] * invWeight + blurred[offset + 1] * weight;
-      output[offset + 2] = original[offset + 2] * invWeight + blurred[offset + 2] * weight;
+      output[offset] = original[offset] * invWeight + blurred[offset] * weight;
+      output[offset + 1] =
+        original[offset + 1] * invWeight + blurred[offset + 1] * weight;
+      output[offset + 2] =
+        original[offset + 2] * invWeight + blurred[offset + 2] * weight;
       output[offset + 3] = original[offset + 3]; // Keep original alpha
     }
   }

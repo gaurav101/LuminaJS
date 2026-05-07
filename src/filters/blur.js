@@ -30,7 +30,10 @@ export function blur(imageData, radius = 1) {
   // Horizontal pass
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
-      let r = 0, g = 0, b = 0, a = 0;
+      let r = 0,
+        g = 0,
+        b = 0,
+        a = 0;
       let count = 0;
       for (let dx = -radius; dx <= radius; dx++) {
         const nx = x + dx;
@@ -44,7 +47,7 @@ export function blur(imageData, radius = 1) {
         }
       }
       const offset = (y * width + x) * 4;
-      temp[offset]     = r / count;
+      temp[offset] = r / count;
       temp[offset + 1] = g / count;
       temp[offset + 2] = b / count;
       temp[offset + 3] = a / count;
@@ -54,7 +57,10 @@ export function blur(imageData, radius = 1) {
   // Vertical pass
   for (let x = 0; x < width; x++) {
     for (let y = 0; y < height; y++) {
-      let r = 0, g = 0, b = 0, a = 0;
+      let r = 0,
+        g = 0,
+        b = 0,
+        a = 0;
       let count = 0;
       for (let dy = -radius; dy <= radius; dy++) {
         const ny = y + dy;
@@ -68,7 +74,7 @@ export function blur(imageData, radius = 1) {
         }
       }
       const offset = (y * width + x) * 4;
-      output[offset]     = r / count;
+      output[offset] = r / count;
       output[offset + 1] = g / count;
       output[offset + 2] = b / count;
       output[offset + 3] = a / count;

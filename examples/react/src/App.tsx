@@ -1,34 +1,34 @@
-import { useState } from 'react'
-import { useLumina, LuminaCanvas } from '@gks101/luminajs/react'
-import './App.css'
+import { useState } from 'react';
+import { useLumina, LuminaCanvas } from '@gks101/luminajs/react';
+import './App.css';
 
 function App() {
-  const [brightness, setBrightness] = useState(0)
-  const [contrast, setContrast] = useState(0)
-  const [filterType, setFilterType] = useState<string>('none')
-  const [watermarkText, setWatermarkText] = useState('LuminaJS')
-  const [watermarkX, setWatermarkX] = useState(20)
-  const [watermarkY, setWatermarkY] = useState(60)
-  const [watermarkColor, setWatermarkColor] = useState('rgba(255,255,255,0.7)')
-  const [watermarkSize, setWatermarkSize] = useState(40)
-  const [watermarkFont, setWatermarkFont] = useState('Inter')
-  const [bgBlur, setBgBlur] = useState(false)
-  const [showAscii, setShowAscii] = useState(false)
+  const [brightness, setBrightness] = useState(0);
+  const [contrast, setContrast] = useState(0);
+  const [filterType, setFilterType] = useState<string>('none');
+  const [watermarkText, setWatermarkText] = useState('LuminaJS');
+  const [watermarkX, setWatermarkX] = useState(20);
+  const [watermarkY, setWatermarkY] = useState(60);
+  const [watermarkColor, setWatermarkColor] = useState('rgba(255,255,255,0.7)');
+  const [watermarkSize, setWatermarkSize] = useState(40);
+  const [watermarkFont, setWatermarkFont] = useState('Inter');
+  const [bgBlur, setBgBlur] = useState(false);
+  const [showAscii, setShowAscii] = useState(false);
   // Transformation states
-  const [width, setWidth] = useState(600)
-  const [height, setHeight] = useState(400)
-  const [isResized, setIsResized] = useState(false)
-  const [isCropped, setIsCropped] = useState(false)
-  const [cropX, setCropX] = useState(100)
-  const [cropY, setCropY] = useState(100)
-  const [cropW, setCropW] = useState(400)
-  const [cropH, setCropH] = useState(400)
+  const [width, setWidth] = useState(600);
+  const [height, setHeight] = useState(400);
+  const [isResized, setIsResized] = useState(false);
+  const [isCropped, setIsCropped] = useState(false);
+  const [cropX, setCropX] = useState(100);
+  const [cropY, setCropY] = useState(100);
+  const [cropW, setCropW] = useState(400);
+  const [cropH, setCropH] = useState(400);
 
   // ASCII logic
   const { result: asciiText, loading: asciiLoading } = useLumina({
     source: '/sample.png',
     operations: (l) => l.resize(100, 50).ascii(),
-    deps: [showAscii]
+    deps: [showAscii],
   });
 
   // Thumbnail preview
@@ -52,13 +52,20 @@ function App() {
     if (filterType === 'emboss') chain = chain.emboss();
     if (filterType === 'edge') chain = chain.edgeDetection();
 
-    if (bgBlur) chain = chain.backgroundBlur({ sigma: 6, focusRadius: 150, falloff: 200 });
-    if (watermarkText) chain = chain.watermark(watermarkText, {
-      x: watermarkX, y: watermarkY,
-      fontSize: watermarkSize,
-      fontFace: watermarkFont,
-      color: watermarkColor
-    });
+    if (bgBlur)
+      chain = chain.backgroundBlur({
+        sigma: 6,
+        focusRadius: 150,
+        falloff: 200,
+      });
+    if (watermarkText)
+      chain = chain.watermark(watermarkText, {
+        x: watermarkX,
+        y: watermarkY,
+        fontSize: watermarkSize,
+        fontFace: watermarkFont,
+        color: watermarkColor,
+      });
 
     return chain;
   };
@@ -75,7 +82,10 @@ function App() {
           <div className="card">
             <div className="card-header">
               <h3>{showAscii ? 'ASCII Output' : 'Live Canvas Output'}</h3>
-              <button className="toggle-btn" onClick={() => setShowAscii(!showAscii)}>
+              <button
+                className="toggle-btn"
+                onClick={() => setShowAscii(!showAscii)}
+              >
                 {showAscii ? 'Show Image' : 'Show ASCII'}
               </button>
             </div>
@@ -109,21 +119,41 @@ function App() {
                 <label>Brightness</label>
                 <span>{brightness}</span>
               </div>
-              <input type="range" min="-100" max="100" value={brightness} onChange={(e) => setBrightness(Number(e.target.value))} />
+              <input
+                type="range"
+                min="-100"
+                max="100"
+                value={brightness}
+                onChange={(e) => setBrightness(Number(e.target.value))}
+              />
             </div>
             <div className="control-group">
               <div className="label-row">
                 <label>Contrast</label>
                 <span>{contrast}</span>
               </div>
-              <input type="range" min="-100" max="100" value={contrast} onChange={(e) => setContrast(Number(e.target.value))} />
+              <input
+                type="range"
+                min="-100"
+                max="100"
+                value={contrast}
+                onChange={(e) => setContrast(Number(e.target.value))}
+              />
             </div>
 
             <hr />
 
             <h3>Filters</h3>
             <div className="filter-grid">
-              {['none', 'grayscale', 'sepia', 'blur', 'sharpen', 'emboss', 'edge'].map(f => (
+              {[
+                'none',
+                'grayscale',
+                'sepia',
+                'blur',
+                'sharpen',
+                'emboss',
+                'edge',
+              ].map((f) => (
                 <button
                   key={f}
                   className={filterType === f ? 'active' : ''}
@@ -138,26 +168,78 @@ function App() {
 
             <h3>Transformations</h3>
             <div className="checkbox-row">
-              <input type="checkbox" id="resize" checked={isResized} onChange={() => setIsResized(!isResized)} />
+              <input
+                type="checkbox"
+                id="resize"
+                checked={isResized}
+                onChange={() => setIsResized(!isResized)}
+              />
               <label htmlFor="resize">Enable Resize</label>
             </div>
             {isResized && (
               <div className="transformation-inputs">
-                <div className="input-field"><label>W</label><input type="number" value={width} onChange={(e) => setWidth(Number(e.target.value))} /></div>
-                <div className="input-field"><label>H</label><input type="number" value={height} onChange={(e) => setHeight(Number(e.target.value))} /></div>
+                <div className="input-field">
+                  <label>W</label>
+                  <input
+                    type="number"
+                    value={width}
+                    onChange={(e) => setWidth(Number(e.target.value))}
+                  />
+                </div>
+                <div className="input-field">
+                  <label>H</label>
+                  <input
+                    type="number"
+                    value={height}
+                    onChange={(e) => setHeight(Number(e.target.value))}
+                  />
+                </div>
               </div>
             )}
 
             <div className="checkbox-row">
-              <input type="checkbox" id="crop" checked={isCropped} onChange={() => setIsCropped(!isCropped)} />
+              <input
+                type="checkbox"
+                id="crop"
+                checked={isCropped}
+                onChange={() => setIsCropped(!isCropped)}
+              />
               <label htmlFor="crop">Enable Crop</label>
             </div>
             {isCropped && (
               <div className="transformation-inputs">
-                <div className="input-field"><label>X</label><input type="number" value={cropX} onChange={(e) => setCropX(Number(e.target.value))} /></div>
-                <div className="input-field"><label>Y</label><input type="number" value={cropY} onChange={(e) => setCropY(Number(e.target.value))} /></div>
-                <div className="input-field"><label>W</label><input type="number" value={cropW} onChange={(e) => setCropW(Number(e.target.value))} /></div>
-                <div className="input-field"><label>H</label><input type="number" value={cropH} onChange={(e) => setCropH(Number(e.target.value))} /></div>
+                <div className="input-field">
+                  <label>X</label>
+                  <input
+                    type="number"
+                    value={cropX}
+                    onChange={(e) => setCropX(Number(e.target.value))}
+                  />
+                </div>
+                <div className="input-field">
+                  <label>Y</label>
+                  <input
+                    type="number"
+                    value={cropY}
+                    onChange={(e) => setCropY(Number(e.target.value))}
+                  />
+                </div>
+                <div className="input-field">
+                  <label>W</label>
+                  <input
+                    type="number"
+                    value={cropW}
+                    onChange={(e) => setCropW(Number(e.target.value))}
+                  />
+                </div>
+                <div className="input-field">
+                  <label>H</label>
+                  <input
+                    type="number"
+                    value={cropH}
+                    onChange={(e) => setCropH(Number(e.target.value))}
+                  />
+                </div>
               </div>
             )}
 
@@ -166,16 +248,53 @@ function App() {
             <h3>Utilities</h3>
             <div className="control-group">
               <label>Watermark Options</label>
-              <input type="text" value={watermarkText} onChange={(e) => setWatermarkText(e.target.value)} placeholder="Text..." />
+              <input
+                type="text"
+                value={watermarkText}
+                onChange={(e) => setWatermarkText(e.target.value)}
+                placeholder="Text..."
+              />
               <div className="transformation-grid">
-                <div className="input-field"><label>X</label><input type="number" value={watermarkX} onChange={(e) => setWatermarkX(Number(e.target.value))} /></div>
-                <div className="input-field"><label>Y</label><input type="number" value={watermarkY} onChange={(e) => setWatermarkY(Number(e.target.value))} /></div>
-                <div className="input-field"><label>Size</label><input type="number" value={watermarkSize} onChange={(e) => setWatermarkSize(Number(e.target.value))} /></div>
-                <div className="input-field"><label>Color</label><input type="text" value={watermarkColor} onChange={(e) => setWatermarkColor(e.target.value)} /></div>
+                <div className="input-field">
+                  <label>X</label>
+                  <input
+                    type="number"
+                    value={watermarkX}
+                    onChange={(e) => setWatermarkX(Number(e.target.value))}
+                  />
+                </div>
+                <div className="input-field">
+                  <label>Y</label>
+                  <input
+                    type="number"
+                    value={watermarkY}
+                    onChange={(e) => setWatermarkY(Number(e.target.value))}
+                  />
+                </div>
+                <div className="input-field">
+                  <label>Size</label>
+                  <input
+                    type="number"
+                    value={watermarkSize}
+                    onChange={(e) => setWatermarkSize(Number(e.target.value))}
+                  />
+                </div>
+                <div className="input-field">
+                  <label>Color</label>
+                  <input
+                    type="text"
+                    value={watermarkColor}
+                    onChange={(e) => setWatermarkColor(e.target.value)}
+                  />
+                </div>
               </div>
               <div className="input-field mt-2">
                 <label>Font</label>
-                <select value={watermarkFont} onChange={(e) => setWatermarkFont(e.target.value)} className="full-width-select">
+                <select
+                  value={watermarkFont}
+                  onChange={(e) => setWatermarkFont(e.target.value)}
+                  className="full-width-select"
+                >
                   <option value="Inter">Inter</option>
                   <option value="Arial">Arial</option>
                   <option value="serif">Serif</option>
@@ -185,14 +304,19 @@ function App() {
               </div>
             </div>
             <div className="checkbox-row">
-              <input type="checkbox" id="bgblur" checked={bgBlur} onChange={() => setBgBlur(!bgBlur)} />
+              <input
+                type="checkbox"
+                id="bgblur"
+                checked={bgBlur}
+                onChange={() => setBgBlur(!bgBlur)}
+              />
               <label htmlFor="bgblur">Background Blur (Portrait)</label>
             </div>
           </div>
         </aside>
       </main>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -1,6 +1,12 @@
 import * as filters from '../filters/index.js';
 import { loadImage } from './loader.js';
-import { getPixelData, putPixelData, canvasToBlob, resize, crop } from './canvas.js';
+import {
+  getPixelData,
+  putPixelData,
+  canvasToBlob,
+  resize,
+  crop,
+} from './canvas.js';
 
 /**
  * @fileoverview LuminaJS Core - Chainable API
@@ -100,24 +106,36 @@ export class Lumina {
 
   /**
    * Resizes the image in the chain.
-   * @param {number} width 
-   * @param {number} height 
+   * @param {number} width
+   * @param {number} height
    * @returns {this}
    */
   resize(width, height) {
-    return this._addOp((/** @type {ImageData} */ imageData, /** @type {number} */ w, /** @type {number} */ h) => {
-      const canvas = document.createElement('canvas');
-      canvas.width = imageData.width;
-      canvas.height = imageData.height;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) throw new Error('LuminaJS [chain]: Failed to get canvas context.');
-      ctx.putImageData(imageData, 0, 0);
+    return this._addOp(
+      (
+        /** @type {ImageData} */ imageData,
+        /** @type {number} */ w,
+        /** @type {number} */ h,
+      ) => {
+        const canvas = document.createElement('canvas');
+        canvas.width = imageData.width;
+        canvas.height = imageData.height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx)
+          throw new Error('LuminaJS [chain]: Failed to get canvas context.');
+        ctx.putImageData(imageData, 0, 0);
 
-      const resizedCanvas = resize(canvas, w, h);
-      const resizedCtx = resizedCanvas.getContext('2d');
-      if (!resizedCtx) throw new Error('LuminaJS [chain]: Failed to get resized canvas context.');
-      return resizedCtx.getImageData(0, 0, w, h);
-    }, width, height);
+        const resizedCanvas = resize(canvas, w, h);
+        const resizedCtx = resizedCanvas.getContext('2d');
+        if (!resizedCtx)
+          throw new Error(
+            'LuminaJS [chain]: Failed to get resized canvas context.',
+          );
+        return resizedCtx.getImageData(0, 0, w, h);
+      },
+      width,
+      height,
+    );
   }
 
   /**
@@ -125,19 +143,35 @@ export class Lumina {
    * @param {number} x @param {number} y @param {number} width @param {number} height @returns {this}
    */
   crop(x, y, width, height) {
-    return this._addOp((/** @type {ImageData} */ imageData, /** @type {number} */ cx, /** @type {number} */ cy, /** @type {number} */ cw, /** @type {number} */ ch) => {
-      const canvas = document.createElement('canvas');
-      canvas.width = imageData.width;
-      canvas.height = imageData.height;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) throw new Error('LuminaJS [chain]: Failed to get canvas context.');
-      ctx.putImageData(imageData, 0, 0);
+    return this._addOp(
+      (
+        /** @type {ImageData} */ imageData,
+        /** @type {number} */ cx,
+        /** @type {number} */ cy,
+        /** @type {number} */ cw,
+        /** @type {number} */ ch,
+      ) => {
+        const canvas = document.createElement('canvas');
+        canvas.width = imageData.width;
+        canvas.height = imageData.height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx)
+          throw new Error('LuminaJS [chain]: Failed to get canvas context.');
+        ctx.putImageData(imageData, 0, 0);
 
-      const croppedCanvas = crop(canvas, cx, cy, cw, ch);
-      const croppedCtx = croppedCanvas.getContext('2d');
-      if (!croppedCtx) throw new Error('LuminaJS [chain]: Failed to get cropped canvas context.');
-      return croppedCtx.getImageData(0, 0, cw, ch);
-    }, x, y, width, height);
+        const croppedCanvas = crop(canvas, cx, cy, cw, ch);
+        const croppedCtx = croppedCanvas.getContext('2d');
+        if (!croppedCtx)
+          throw new Error(
+            'LuminaJS [chain]: Failed to get cropped canvas context.',
+          );
+        return croppedCtx.getImageData(0, 0, cw, ch);
+      },
+      x,
+      y,
+      width,
+      height,
+    );
   }
 
   // --- Execution Methods ---
@@ -160,7 +194,10 @@ export class Lumina {
 
     if (currentSource instanceof HTMLCanvasElement) {
       const ctx = currentSource.getContext('2d');
-      if (!ctx) throw new Error('LuminaJS [chain]: Failed to get canvas context from source.');
+      if (!ctx)
+        throw new Error(
+          'LuminaJS [chain]: Failed to get canvas context from source.',
+        );
       return ctx.getImageData(0, 0, currentSource.width, currentSource.height);
     }
 
@@ -187,7 +224,7 @@ export class Lumina {
 
   /**
    * Executes the chain and draws the result to a canvas.
-   * @param {HTMLCanvasElement} canvas 
+   * @param {HTMLCanvasElement} canvas
    * @returns {Promise<HTMLCanvasElement>}
    */
   async toCanvas(canvas) {
@@ -235,9 +272,14 @@ export class Lumina {
    * @returns {Promise<HTMLElement>}
    */
   async toHtmlElement(elementOrId) {
-    const el = typeof elementOrId === 'string' ? document.getElementById(elementOrId) : elementOrId;
+    const el =
+      typeof elementOrId === 'string'
+        ? document.getElementById(elementOrId)
+        : elementOrId;
     if (!el) {
-      throw new Error(`LuminaJS [chain]: Target element not found: "${elementOrId}"`);
+      throw new Error(
+        `LuminaJS [chain]: Target element not found: "${elementOrId}"`,
+      );
     }
 
     if (el instanceof HTMLImageElement) {
@@ -245,7 +287,9 @@ export class Lumina {
     } else if (el instanceof HTMLCanvasElement) {
       await this.toCanvas(el);
     } else {
-      throw new Error('LuminaJS [chain]: toHtmlElement only supports <img> and <canvas> elements.');
+      throw new Error(
+        'LuminaJS [chain]: toHtmlElement only supports <img> and <canvas> elements.',
+      );
     }
 
     return el;
