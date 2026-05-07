@@ -92,7 +92,7 @@ export function useLumina<T = unknown>({
     return () => {
       isMounted = false;
     };
-    // We include operations and outputType, and spread deps. 
+    // We include operations and outputType, and spread deps.
     // We disable the rule for the spread as it's intended for user-provided dependencies.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [source, outputType, operations, ...deps]);
