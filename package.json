@@ -11,24 +11,24 @@
     "url": "https://github.com/gaurav101/LuminaJS/issues"
   },
   "type": "module",
-  "types": "./dist/types/index.d.ts",
+  "types": "./dist/index.d.ts",
   "main": "./dist/lumina.umd.js",
   "module": "./dist/lumina.esm.js",
   "browser": "./dist/lumina.umd.js",
   "unpkg": "./dist/lumina.min.js",
   "exports": {
     ".": {
-      "types": "./dist/types/index.d.ts",
-      "import": "./src/index.js",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/lumina.esm.js",
       "require": "./dist/lumina.umd.js"
     },
     "./filters": {
-      "types": "./dist/types/filters/index.d.ts",
-      "import": "./src/filters/index.js"
+      "types": "./dist/filters/index.d.ts",
+      "import": "./dist/filters/index.js"
     },
     "./core": {
-      "types": "./dist/types/core/index.d.ts",
-      "import": "./src/core/index.js"
+      "types": "./dist/core/index.d.ts",
+      "import": "./dist/core/index.js"
     },
     "./react": {
       "types": "./dist/react/index.d.ts",
