@@ -96,6 +96,8 @@
     "react-canvas",
     "react-canvas-filters",
     "react-image-editor",
+    "react-image-editor-hooks",
+    "react-image-editor-components",
     "image-processing",
     "canvas",
     "filter",
