@@ -31,6 +31,4 @@ WhyLumina.md
 *.tgz
 docs/
 tests/
-src/**
-# Only src/ and package.json will be included by default
-# but explicitly ignoring others keeps it clean.
+src/
