@@ -25,7 +25,7 @@ export interface ImageEditingOptions {
  */
 export function applyEditingOptions(
   chain: Lumina,
-  options: ImageEditingOptions
+  options: ImageEditingOptions,
 ): Lumina {
   let c = chain;
 
@@ -37,7 +37,8 @@ export function applyEditingOptions(
     c = c.ascii(typeof options.ascii === 'boolean' ? {} : options.ascii);
   }
   if (options.blur !== undefined) c = c.blur(options.blur);
-  if (options.gaussianBlur !== undefined) c = c.gaussianBlur(options.gaussianBlur);
+  if (options.gaussianBlur !== undefined)
+    c = c.gaussianBlur(options.gaussianBlur);
   if (options.watermark) {
     c = c.watermark(options.watermark.text, options.watermark.options);
   }
@@ -55,7 +56,7 @@ export function applyEditingOptions(
       options.crop.x,
       options.crop.y,
       options.crop.width,
-      options.crop.height
+      options.crop.height,
     );
   }
 

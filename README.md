@@ -399,7 +399,9 @@ function App() {
 ```
 
 ### Available React Props
+
 Both `useLumina` and `LuminaCanvas` accept these explicit props:
+
 - `grayscale?: boolean`
 - `brightness?: number`
 - `contrast?: number`

@@ -2,10 +2,10 @@ import { useRef, useEffect, useState, type CanvasHTMLAttributes } from 'react';
 import { lumina, type Lumina } from '../index.js';
 import { type ImageEditingOptions, applyEditingOptions } from './types.js';
 
-export interface LuminaCanvasProps extends Omit<
-  CanvasHTMLAttributes<HTMLCanvasElement>,
-  'onError'
->, ImageEditingOptions {
+export interface LuminaCanvasProps
+  extends
+    Omit<CanvasHTMLAttributes<HTMLCanvasElement>, 'onError'>,
+    ImageEditingOptions {
   source:
     | string
     | File

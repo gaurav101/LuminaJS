@@ -40,8 +40,6 @@ function App() {
     outputType: 'dataUrl',
   });
 
-
-
   return (
     <div className="demo-container">
       <header>
@@ -86,7 +84,9 @@ function App() {
                   emboss={filterType === 'emboss'}
                   edgeDetection={filterType === 'edge'}
                   backgroundBlur={
-                    bgBlur ? { sigma: 6, focusRadius: 150, falloff: 200 } : undefined
+                    bgBlur
+                      ? { sigma: 6, focusRadius: 150, falloff: 200 }
+                      : undefined
                   }
                   watermark={
                     watermarkText
