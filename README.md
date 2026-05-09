@@ -352,7 +352,7 @@ LuminaJS provides a dedicated React entry point with hooks and components.
 
 ### `useLumina` Hook
 
-The `useLumina` hook manages the image processing lifecycle, providing `result`, `loading`, and `error` states.
+The `useLumina` hook manages the image processing lifecycle, providing `result`, `loading`, and `error` states. You can pass image editing props directly, or use the `operations` function for advanced chaining.
 
 ```jsx
 import { useLumina } from '@gks101/luminajs/react';
@@ -360,7 +360,9 @@ import { useLumina } from '@gks101/luminajs/react';
 function ImagePreview({ file }) {
   const { result, loading, error } = useLumina({
     source: file,
-    operations: (l) => l.grayscale().brightness(20).sharpen(),
+    grayscale: true,
+    brightness: 20,
+    sharpen: true,
     outputType: 'dataUrl', // 'imageData' | 'dataUrl' | 'blob'
     deps: [file],
   });
@@ -374,7 +376,7 @@ function ImagePreview({ file }) {
 
 ### `LuminaCanvas` Component
 
-A declarative way to render processed images directly onto a canvas element.
+A declarative way to render processed images directly onto a canvas element. It accepts image editing options directly as props!
 
 ```jsx
 import { LuminaCanvas } from '@gks101/luminajs/react';
@@ -383,9 +385,11 @@ function App() {
   return (
     <LuminaCanvas
       source="portrait.jpg"
-      filter={(l) => l.gaussianBlur(3).sepia()}
-      width={800}
-      height={600}
+      gaussianBlur={3}
+      sepia={true}
+      resize={{ width: 800, height: 600 }}
+      width={800} // HTML attribute
+      height={600} // HTML attribute
       className="my-custom-canvas"
       onLoad={() => console.log('Image rendered!')}
       onProcessError={(err) => console.error(err)}
@@ -393,6 +397,23 @@ function App() {
   );
 }
 ```
+
+### Available React Props
+Both `useLumina` and `LuminaCanvas` accept these explicit props:
+- `grayscale?: boolean`
+- `brightness?: number`
+- `contrast?: number`
+- `sepia?: boolean`
+- `ascii?: boolean | Record<string, any>`
+- `blur?: number`
+- `gaussianBlur?: number`
+- `sharpen?: boolean`
+- `emboss?: boolean`
+- `edgeDetection?: boolean`
+- `resize?: { width: number; height: number }`
+- `crop?: { x: number; y: number; width: number; height: number }`
+- `watermark?: { text: string; options?: any }`
+- `backgroundBlur?: any`
 
 ## License
 

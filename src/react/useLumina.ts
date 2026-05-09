@@ -9,7 +9,9 @@ export type LuminaSource =
   | ImageData;
 export type LuminaOutputType = 'imageData' | 'dataUrl' | 'blob';
 
-export interface UseLuminaOptions {
+import { type ImageEditingOptions, applyEditingOptions } from './types.js';
+
+export interface UseLuminaOptions extends ImageEditingOptions {
   source: LuminaSource | null;
   operations?: (chain: Lumina) => Lumina;
   deps?: unknown[];
@@ -38,6 +40,7 @@ export function useLumina<T = unknown>({
   operations,
   deps = [],
   outputType = 'imageData',
+  ...editingOptions
 }: UseLuminaOptions): UseLuminaResult<T> {
   const [result, setResult] = useState<T | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -56,6 +59,8 @@ export function useLumina<T = unknown>({
       setError(null);
       try {
         let chain = lumina(source);
+
+        chain = applyEditingOptions(chain, editingOptions);
 
         if (typeof operations === 'function') {
           chain = operations(chain);
@@ -95,7 +100,7 @@ export function useLumina<T = unknown>({
     // We include operations and outputType, and spread deps.
     // We disable the rule for the spread as it's intended for user-provided dependencies.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [source, outputType, operations, ...deps]);
+  }, [source, outputType, operations, JSON.stringify(editingOptions), ...deps]);
 
   return { result, loading, error };
 }

@@ -27,48 +27,20 @@ function App() {
   // ASCII logic
   const { result: asciiText, loading: asciiLoading } = useLumina<string>({
     source: '/sample.png',
-    operations: (l) => l.resize(100, 50).ascii(),
+    resize: { width: 100, height: 50 },
+    ascii: true,
     deps: [showAscii],
   });
 
   // Thumbnail preview
   const { result: thumbnail } = useLumina<string>({
     source: '/sample.png',
-    operations: (l) => l.resize(200, 150).grayscale(),
+    resize: { width: 200, height: 150 },
+    grayscale: true,
     outputType: 'dataUrl',
   });
 
-  const getFilter = (l: any) => {
-    let chain = l.brightness(brightness).contrast(contrast);
 
-    if (isResized) chain = chain.resize(width, height);
-    if (isCropped) chain = chain.crop(cropX, cropY, cropW, cropH);
-
-    // Apply filters
-    if (filterType === 'grayscale') chain = chain.grayscale();
-    if (filterType === 'sepia') chain = chain.sepia();
-    if (filterType === 'blur') chain = chain.gaussianBlur(5);
-    if (filterType === 'sharpen') chain = chain.sharpen();
-    if (filterType === 'emboss') chain = chain.emboss();
-    if (filterType === 'edge') chain = chain.edgeDetection();
-
-    if (bgBlur)
-      chain = chain.backgroundBlur({
-        sigma: 6,
-        focusRadius: 150,
-        falloff: 200,
-      });
-    if (watermarkText)
-      chain = chain.watermark(watermarkText, {
-        x: watermarkX,
-        y: watermarkY,
-        fontSize: watermarkSize,
-        fontFace: watermarkFont,
-        color: watermarkColor,
-      });
-
-    return chain;
-  };
 
   return (
     <div className="demo-container">
@@ -98,8 +70,38 @@ function App() {
               ) : (
                 <LuminaCanvas
                   source="/sample.png"
-                  filter={getFilter}
                   className="main-canvas"
+                  brightness={brightness}
+                  contrast={contrast}
+                  resize={isResized ? { width, height } : undefined}
+                  crop={
+                    isCropped
+                      ? { x: cropX, y: cropY, width: cropW, height: cropH }
+                      : undefined
+                  }
+                  grayscale={filterType === 'grayscale'}
+                  sepia={filterType === 'sepia'}
+                  gaussianBlur={filterType === 'blur' ? 5 : undefined}
+                  sharpen={filterType === 'sharpen'}
+                  emboss={filterType === 'emboss'}
+                  edgeDetection={filterType === 'edge'}
+                  backgroundBlur={
+                    bgBlur ? { sigma: 6, focusRadius: 150, falloff: 200 } : undefined
+                  }
+                  watermark={
+                    watermarkText
+                      ? {
+                          text: watermarkText,
+                          options: {
+                            x: watermarkX,
+                            y: watermarkY,
+                            fontSize: watermarkSize,
+                            fontFace: watermarkFont,
+                            color: watermarkColor,
+                          },
+                        }
+                      : undefined
+                  }
                 />
               )}
             </div>

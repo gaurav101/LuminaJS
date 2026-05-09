@@ -1,10 +1,11 @@
 import { useRef, useEffect, useState, type CanvasHTMLAttributes } from 'react';
 import { lumina, type Lumina } from '../index.js';
+import { type ImageEditingOptions, applyEditingOptions } from './types.js';
 
 export interface LuminaCanvasProps extends Omit<
   CanvasHTMLAttributes<HTMLCanvasElement>,
   'onError'
-> {
+>, ImageEditingOptions {
   source:
     | string
     | File
@@ -32,8 +33,38 @@ export function LuminaCanvas({
   filter,
   onProcessError,
   onLoad,
+  grayscale,
+  brightness,
+  contrast,
+  sepia,
+  ascii,
+  blur,
+  gaussianBlur,
+  watermark,
+  backgroundBlur,
+  sharpen,
+  emboss,
+  edgeDetection,
+  resize,
+  crop,
   ...props
 }: LuminaCanvasProps) {
+  const editingOptions = {
+    grayscale,
+    brightness,
+    contrast,
+    sepia,
+    ascii,
+    blur,
+    gaussianBlur,
+    watermark,
+    backgroundBlur,
+    sharpen,
+    emboss,
+    edgeDetection,
+    resize,
+    crop,
+  };
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [error, setError] = useState<Error | null>(null);
 
@@ -45,6 +76,8 @@ export function LuminaCanvas({
     const applyFilter = async () => {
       try {
         let chain = lumina(source);
+        chain = applyEditingOptions(chain, editingOptions);
+
         if (typeof filter === 'function') {
           chain = filter(chain);
         }
@@ -70,7 +103,7 @@ export function LuminaCanvas({
     return () => {
       isMounted = false;
     };
-  }, [source, filter, onProcessError, onLoad]);
+  }, [source, filter, onProcessError, onLoad, JSON.stringify(editingOptions)]);
 
   if (error) {
     return <div className="lumina-error">{error.message}</div>;
