@@ -14,6 +14,7 @@ function App() {
   const [watermarkFont, setWatermarkFont] = useState('Inter');
   const [bgBlur, setBgBlur] = useState(false);
   const [showAscii, setShowAscii] = useState(false);
+  const [canvasDataUrl, setCanvasDataUrl] = useState<string>('');
   // Transformation states
   const [width, setWidth] = useState(600);
   const [height, setHeight] = useState(400);
@@ -33,12 +34,31 @@ function App() {
   });
 
   // Thumbnail preview
-  const { result: thumbnail } = useLumina<string>({
+  const { result: thumbnail, getImage: getThumbnailImage } = useLumina<string>({
     source: '/sample.png',
     resize: { width: 200, height: 150 },
     grayscale: true,
     outputType: 'dataUrl',
   });
+
+  const handleDownloadThumbnail = async () => {
+    const data = await getThumbnailImage();
+    if (data) {
+      const link = document.createElement('a');
+      link.href = data;
+      link.download = 'lumina-thumbnail.png';
+      link.click();
+    }
+  };
+
+  const handleDownloadMain = () => {
+    if (canvasDataUrl) {
+      const link = document.createElement('a');
+      link.href = canvasDataUrl;
+      link.download = 'lumina-processed.png';
+      link.click();
+    }
+  };
 
   return (
     <div className="demo-container">
@@ -52,12 +72,23 @@ function App() {
           <div className="card">
             <div className="card-header">
               <h3>{showAscii ? 'ASCII Output' : 'Live Canvas Output'}</h3>
-              <button
-                className="toggle-btn"
-                onClick={() => setShowAscii(!showAscii)}
-              >
-                {showAscii ? 'Show Image' : 'Show ASCII'}
-              </button>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                {!showAscii && (
+                  <button
+                    className="toggle-btn"
+                    onClick={handleDownloadMain}
+                    disabled={!canvasDataUrl}
+                  >
+                    Download
+                  </button>
+                )}
+                <button
+                  className="toggle-btn"
+                  onClick={() => setShowAscii(!showAscii)}
+                >
+                  {showAscii ? 'Show Image' : 'Show ASCII'}
+                </button>
+              </div>
             </div>
 
             <div className="display-area">
@@ -102,6 +133,8 @@ function App() {
                         }
                       : undefined
                   }
+                  outputType="dataUrl"
+                  getImage={(data) => setCanvasDataUrl(data as string)}
                 />
               )}
             </div>
@@ -110,6 +143,14 @@ function App() {
           <div className="thumbnail-card">
             <h4>Generated Thumbnail (useLumina Hook)</h4>
             {thumbnail && <img src={thumbnail} alt="Preview" />}
+
+            <button
+              className="toggle-btn"
+              onClick={handleDownloadThumbnail}
+              style={{ marginTop: '10px', display: 'block', margin: '0 auto' }}
+            >
+              Fetch & Download Thumbnail
+            </button>
           </div>
         </section>
 
