@@ -1,3 +1,4 @@
+/* global global */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import {
   getPixelData,
@@ -46,7 +47,11 @@ describe('canvas.js', () => {
     global.document = {
       createElement: vi.fn((tag) => {
         if (tag === 'canvas') {
-          return { ...mockCanvas, getContext: mockCanvas.getContext, toBlob: mockCanvas.toBlob };
+          return {
+            ...mockCanvas,
+            getContext: mockCanvas.getContext,
+            toBlob: mockCanvas.toBlob,
+          };
         }
         return {};
       }),
@@ -63,7 +68,7 @@ describe('canvas.js', () => {
     it('should extract pixel data from a valid image', () => {
       const mockImage = { naturalWidth: 100, naturalHeight: 100 };
       const { imageData, canvas } = getPixelData(mockImage);
-      
+
       expect(global.document.createElement).toHaveBeenCalledWith('canvas');
       expect(mockCtx.drawImage).toHaveBeenCalledWith(mockImage, 0, 0, 100, 100);
       expect(mockCtx.getImageData).toHaveBeenCalledWith(0, 0, 100, 100);
@@ -74,7 +79,7 @@ describe('canvas.js', () => {
     it('should fallback to width/height if natural dimensions are missing', () => {
       const mockImage = { width: 50, height: 50 };
       const { imageData, canvas } = getPixelData(mockImage);
-      
+
       expect(mockCtx.drawImage).toHaveBeenCalledWith(mockImage, 0, 0, 50, 50);
       expect(imageData.width).toBe(50);
       expect(canvas.width).toBe(50);
@@ -98,15 +103,19 @@ describe('canvas.js', () => {
     it('should put image data onto a canvas', () => {
       const mockImageData = { data: [], width: 100, height: 100 };
       putPixelData(mockCanvas, mockImageData);
-      
-      expect(mockCanvas.getContext).toHaveBeenCalledWith('2d', { willReadFrequently: true });
+
+      expect(mockCanvas.getContext).toHaveBeenCalledWith('2d', {
+        willReadFrequently: true,
+      });
       expect(mockCtx.putImageData).toHaveBeenCalledWith(mockImageData, 0, 0);
     });
 
     it('should throw if 2d context cannot be obtained', () => {
       mockCanvas.getContext.mockReturnValueOnce(null);
       const mockImageData = { data: [], width: 100, height: 100 };
-      expect(() => putPixelData(mockCanvas, mockImageData)).toThrow(/Failed to obtain a 2D context/);
+      expect(() => putPixelData(mockCanvas, mockImageData)).toThrow(
+        /Failed to obtain a 2D context/,
+      );
     });
   });
 
@@ -115,11 +124,17 @@ describe('canvas.js', () => {
       const blob = await canvasToBlob(mockCanvas);
       expect(blob).toBeInstanceOf(Blob);
       expect(blob.type).toBe('image/png');
-      expect(mockCanvas.toBlob).toHaveBeenCalledWith(expect.any(Function), 'image/png', 0.92);
+      expect(mockCanvas.toBlob).toHaveBeenCalledWith(
+        expect.any(Function),
+        'image/png',
+        0.92,
+      );
     });
 
     it('should reject if toBlob returns null', async () => {
-      await expect(canvasToBlob(mockCanvas, 'unsupported')).rejects.toThrow(/toBlob returned null/);
+      await expect(canvasToBlob(mockCanvas, 'unsupported')).rejects.toThrow(
+        /toBlob returned null/,
+      );
     });
   });
 
@@ -127,7 +142,7 @@ describe('canvas.js', () => {
     it('should resize the source and return a new canvas', () => {
       const source = { naturalWidth: 200, naturalHeight: 200 };
       const resizedCanvas = resize(source, 100, 50);
-      
+
       expect(global.document.createElement).toHaveBeenCalledWith('canvas');
       expect(mockCtx.drawImage).toHaveBeenCalledWith(source, 0, 0, 100, 50);
       expect(resizedCanvas.width).toBe(100);
@@ -145,9 +160,19 @@ describe('canvas.js', () => {
     it('should crop the source and return a new canvas', () => {
       const source = { naturalWidth: 200, naturalHeight: 200 };
       const croppedCanvas = crop(source, 10, 20, 100, 50);
-      
+
       expect(global.document.createElement).toHaveBeenCalledWith('canvas');
-      expect(mockCtx.drawImage).toHaveBeenCalledWith(source, 10, 20, 100, 50, 0, 0, 100, 50);
+      expect(mockCtx.drawImage).toHaveBeenCalledWith(
+        source,
+        10,
+        20,
+        100,
+        50,
+        0,
+        0,
+        100,
+        50,
+      );
       expect(croppedCanvas.width).toBe(100);
       expect(croppedCanvas.height).toBe(50);
     });
@@ -162,7 +187,7 @@ describe('canvas.js', () => {
     it('should return extracted imagedata after resizing', () => {
       const source = { naturalWidth: 200, naturalHeight: 200 };
       const imageData = getResizedImageData(source, 50, 50);
-      
+
       expect(mockCtx.drawImage).toHaveBeenCalledWith(source, 0, 0, 50, 50);
       expect(mockCtx.getImageData).toHaveBeenCalledWith(0, 0, 50, 50);
       expect(imageData.width).toBe(50);
@@ -174,12 +199,15 @@ describe('canvas.js', () => {
       // It calls createOffscreenCanvas which calls getContext, then it calls getContext again in getResizedImageData
       global.document.createElement = vi.fn(() => ({
         ...mockCanvas,
-        getContext: vi.fn()
+        getContext: vi
+          .fn()
           .mockReturnValueOnce(mockCtx) // For createOffscreenCanvas
-          .mockReturnValueOnce(null)    // For getResizedImageData
+          .mockReturnValueOnce(null), // For getResizedImageData
       }));
 
-      expect(() => getResizedImageData(source, 50, 50)).toThrow(/Failed to obtain a 2D context/);
+      expect(() => getResizedImageData(source, 50, 50)).toThrow(
+        /Failed to obtain a 2D context/,
+      );
     });
   });
 });

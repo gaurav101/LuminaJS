@@ -1,3 +1,4 @@
+/* global global */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { loadImage } from '../../src/core/loader.js';
 
@@ -23,11 +24,13 @@ describe('loader.js', () => {
         this.onload = null;
         this.onerror = null;
         this.crossOrigin = '';
-        
+
         // Mock async load behavior based on setting src
         Object.defineProperty(this, 'src', {
-          get: function() { return this._src; },
-          set: function(val) {
+          get: function () {
+            return this._src;
+          },
+          set: function (val) {
             this._src = val;
             setTimeout(() => {
               if (val && val.includes('error')) {
@@ -36,7 +39,7 @@ describe('loader.js', () => {
                 if (this.onload) this.onload();
               }
             }, 0);
-          }
+          },
         });
       }
     };
@@ -60,7 +63,9 @@ describe('loader.js', () => {
   });
 
   it('should reject when URL loading fails', async () => {
-    await expect(loadImage('http://example.com/error.png')).rejects.toThrow(/Failed to load image from URL/);
+    await expect(loadImage('http://example.com/error.png')).rejects.toThrow(
+      /Failed to load image from URL/,
+    );
   });
 
   it('should load an image from a valid File object', async () => {
