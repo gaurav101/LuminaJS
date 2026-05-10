@@ -29,8 +29,8 @@ function App() {
   const { result: asciiText, loading: asciiLoading } = useLumina<string>({
     source: '/sample.png',
     resize: { width: 100, height: 50 },
-    ascii: true,
-    deps: [showAscii],
+    operations: (chain) => chain.ascii(),
+    outputType: undefined,
   });
 
   // Thumbnail preview
@@ -84,7 +84,10 @@ function App() {
                 )}
                 <button
                   className="toggle-btn"
-                  onClick={() => setShowAscii(!showAscii)}
+                  onClick={() => {
+                    setShowAscii(!showAscii);
+                    console.log(asciiText);
+                  }}
                 >
                   {showAscii ? 'Show Image' : 'Show ASCII'}
                 </button>
