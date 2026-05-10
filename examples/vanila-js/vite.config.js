@@ -6,4 +6,7 @@ export default defineConfig({
     strictPort: true,
     open: true,
   },
+  build: {
+    outDir: '../../dist/examples/vanilla-js',
+  },
 });

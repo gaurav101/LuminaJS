@@ -29,4 +29,6 @@ docs/
 tests/
 src/
 examples/
+dist/examples/
 !dist/
+

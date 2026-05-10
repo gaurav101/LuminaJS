@@ -38,7 +38,7 @@
     }
   },
   "scripts": {
-    "build": "rollup -c && npm run build:types && npm run generate-docs",
+    "build": "rollup -c && npm run build:types && npm run generate-docs && npm run build:examples",
     "build:types": "tsc",
     "dev": "rollup -c -w",
     "start:demo": "npm run dev --prefix react-demo",
@@ -49,7 +49,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "generate-docs": "jsdoc -c jsdoc.json",
-    "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky; fi"
+    "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky; fi",
+    "build:examples": "npm run build --prefix ./examples/react && npm run build --prefix ./examples/vanila-js"
   },
   "peerDependencies": {
     "react": ">=16.8.0",
