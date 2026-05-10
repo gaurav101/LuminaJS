@@ -1,6 +1,7 @@
 import terser from '@rollup/plugin-terser';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import bundleSize from 'rollup-plugin-bundle-size';
+import copy from 'rollup-plugin-copy';
 
 const peerDeps = ['react', 'react-dom'];
 
@@ -9,7 +10,13 @@ export default [
   {
     input: 'src/index.js',
     external: peerDeps,
-    plugins: [nodeResolve(), bundleSize()],
+    plugins: [
+      nodeResolve(),
+      bundleSize(),
+      copy({
+        targets: [{ src: 'src/index.html', dest: 'dist' }],
+      }),
+    ],
     treeshake: {
       moduleSideEffects: false,
     },
