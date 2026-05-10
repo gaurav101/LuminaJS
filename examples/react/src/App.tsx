@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLumina, LuminaCanvas } from '@gks101/luminajs/react';
+import { useLumina, LuminaCanvas } from '../../../src/react/index';
 import './App.css';
 
 function App() {
