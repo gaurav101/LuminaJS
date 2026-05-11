@@ -25,6 +25,7 @@ eslint.config.js
 
 # Exclude tarballs
 *.tgz
+.husky/
 docs/
 tests/
 src/

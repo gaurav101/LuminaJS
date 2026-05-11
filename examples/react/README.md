@@ -1,54 +1,65 @@
-# React + TypeScript + Vite
+# LuminaJS React Example
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This example demonstrates how to use LuminaJS in a React application with TypeScript and Vite.
 
-Currently, two official plugins are available:
+## Features Demonstrated
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Using the `useLumina` hook for image processing
+- Using the `LuminaCanvas` component for canvas-based image manipulation
+- Chainable API for applying multiple filters
+- Real-time image processing with React state
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Running Locally
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-});
+```bash
+# From the root directory
+npm run serve:react
+
+# Or using Nx directly
+npx nx run examples-react:serve
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Building for Production
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
+```bash
+# From the root directory
+npm run build:examples
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
+# Or build just this example
+npx nx run examples-react:build
+```
+
+## Usage
+
+The example shows various ways to use LuminaJS:
+
+1. **Hook-based approach**: Using `useLumina` for state management
+2. **Component approach**: Using `LuminaCanvas` for direct canvas manipulation
+3. **Chainable API**: Applying multiple filters in sequence
+
+## Project Structure
+
+```
+src/
+├── App.tsx          # Main application component
+├── main.tsx         # Application entry point
+└── assets/          # Static assets
+```
+
+## Dependencies
+
+This example uses:
+
+- React 19
+- TypeScript
+- Vite for build tooling
+- LuminaJS (from the monorepo)
+  ...reactDom.configs.recommended.rules,
   },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-});
+  });
+
+```
+
 ```

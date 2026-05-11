@@ -38,10 +38,18 @@
     }
   },
   "scripts": {
-    "build": "rollup -c && npm run build:types && npm run generate-docs && npm run build:examples",
-    "build:types": "npx tsc",
+    "nx": "nx",
+    "build": "rollup -c && npm run build:types && npm run generate-docs",
+    "build:types": "tsc",
+    "build:all": "npm run build && npm run build:library && npm run build:core && npm run build:react-lib && npm run build:examples",
+    "build:library": "nx run luminajs:build && ",
+    "build:core": "nx run luminajs-core:build",
+    "build:react-lib": "nx run luminajs-react:build",
+    "build:examples": "nx run examples-react:build && nx run examples-vanilla-js:build",
     "dev": "rollup -c -w",
     "start:demo": "npm run dev --prefix react-demo",
+    "serve:react": "nx run examples-react:serve",
+    "serve:vanilla-js": "nx run examples-vanilla-js:serve",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint .",
@@ -49,8 +57,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "generate-docs": "jsdoc -c jsdoc.json",
-    "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky; fi",
-    "build:examples": "npm run build --prefix ./examples/react && npm run build --prefix ./examples/vanila-js"
+    "kill:dev": " kill -9 $(lsof -ti:5175) || true",
+    "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky; fi"
   },
   "peerDependencies": {
     "react": ">=16.8.0",
@@ -77,6 +85,8 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^17.6.0",
     "husky": "^9.1.7",
+    "nx": "^16.10.0",
+    "@nx/workspace": "^16.10.0",
     "jsdoc": "^4.0.5",
     "prettier": "^3.8.3",
     "react": "^19.0.0",

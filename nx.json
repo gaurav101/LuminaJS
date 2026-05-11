@@ -1,0 +1,17 @@
+{
+  "npmScope": "luminajs",
+  "implicitDependencies": {
+    "package.json": "*",
+    "tsconfig.base.json": "*",
+    "nx.json": "*"
+  },
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "nx/tasks-runners/default",
+      "options": {
+        "cacheableOperations": ["build", "lint", "test"],
+        "parallel": 3
+      }
+    }
+  }
+}

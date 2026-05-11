@@ -5,11 +5,11 @@ export interface ImageEditingOptions {
   brightness?: number;
   contrast?: number;
   sepia?: boolean;
-  ascii?: boolean | Record<string, any>;
+  ascii?: boolean | Record<string, unknown>;
   blur?: number;
   gaussianBlur?: number;
-  watermark?: { text: string; options?: any };
-  backgroundBlur?: any;
+  watermark?: { text: string; options?: Record<string, unknown> };
+  backgroundBlur?: Record<string, unknown>;
   sharpen?: boolean;
   emboss?: boolean;
   edgeDetection?: boolean;
@@ -40,7 +40,7 @@ export function applyEditingOptions(
   if (options.gaussianBlur !== undefined)
     c = c.gaussianBlur(options.gaussianBlur);
   if (options.watermark) {
-    c = c.watermark(options.watermark.text, options.watermark.options);
+    c = c.watermark(options.watermark.text, options.watermark.options || {});
   }
   if (options.backgroundBlur) {
     c = c.backgroundBlur(options.backgroundBlur);

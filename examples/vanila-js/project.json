@@ -1,0 +1,29 @@
+{
+  "name": "examples-vanilla-js",
+  "root": "examples/vanila-js",
+  "sourceRoot": "examples/vanila-js/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/examples/vanila-js/dist"],
+      "options": {
+        "commands": [
+          {
+            "command": "npm run build --prefix ./examples/vanila-js"
+          }
+        ]
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "npm run dev --prefix ./examples/vanila-js"
+          }
+        ]
+      }
+    }
+  }
+}

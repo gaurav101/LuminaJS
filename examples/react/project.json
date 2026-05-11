@@ -1,0 +1,29 @@
+{
+  "name": "examples-react",
+  "root": "examples/react",
+  "sourceRoot": "examples/react/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/examples/react/dist"],
+      "options": {
+        "commands": [
+          {
+            "command": "npm run build --prefix ./examples/react"
+          }
+        ]
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "npm run dev --prefix ./examples/react"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,4 +1,10 @@
-import { useRef, useEffect, useState, type CanvasHTMLAttributes } from 'react';
+import {
+  useRef,
+  useEffect,
+  useState,
+  useMemo,
+  type CanvasHTMLAttributes,
+} from 'react';
 import { lumina, type Lumina } from '../index.js';
 import { type ImageEditingOptions, applyEditingOptions } from './types.js';
 
@@ -83,22 +89,40 @@ export function LuminaCanvas({
   crop,
   ...props
 }: LuminaCanvasProps) {
-  const editingOptions = {
-    grayscale,
-    brightness,
-    contrast,
-    sepia,
-    ascii,
-    blur,
-    gaussianBlur,
-    watermark,
-    backgroundBlur,
-    sharpen,
-    emboss,
-    edgeDetection,
-    resize,
-    crop,
-  };
+  const editingOptions = useMemo(
+    () => ({
+      grayscale,
+      brightness,
+      contrast,
+      sepia,
+      ascii,
+      blur,
+      gaussianBlur,
+      watermark,
+      backgroundBlur,
+      sharpen,
+      emboss,
+      edgeDetection,
+      resize,
+      crop,
+    }),
+    [
+      grayscale,
+      brightness,
+      contrast,
+      sepia,
+      ascii,
+      blur,
+      gaussianBlur,
+      watermark,
+      backgroundBlur,
+      sharpen,
+      emboss,
+      edgeDetection,
+      resize,
+      crop,
+    ],
+  );
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [error, setError] = useState<Error | null>(null);
 
@@ -168,7 +192,7 @@ export function LuminaCanvas({
     onLoad,
     getImage,
     outputType,
-    JSON.stringify(editingOptions),
+    editingOptions,
   ]);
 
   if (error) {

@@ -36,14 +36,83 @@ import { useLumina, LuminaCanvas } from '@gks101/luminajs/react';
 
 ## Building from Source
 
-If you want to generate the optimized distributable files locally:
+This project is organized as an Nx monorepo with multiple libraries and example applications. To build everything:
 
 ```bash
 # 1. Install dependencies
 npm install
 
-# 2. Run the build command
-npm run build
+# 2. Build the main library
+npm run build:library
+
+# 3. Build individual libraries
+npm run build:core          # Core utilities
+npm run build:react-lib     # React components and hooks
+
+# 4. Build example applications
+npm run build:examples      # Both React and Vanilla JS examples
+```
+
+### Monorepo Structure
+
+This workspace contains:
+
+- **`luminajs`** - Main library (rollup build)
+- **`luminajs-core`** - Core utilities (TypeScript compilation)
+- **`luminajs-react`** - React components and hooks (TypeScript compilation)
+- **`examples-react`** - React example application
+- **`examples-vanilla-js`** - Vanilla JavaScript example application
+
+### Development Commands
+
+```bash
+# Run all tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Lint the codebase
+npm lint
+
+# Format code
+npm run format
+
+# Generate documentation
+npm run generate-docs
+```
+
+### Running Examples
+
+```bash
+# Start React example in development mode
+npm run serve:react
+
+# Start Vanilla JS example in development mode
+npm run serve:vanilla-js
+
+# Build examples for production
+npm run build:examples
+```
+
+### Nx Commands
+
+You can also use Nx directly for more granular control:
+
+```bash
+# List all projects
+npx nx show projects
+
+# Build specific projects
+npx nx run luminajs:build
+npx nx run luminajs-core:build
+npx nx run luminajs-react:build
+npx nx run examples-react:build
+npx nx run examples-vanilla-js:build
+
+# Serve examples
+npx nx run examples-react:serve
+npx nx run examples-vanilla-js:serve
 ```
 
 The output will be generated in the `dist/` directory.
