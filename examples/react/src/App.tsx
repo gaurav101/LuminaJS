@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useLumina, LuminaCanvas } from '@gks101/luminajs/react';
 import './App.css';
 
@@ -25,18 +25,26 @@ function App() {
   const [cropW, setCropW] = useState(400);
   const [cropH, setCropH] = useState(400);
 
+  // Memoize operations to prevent infinite loops
+  const asciiOperation = useCallback((chain) => chain.ascii(), []);
+  const asciiResizeConfig = useMemo(() => ({ width: 100, height: 50 }), []);
+  const thumbnailResizeConfig = useMemo(
+    () => ({ width: 200, height: 150 }),
+    [],
+  );
+
   // ASCII logic
   const { result: asciiText, loading: asciiLoading } = useLumina<string>({
     source: '/sample.png',
-    resize: { width: 100, height: 50 },
-    operations: (chain) => chain.ascii(),
+    resize: asciiResizeConfig,
+    operations: asciiOperation,
     outputType: undefined,
   });
 
   // Thumbnail preview
   const { result: thumbnail, getImage: getThumbnailImage } = useLumina<string>({
     source: '/sample.png',
-    resize: { width: 200, height: 150 },
+    resize: thumbnailResizeConfig,
     grayscale: true,
     outputType: 'dataUrl',
   });
