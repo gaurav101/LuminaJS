@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLumina, LuminaCanvas } from '@gks101/luminajs/react';
+import { useLumina, LuminaCanvas } from '../../../src/react/index';
 import './App.css';
 
 function App() {
@@ -14,6 +14,7 @@ function App() {
   const [watermarkFont, setWatermarkFont] = useState('Inter');
   const [bgBlur, setBgBlur] = useState(false);
   const [showAscii, setShowAscii] = useState(false);
+  const [canvasDataUrl, setCanvasDataUrl] = useState<string>('');
   // Transformation states
   const [width, setWidth] = useState(600);
   const [height, setHeight] = useState(400);
@@ -27,47 +28,36 @@ function App() {
   // ASCII logic
   const { result: asciiText, loading: asciiLoading } = useLumina<string>({
     source: '/sample.png',
-    operations: (l) => l.resize(100, 50).ascii(),
-    deps: [showAscii],
+    resize: { width: 100, height: 50 },
+    operations: (chain) => chain.ascii(),
+    outputType: undefined,
   });
 
   // Thumbnail preview
-  const { result: thumbnail } = useLumina<string>({
+  const { result: thumbnail, getImage: getThumbnailImage } = useLumina<string>({
     source: '/sample.png',
-    operations: (l) => l.resize(200, 150).grayscale(),
+    resize: { width: 200, height: 150 },
+    grayscale: true,
     outputType: 'dataUrl',
   });
 
-  const getFilter = (l: any) => {
-    let chain = l.brightness(brightness).contrast(contrast);
+  const handleDownloadThumbnail = async () => {
+    const data = await getThumbnailImage();
+    if (data) {
+      const link = document.createElement('a');
+      link.href = data;
+      link.download = 'lumina-thumbnail.png';
+      link.click();
+    }
+  };
 
-    if (isResized) chain = chain.resize(width, height);
-    if (isCropped) chain = chain.crop(cropX, cropY, cropW, cropH);
-
-    // Apply filters
-    if (filterType === 'grayscale') chain = chain.grayscale();
-    if (filterType === 'sepia') chain = chain.sepia();
-    if (filterType === 'blur') chain = chain.gaussianBlur(5);
-    if (filterType === 'sharpen') chain = chain.sharpen();
-    if (filterType === 'emboss') chain = chain.emboss();
-    if (filterType === 'edge') chain = chain.edgeDetection();
-
-    if (bgBlur)
-      chain = chain.backgroundBlur({
-        sigma: 6,
-        focusRadius: 150,
-        falloff: 200,
-      });
-    if (watermarkText)
-      chain = chain.watermark(watermarkText, {
-        x: watermarkX,
-        y: watermarkY,
-        fontSize: watermarkSize,
-        fontFace: watermarkFont,
-        color: watermarkColor,
-      });
-
-    return chain;
+  const handleDownloadMain = () => {
+    if (canvasDataUrl) {
+      const link = document.createElement('a');
+      link.href = canvasDataUrl;
+      link.download = 'lumina-processed.png';
+      link.click();
+    }
   };
 
   return (
@@ -82,12 +72,26 @@ function App() {
           <div className="card">
             <div className="card-header">
               <h3>{showAscii ? 'ASCII Output' : 'Live Canvas Output'}</h3>
-              <button
-                className="toggle-btn"
-                onClick={() => setShowAscii(!showAscii)}
-              >
-                {showAscii ? 'Show Image' : 'Show ASCII'}
-              </button>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                {!showAscii && (
+                  <button
+                    className="toggle-btn"
+                    onClick={handleDownloadMain}
+                    disabled={!canvasDataUrl}
+                  >
+                    Download
+                  </button>
+                )}
+                <button
+                  className="toggle-btn"
+                  onClick={() => {
+                    setShowAscii(!showAscii);
+                    console.log(asciiText);
+                  }}
+                >
+                  {showAscii ? 'Show Image' : 'Show ASCII'}
+                </button>
+              </div>
             </div>
 
             <div className="display-area">
@@ -98,8 +102,42 @@ function App() {
               ) : (
                 <LuminaCanvas
                   source="/sample.png"
-                  filter={getFilter}
                   className="main-canvas"
+                  brightness={brightness}
+                  contrast={contrast}
+                  resize={isResized ? { width, height } : undefined}
+                  crop={
+                    isCropped
+                      ? { x: cropX, y: cropY, width: cropW, height: cropH }
+                      : undefined
+                  }
+                  grayscale={filterType === 'grayscale'}
+                  sepia={filterType === 'sepia'}
+                  gaussianBlur={filterType === 'blur' ? 5 : undefined}
+                  sharpen={filterType === 'sharpen'}
+                  emboss={filterType === 'emboss'}
+                  edgeDetection={filterType === 'edge'}
+                  backgroundBlur={
+                    bgBlur
+                      ? { sigma: 6, focusRadius: 150, falloff: 200 }
+                      : undefined
+                  }
+                  watermark={
+                    watermarkText
+                      ? {
+                          text: watermarkText,
+                          options: {
+                            x: watermarkX,
+                            y: watermarkY,
+                            fontSize: watermarkSize,
+                            fontFace: watermarkFont,
+                            color: watermarkColor,
+                          },
+                        }
+                      : undefined
+                  }
+                  outputType="dataUrl"
+                  getImage={(data) => setCanvasDataUrl(data as string)}
                 />
               )}
             </div>
@@ -108,6 +146,14 @@ function App() {
           <div className="thumbnail-card">
             <h4>Generated Thumbnail (useLumina Hook)</h4>
             {thumbnail && <img src={thumbnail} alt="Preview" />}
+
+            <button
+              className="toggle-btn"
+              onClick={handleDownloadThumbnail}
+              style={{ marginTop: '10px', display: 'block', margin: '0 auto' }}
+            >
+              Fetch & Download Thumbnail
+            </button>
           </div>
         </section>
 

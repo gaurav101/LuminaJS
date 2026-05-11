@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LuminaJS Demo</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family:
+          Inter,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          sans-serif;
+        background: radial-gradient(
+          circle at top left,
+          #3f7dff 0%,
+          #0b0f1f 45%,
+          #090b12 100%
+        );
+        color: #f8fbff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .page-wrap {
+        width: min(1100px, calc(100vw - 32px));
+        padding: 48px;
+        border-radius: 32px;
+        background: rgba(12, 22, 52, 0.92);
+        box-shadow: 0 32px 80px rgba(0, 0, 0, 0.32);
+        backdrop-filter: blur(18px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      header {
+        display: grid;
+        gap: 18px;
+        margin-bottom: 36px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(2.6rem, 4vw, 4.4rem);
+        line-height: 1.03;
+        letter-spacing: -0.04em;
+      }
+
+      p.lead {
+        margin: 0;
+        max-width: 760px;
+        font-size: 1.12rem;
+        color: #d9e1ff;
+        line-height: 1.9;
+      }
+
+      .row {
+        display: grid;
+        gap: 20px;
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .cards {
+        display: grid;
+        gap: 18px;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      }
+
+      .card {
+        padding: 24px;
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+      }
+
+      .card h2 {
+        margin-top: 0;
+        margin-bottom: 12px;
+        font-size: 1.18rem;
+      }
+
+      .card p,
+      .card li {
+        margin: 0;
+        color: #c8d1ff;
+        line-height: 1.8;
+        font-size: 0.98rem;
+      }
+
+      .card ul {
+        padding-left: 1.2rem;
+        margin: 0;
+      }
+
+      .links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 16px;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px 22px;
+        border-radius: 999px;
+        text-decoration: none;
+        color: #fff;
+        background: linear-gradient(135deg, #7c95ff 0%, #30d0ff 100%);
+        font-weight: 600;
+        transition:
+          transform 0.18s ease,
+          filter 0.18s ease;
+      }
+
+      .button:hover {
+        transform: translateY(-1px);
+        filter: saturate(1.08);
+      }
+
+      .button.secondary {
+        background: rgba(255, 255, 255, 0.08);
+        color: #f2f6ff;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+      }
+
+      @media (max-width: 720px) {
+        .page-wrap {
+          padding: 32px 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page-wrap">
+      <header>
+        <h1>LuminaJS</h1>
+        <p class="lead">
+          LuminaJS is a modular, chainable, lightweight, zero-dependency
+          JavaScript utility library for browser-based image processing using
+          the HTML5 Canvas API. It provides a functional approach to image
+          manipulation, focusing on performance and ease of use.
+        </p>
+        <div class="links">
+          <a class="button" href="./examples/react">React Demo</a>
+          <a class="button secondary" href="./examples/vanilla-js"
+            >Vanilla JS Demo</a
+          >
+        </div>
+      </header>
+
+      <div class="row">
+        <div class="card">
+          <h2>Why LuminaJS?</h2>
+          <p>
+            Fast, small, and easy to integrate. LuminaJS works with HTML5 Canvas
+            and supports chainable filters, React hooks, and direct script tag
+            usage without any external dependencies.
+          </p>
+          <ul>
+            <li>🚀 High Performance: optimized image processing loops</li>
+            <li>🧩 Modular: import only the features you need</li>
+            <li>📦 Lightweight: zero external dependencies</li>
+            <li>🖼️ Canvas-powered: seamless browser integration</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h2>Quick Start</h2>
+          <p>
+            Install from npm and start processing images with a clean fluent
+            API.
+          </p>
+          <pre
+            style="
+              margin: 0;
+              padding: 16px;
+              border-radius: 16px;
+              background: rgba(255, 255, 255, 0.05);
+              overflow-x: auto;
+              color: #edf2ff;
+              font-size: 0.95rem;
+            "
+          >
+npm install @gks101/luminajs</pre
+          >
+          <p style="margin-top: 12px">
+            Use the `lumina()` chain to load images, apply filters, and render
+            results directly to a canvas or HTML element.
+          </p>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

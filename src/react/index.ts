@@ -7,3 +7,4 @@ export type {
 } from './useLumina';
 export { LuminaCanvas } from './LuminaCanvas';
 export type { LuminaCanvasProps } from './LuminaCanvas';
+export type { ImageEditingOptions } from './types';

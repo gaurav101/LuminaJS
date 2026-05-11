@@ -352,46 +352,118 @@ LuminaJS provides a dedicated React entry point with hooks and components.
 
 ### `useLumina` Hook
 
-The `useLumina` hook manages the image processing lifecycle, providing `result`, `loading`, and `error` states.
+The `useLumina` hook manages the image processing lifecycle, providing `result`, `loading`, and `error` states. You can pass image editing props directly, or use the `operations` function for advanced chaining. It also returns a `getImage()` function which you can call to generate the image on demand.
 
 ```jsx
 import { useLumina } from '@gks101/luminajs/react';
 
 function ImagePreview({ file }) {
-  const { result, loading, error } = useLumina({
+  const { result, loading, error, getImage } = useLumina({
     source: file,
-    operations: (l) => l.grayscale().brightness(20).sharpen(),
+    grayscale: true,
+    brightness: 20,
+    sharpen: true,
     outputType: 'dataUrl', // 'imageData' | 'dataUrl' | 'blob'
     deps: [file],
   });
 
+  const handleUpload = async () => {
+    // Generate the blob on demand
+    const blob = await getImage('blob');
+    // await myUploadFunction(blob);
+  };
+
   if (loading) return <div>Processing image...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
-  return <img src={result} alt="Processed preview" />;
+  return (
+    <div>
+      <img src={result} alt="Processed preview" />
+      <button onClick={handleUpload}>Upload Processed Image</button>
+    </div>
+  );
 }
 ```
 
 ### `LuminaCanvas` Component
 
-A declarative way to render processed images directly onto a canvas element.
+A declarative way to render processed images directly onto a canvas element. It accepts image editing options directly as props!
 
 ```jsx
 import { LuminaCanvas } from '@gks101/luminajs/react';
 
 function App() {
+  const handleImageGenerated = (dataUrl) => {
+    console.log('Got the generated image data URL:', dataUrl);
+  };
+
   return (
     <LuminaCanvas
       source="portrait.jpg"
-      filter={(l) => l.gaussianBlur(3).sepia()}
-      width={800}
-      height={600}
+      gaussianBlur={3}
+      sepia={true}
+      resize={{ width: 800, height: 600 }}
+      width={800} // HTML attribute
+      height={600} // HTML attribute
       className="my-custom-canvas"
-      onLoad={() => console.log('Image rendered!')}
+      outputType="dataUrl"
+      getImage={handleImageGenerated}
       onProcessError={(err) => console.error(err)}
     />
   );
 }
+```
+
+### Available React Props
+
+Both `useLumina` and `LuminaCanvas` accept these explicit props to make image processing incredibly simple without writing chained operations manually:
+
+| Prop             | Type                                                      | Description                                    |
+| :--------------- | :-------------------------------------------------------- | :--------------------------------------------- |
+| `grayscale`      | `boolean`                                                 | Applies a grayscale filter.                    |
+| `brightness`     | `number`                                                  | Adjusts brightness [-255, 255].                |
+| `contrast`       | `number`                                                  | Adjusts contrast [-100, 100].                  |
+| `sepia`          | `boolean`                                                 | Applies a classic antique sepia tone.          |
+| `blur`           | `number`                                                  | Applies a box blur effect.                     |
+| `gaussianBlur`   | `number`                                                  | Applies a smooth Gaussian blur effect.         |
+| `sharpen`        | `boolean`                                                 | Sharpens the image.                            |
+| `emboss`         | `boolean`                                                 | Applies an emboss effect.                      |
+| `edgeDetection`  | `boolean`                                                 | Highlights edges.                              |
+| `resize`         | `{ width: number, height: number }`                       | Resizes the image to the specified dimensions. |
+| `crop`           | `{ x: number, y: number, width: number, height: number }` | Crops the image.                               |
+| `watermark`      | `{ text: string, options?: any }`                         | Overlays text on the image.                    |
+| `backgroundBlur` | `any`                                                     | Selectively blurs the background.              |
+| `ascii`          | `boolean \| Record<string, any>`                          | Transforms the image into ASCII text.          |
+
+### Getting the Processed Image (`getImage`)
+
+A common requirement is to retrieve the processed image data so you can upload it to a server or pass it to another component. Both the hook and the component provide an easy way to do this via `getImage`.
+
+#### Using `useLumina`
+
+The hook returns a `getImage` asynchronous function. This allows you to generate the image on demand (e.g. when a user clicks a "Save" button), using the latest props applied.
+
+```jsx
+const handleUpload = async () => {
+  // You can override the outputType when calling getImage
+  const finalBlob = await getImage('blob');
+  await uploadToServer(finalBlob);
+};
+```
+
+#### Using `LuminaCanvas`
+
+The component accepts a `getImage` prop. This is a callback that will be triggered automatically as soon as the canvas finishes rendering the processed image.
+
+```jsx
+<LuminaCanvas
+  source="photo.jpg"
+  outputType="dataUrl" // format passed to getImage (dataUrl, blob, imageData, canvas)
+  getImage={(dataUrl) => {
+    // Save to state, send to a parent component, etc.
+    setProcessedImage(dataUrl);
+  }}
+/>
 ```
 
 ## License

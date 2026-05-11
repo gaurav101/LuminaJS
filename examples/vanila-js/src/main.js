@@ -6,7 +6,7 @@ import {
   getResizedImageData,
   resize,
   crop,
-} from '@gks101/luminajs';
+} from '../../../src/index.js';
 
 // DOM Elements
 const dropZone = document.getElementById('dropZone');
