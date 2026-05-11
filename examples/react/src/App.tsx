@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useLumina, LuminaCanvas } from '../../../src/react/index';
+import { useState, useCallback } from 'react';
+import { useLumina, LuminaCanvas } from '@gks101/luminajs/react';
 import './App.css';
 
 function App() {
@@ -59,6 +59,12 @@ function App() {
       link.click();
     }
   };
+
+  const handleGetCanvasImage = useCallback((data: string | Blob | ImageData | HTMLCanvasElement) => {
+    if (typeof data === 'string') {
+      setCanvasDataUrl(data);
+    }
+  }, []);
 
   return (
     <div className="demo-container">
@@ -137,7 +143,7 @@ function App() {
                       : undefined
                   }
                   outputType="dataUrl"
-                  getImage={(data) => setCanvasDataUrl(data as string)}
+                  getImage={handleGetCanvasImage}
                 />
               )}
             </div>

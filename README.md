@@ -8,7 +8,8 @@ LuminaJS is a modular, chainable,lightweight, zero-dependency JavaScript utility
 
 ## Features
 
-- [Demo](https://gaurav101.github.io/LuminaJS/)
+- [Demo-react](https://gaurav101.github.io/LuminaJS/react)
+- [Demo-vanila-js](https://gaurav101.github.io/LuminaJS/)
 - [Code](https://github.com/gaurav101/LuminaJS)
 - [NPM](https://www.npmjs.com/package/@gks101/luminajs)
 - [Documentation](https://gaurav101.github.io/LuminaJS/docs/)
