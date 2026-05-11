@@ -60,11 +60,14 @@ function App() {
     }
   };
 
-  const handleGetCanvasImage = useCallback((data: string | Blob | ImageData | HTMLCanvasElement) => {
-    if (typeof data === 'string') {
-      setCanvasDataUrl(data);
-    }
-  }, []);
+  const handleGetCanvasImage = useCallback(
+    (data: string | Blob | ImageData | HTMLCanvasElement) => {
+      if (typeof data === 'string') {
+        setCanvasDataUrl(data);
+      }
+    },
+    [],
+  );
 
   return (
     <div className="demo-container">
