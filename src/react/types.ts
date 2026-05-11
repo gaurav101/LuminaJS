@@ -5,11 +5,11 @@ export interface ImageEditingOptions {
   brightness?: number;
   contrast?: number;
   sepia?: boolean;
-  ascii?: boolean | Record<string, any>;
+  ascii?: boolean | Record<string, unknown>;
   blur?: number;
   gaussianBlur?: number;
-  watermark?: { text: string; options?: any };
-  backgroundBlur?: any;
+  watermark?: { text: string; options?: Record<string, unknown> };
+  backgroundBlur?: Record<string, unknown>;
   sharpen?: boolean;
   emboss?: boolean;
   edgeDetection?: boolean;

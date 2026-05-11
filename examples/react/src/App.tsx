@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo } from 'react';
 import { useLumina, LuminaCanvas } from '@gks101/luminajs/react';
+import { ImageCropperExample } from './../../../src/react/ImageCropperExample';
 import './App.css';
 
 function App() {
@@ -378,6 +379,9 @@ function App() {
           </div>
         </aside>
       </main>
+      <div>
+        <ImageCropperExample />
+      </div>
     </div>
   );
 }
