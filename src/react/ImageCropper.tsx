@@ -300,6 +300,53 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
               onCropComplete={handleCropSelectionComplete}
               lineColor="#0066cc"
               overlayOpacity={0.6}
+              overlayControls={({ left, top, width, height, scaleX, scaleY }) => (
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <button
+                    type="button"
+                    onClick={handleApplyCrop}
+                    disabled={isCropping}
+                    className={applyButtonClassName}
+                    style={{
+                      padding: '8px 12px',
+                      backgroundColor: '#0066cc',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: isCropping ? 'not-allowed' : 'pointer',
+                      fontSize: '13px',
+                      fontWeight: 500,
+                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.12)',
+                      ...applyButtonStyle,
+                    }}
+                  >
+                    {isCropping ? 'Processing...' : 'Apply Crop'}
+                  </button>
+
+                  {allowReset && (
+                    <button
+                      type="button"
+                      onClick={handleReset}
+                      disabled={isCropping}
+                      className={resetButtonClassName}
+                      style={{
+                        padding: '8px 12px',
+                        backgroundColor: '#fff',
+                        color: '#333',
+                        border: '1px solid #ddd',
+                        borderRadius: '4px',
+                        cursor: isCropping ? 'not-allowed' : 'pointer',
+                        fontSize: '13px',
+                        fontWeight: 500,
+                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.12)',
+                        ...resetButtonStyle,
+                      }}
+                    >
+                      Reset
+                    </button>
+                  )}
+                </div>
+              )}
             />
           )
         )}
@@ -346,53 +393,7 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
           </div>
         )}
 
-        {!appliedPreviewSrc && hasSelectedCrop && (
-          <div style={buttonContainerStyle}>
-            <button
-              type="button"
-              onClick={handleApplyCrop}
-              disabled={isCropping}
-              className={applyButtonClassName}
-              style={{
-                padding: '8px 12px',
-                backgroundColor: '#0066cc',
-                color: '#fff',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: isCropping ? 'not-allowed' : 'pointer',
-                fontSize: '13px',
-                fontWeight: 500,
-                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.12)',
-                ...applyButtonStyle,
-              }}
-            >
-              {isCropping ? 'Processing...' : 'Apply Crop'}
-            </button>
 
-            {allowReset && (
-              <button
-                type="button"
-                onClick={handleReset}
-                disabled={isCropping}
-                className={resetButtonClassName}
-                style={{
-                  padding: '8px 12px',
-                  backgroundColor: '#fff',
-                  color: '#333',
-                  border: '1px solid #ddd',
-                  borderRadius: '4px',
-                  cursor: isCropping ? 'not-allowed' : 'pointer',
-                  fontSize: '13px',
-                  fontWeight: 500,
-                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.12)',
-                  ...resetButtonStyle,
-                }}
-              >
-                Reset
-              </button>
-            )}
-          </div>
-        )}
       </div>
     </div>
   );

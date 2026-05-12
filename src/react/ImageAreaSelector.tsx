@@ -5,6 +5,7 @@ import {
   useEffect,
   FC,
   MouseEvent,
+  ReactNode,
 } from 'react';
 
 export interface CropArea {
@@ -22,6 +23,16 @@ interface ImageAreaSelectorProps {
   lineWidth?: number;
   lineColor?: string;
   overlayOpacity?: number;
+  // Optional render prop to display controls relative to the selection overlay.
+  // Receives overlay dimensions (CSS pixels) and display scale.
+  overlayControls?: (params: {
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+    scaleX: number;
+    scaleY: number;
+  }) => React.ReactNode;
 }
 
 type DragMode = 'draw' | 'move';
@@ -267,20 +278,55 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
 
       {/* The Selection Box Overlay */}
       {crop.width > 0 && crop.height > 0 && (
-        <div
-          style={{
-            position: 'absolute',
-            border: `${lineWidth}px dashed ${lineColor}`,
-            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-            boxShadow: `0 0 0 9999px rgba(0, 0, 0, ${overlayOpacity})`,
-            cursor: isDragging ? 'grabbing' : 'move',
-            left: crop.x * displayScale.scaleX,
-            top: crop.y * displayScale.scaleY,
-            width: crop.width * displayScale.scaleX,
-            height: crop.height * displayScale.scaleY,
-            zIndex: 10,
-          }}
-        />
+        <>
+          <div
+            style={{
+              position: 'absolute',
+              border: `${lineWidth}px dashed ${lineColor}`,
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              boxShadow: `0 0 0 9999px rgba(0, 0, 0, ${overlayOpacity})`,
+              cursor: isDragging ? 'grabbing' : 'move',
+              left: crop.x * displayScale.scaleX,
+              top: crop.y * displayScale.scaleY,
+              width: crop.width * displayScale.scaleX,
+              height: crop.height * displayScale.scaleY,
+              zIndex: 10,
+            }}
+          />
+
+          {/* Optional controls rendered relative to the selection overlay */}
+          {overlayControls && (() => {
+            const leftPx = crop.x * displayScale.scaleX;
+            const topPx = crop.y * displayScale.scaleY;
+            const widthPx = crop.width * displayScale.scaleX;
+            const heightPx = crop.height * displayScale.scaleY;
+
+            // Attempt to place controls above the selection; if not enough space, place below.
+            const CONTROL_HEIGHT = 40;
+            let controlsTop = topPx - CONTROL_HEIGHT - 8;
+            if (controlsTop < 8) controlsTop = topPx + heightPx + 8;
+
+            return (
+              <div
+                style={{
+                  position: 'absolute',
+                  left: leftPx,
+                  top: controlsTop,
+                  zIndex: 1001,
+                }}
+              >
+                {overlayControls({
+                  left: leftPx,
+                  top: topPx,
+                  width: widthPx,
+                  height: heightPx,
+                  scaleX: displayScale.scaleX,
+                  scaleY: displayScale.scaleY,
+                })}
+              </div>
+            );
+          })()}
+        </>
       )}
     </div>
   );
