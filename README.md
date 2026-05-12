@@ -515,10 +515,6 @@ The component accepts a `getImage` prop. This is a callback that will be trigger
 />
 ```
 
-## License
-
-MIT © LuminaJS Team
-
 ## ImageCropper - Props
 
 This repository includes the ImageCropper component. New props were added to allow customizing the Apply Crop and Reset buttons:
@@ -531,3 +527,9 @@ This repository includes the ImageCropper component. New props were added to all
 - onReset: () => boolean | void | Promise<boolean | void> (optional) - Callback invoked when Reset is clicked. Returning `false` will abort the default reset.
 
 These props are optional and backward-compatible.
+
+---
+
+## License
+
+MIT © LuminaJS Team
