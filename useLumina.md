@@ -325,8 +325,8 @@ export function AsciiPreview() {
 - Prefer explicit editing options for common filters and reserve `operations` for custom ordering or advanced chains.
 - Handle all three states in the UI: `loading`, `error`, and `result`.
 
-
 ## ImageCropper - Props
+
 This repository includes the ImageCropper component. New props were added to allow customizing the Apply Crop and Reset buttons:
 
 - applyButtonClassName: string (optional) - CSS class for the Apply button.

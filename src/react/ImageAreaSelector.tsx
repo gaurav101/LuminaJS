@@ -24,10 +24,13 @@ interface ImageAreaSelectorProps {
   overlayOpacity?: number;
 }
 
+type DragMode = 'draw' | 'move';
+
 /**
  * ImageAreaSelector - An interactive image cropping tool.
  *
  * Displays an image with a draggable selection box to define a crop area.
+ * The selected crop area can be dragged to another part of the image before applying.
  * Constraints applied: image boundaries, optional aspect ratio, and prevents negative dimensions.
  *
  * @param {ImageAreaSelectorProps} props
@@ -67,14 +70,17 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
     height: 0,
   });
   const [isDragging, setIsDragging] = useState(false);
+  const [dragMode, setDragMode] = useState<DragMode>('draw');
   const [displayScale, setDisplayScale] = useState({
     scaleX: 1,
     scaleY: 1,
   });
   const imgRef = useRef<HTMLImageElement>(null);
   const startPos = useRef({ x: 0, y: 0 });
+  const moveOffset = useRef({ x: 0, y: 0 });
   const cropRef = useRef<CropArea>(crop);
   const isDraggingRef = useRef(false);
+  const dragModeRef = useRef<DragMode>('draw');
 
   const updateDisplayScale = useCallback(() => {
     const img = imgRef.current;
@@ -89,47 +95,106 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
     });
   }, []);
 
-  const handleMouseDown = useCallback((e: MouseEvent<HTMLImageElement>) => {
+  const getImagePoint = useCallback((e: MouseEvent<HTMLElement>) => {
     const img = imgRef.current;
     const rect = img?.getBoundingClientRect();
-    if (!rect || !img) return;
+    if (!rect || !img) return null;
 
     const scaleX = img.naturalWidth / rect.width;
     const scaleY = img.naturalHeight / rect.height;
 
-    const x = (e.clientX - rect.left) * scaleX;
-    const y = (e.clientY - rect.top) * scaleY;
-
-    setIsDragging(true);
-    isDraggingRef.current = true;
-    startPos.current = { x, y };
-    const emptyCrop = { x, y, width: 0, height: 0 };
-    cropRef.current = emptyCrop;
-    setCrop(emptyCrop);
+    return {
+      x: Math.max(
+        0,
+        Math.min((e.clientX - rect.left) * scaleX, img.naturalWidth),
+      ),
+      y: Math.max(
+        0,
+        Math.min((e.clientY - rect.top) * scaleY, img.naturalHeight),
+      ),
+      imageWidth: img.naturalWidth,
+      imageHeight: img.naturalHeight,
+    };
   }, []);
+
+  const handleMouseDown = useCallback(
+    (e: MouseEvent<HTMLDivElement>) => {
+      if (e.button !== 0) return;
+
+      const point = getImagePoint(e);
+      if (!point) return;
+
+      setIsDragging(true);
+      isDraggingRef.current = true;
+
+      const currentCrop = cropRef.current;
+      const isInsideCrop =
+        currentCrop.width > 0 &&
+        currentCrop.height > 0 &&
+        point.x >= currentCrop.x &&
+        point.x <= currentCrop.x + currentCrop.width &&
+        point.y >= currentCrop.y &&
+        point.y <= currentCrop.y + currentCrop.height;
+
+      if (isInsideCrop) {
+        dragModeRef.current = 'move';
+        setDragMode('move');
+        moveOffset.current = {
+          x: point.x - currentCrop.x,
+          y: point.y - currentCrop.y,
+        };
+        return;
+      }
+
+      dragModeRef.current = 'draw';
+      setDragMode('draw');
+      startPos.current = { x: point.x, y: point.y };
+      const emptyCrop = { x: point.x, y: point.y, width: 0, height: 0 };
+      cropRef.current = emptyCrop;
+      setCrop(emptyCrop);
+    },
+    [getImagePoint],
+  );
 
   const handleMouseMove = useCallback(
     (e: MouseEvent<HTMLDivElement>) => {
       if (!isDragging || !imgRef.current) return;
 
-      const img = imgRef.current;
-      const rect = img.getBoundingClientRect();
+      const point = getImagePoint(e);
+      if (!point) return;
 
-      const scaleX = img.naturalWidth / rect.width;
-      const scaleY = img.naturalHeight / rect.height;
+      if (dragModeRef.current === 'move') {
+        const currentCrop = cropRef.current;
+        const newCrop = {
+          ...currentCrop,
+          x: Math.max(
+            0,
+            Math.min(
+              point.x - moveOffset.current.x,
+              point.imageWidth - currentCrop.width,
+            ),
+          ),
+          y: Math.max(
+            0,
+            Math.min(
+              point.y - moveOffset.current.y,
+              point.imageHeight - currentCrop.height,
+            ),
+          ),
+        };
 
-      let currentX = (e.clientX - rect.left) * scaleX;
-      let currentY = (e.clientY - rect.top) * scaleY;
+        cropRef.current = newCrop;
+        setCrop(newCrop);
+        onCropChange(newCrop);
+        return;
+      }
 
-      currentX = Math.max(0, Math.min(currentX, img.naturalWidth));
-      currentY = Math.max(0, Math.min(currentY, img.naturalHeight));
-
-      let width = currentX - startPos.current.x;
-      let height = aspect ? width / aspect : currentY - startPos.current.y;
+      let width = point.x - startPos.current.x;
+      let height = aspect ? width / aspect : point.y - startPos.current.y;
 
       if (aspect && Math.abs(height) > 0) {
-        const maxHeight = img.naturalHeight - Math.max(0, startPos.current.y);
-        const maxWidth = img.naturalWidth - Math.max(0, startPos.current.x);
+        const maxHeight = point.imageHeight - Math.max(0, startPos.current.y);
+        const maxWidth = point.imageWidth - Math.max(0, startPos.current.x);
 
         if (Math.abs(height) > maxHeight) {
           height = Math.sign(height) * maxHeight;
@@ -142,8 +207,8 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
       }
 
       const newCrop = {
-        x: width > 0 ? startPos.current.x : currentX,
-        y: height > 0 ? startPos.current.y : currentY,
+        x: width > 0 ? startPos.current.x : point.x,
+        y: height > 0 ? startPos.current.y : point.y,
         width: Math.abs(width),
         height: Math.abs(height),
       };
@@ -152,7 +217,7 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
       setCrop(newCrop);
       onCropChange(newCrop);
     },
-    [isDragging, aspect, onCropChange],
+    [isDragging, aspect, getImagePoint, onCropChange],
   );
 
   const stopDragging = useCallback(() => {
@@ -178,9 +243,15 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
       style={{
         position: 'relative',
         display: 'inline-block',
-        cursor: isDragging ? 'grabbing' : 'crosshair',
+        cursor:
+          isDragging && dragMode === 'move'
+            ? 'grabbing'
+            : isDragging
+              ? 'crosshair'
+              : 'crosshair',
         userSelect: 'none',
       }}
+      onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={stopDragging}
       onMouseLeave={stopDragging}
@@ -190,7 +261,6 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
         src={src}
         alt="Crop Source"
         onLoad={updateDisplayScale}
-        onMouseDown={handleMouseDown}
         style={{ display: 'block', maxWidth: '100%', userSelect: 'none' }}
         draggable={false}
       />
@@ -203,7 +273,7 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
             border: `${lineWidth}px dashed ${lineColor}`,
             backgroundColor: 'rgba(255, 255, 255, 0.1)',
             boxShadow: `0 0 0 9999px rgba(0, 0, 0, ${overlayOpacity})`,
-            pointerEvents: 'none',
+            cursor: isDragging ? 'grabbing' : 'move',
             left: crop.x * displayScale.scaleX,
             top: crop.y * displayScale.scaleY,
             width: crop.width * displayScale.scaleX,

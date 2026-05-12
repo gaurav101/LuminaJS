@@ -1,6 +1,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import { useLumina, LuminaCanvas } from '@gks101/luminajs/react';
 import './App.css';
+
 function App() {
   const [brightness, setBrightness] = useState(0);
   const [contrast, setContrast] = useState(0);
@@ -376,6 +377,14 @@ function App() {
             </div>
           </div>
         </aside>
+
+        {/*<section>*/}
+        {/*  <div className={'preview-panel'}>*/}
+        {/*    <ImageCropper src={'sample.png'} className="card" />*/}
+        {/*  </div>*/}
+
+        {/*  <ImageCropperExample />*/}
+        {/*</section>*/}
       </main>
     </div>
   );

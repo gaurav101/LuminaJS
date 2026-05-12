@@ -519,8 +519,8 @@ The component accepts a `getImage` prop. This is a callback that will be trigger
 
 MIT © LuminaJS Team
 
-
 ## ImageCropper - Props
+
 This repository includes the ImageCropper component. New props were added to allow customizing the Apply Crop and Reset buttons:
 
 - applyButtonClassName: string (optional) - CSS class for the Apply button.

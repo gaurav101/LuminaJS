@@ -309,8 +309,8 @@ Remote images must be accessible to the browser canvas. If you see CORS errors, 
 - [useLumina Hook Documentation](./useLumina.md)
 - [LuminaJS Core API](./README.md)
 
-
 ## ImageCropper - Props
+
 This repository includes the ImageCropper component. New props were added to allow customizing the Apply Crop and Reset buttons:
 
 - applyButtonClassName: string (optional) - CSS class for the Apply button.

@@ -98,7 +98,6 @@ export function ImageCropperExample() {
         <div
           style={{
             padding: '20px',
-            backgroundColor: '#f5f5f5',
             borderRadius: '8px',
             marginTop: '20px',
           }}
@@ -156,106 +155,6 @@ export function ImageCropperExample() {
           </div>
         </div>
       )}
-
-      {/* Usage Examples */}
-      <div
-        style={{
-          marginTop: '40px',
-          padding: '20px',
-          backgroundColor: '#f0f0f0',
-          borderRadius: '8px',
-          color: '#333',
-        }}
-      >
-        <h3>Usage Examples</h3>
-
-        <h4>1. Basic ImageCropper</h4>
-        <pre
-          style={{
-            backgroundColor: '#fff',
-            padding: '12px',
-            borderRadius: '4px',
-            overflow: 'auto',
-            fontSize: '12px',
-          }}
-        >
-          {`import { ImageCropper } from '@lumina/react';
-
-export function MyComponent() {
-  const handleCropComplete = (croppedBlob: Blob) => {
-    // Use the cropped image
-    const url = URL.createObjectURL(croppedBlob);
-    console.log(url);
-  };
-
-  return (
-    <ImageCropper
-      src="photo.jpg"
-      aspectRatio={16 / 9}
-      outputFormat="blob"
-      onCropComplete={handleCropComplete}
-    />
-  );
-}`}
-        </pre>
-
-        <h4>2. Custom Aspect Ratio</h4>
-        <pre
-          style={{
-            backgroundColor: '#fff',
-            padding: '12px',
-            borderRadius: '4px',
-            overflow: 'auto',
-            fontSize: '12px',
-          }}
-        >
-          {`// Square crop (1:1)
-<ImageCropper src={imageSrc} aspectRatio={1} />
-
-// Portrait (9:16)
-<ImageCropper src={imageSrc} aspectRatio={9 / 16} />
-
-// Instagram post (1.2:1)
-<ImageCropper src={imageSrc} aspectRatio={1.2} />`}
-        </pre>
-
-        <h4>3. Using ImageAreaSelector with useLumina</h4>
-        <pre
-          style={{
-            backgroundColor: '#fff',
-            padding: '12px',
-            borderRadius: '4px',
-            overflow: 'auto',
-            fontSize: '12px',
-          }}
-        >
-          {`import { ImageAreaSelector, useLumina } from '@lumina/react';
-
-export function AdvancedCropper() {
-  const [crop, setCrop] = useState({ x: 0, y: 0, width: 0, height: 0 });
-
-  const { result } = useLumina({
-    source: 'photo.jpg',
-    crop,
-    // Can chain filters before cropping
-    grayscale: true,
-    brightness: 10,
-    outputType: 'blob',
-  });
-
-  return (
-    <>
-      <ImageAreaSelector
-        src="photo.jpg"
-        onCropChange={setCrop}
-        aspect={16 / 9}
-      />
-      {result && <img src={URL.createObjectURL(result)} />}
-    </>
-  );
-}`}
-        </pre>
-      </div>
     </div>
   );
 }

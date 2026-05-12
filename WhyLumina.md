@@ -201,8 +201,8 @@ Whether you need a simple client-side resizer to save upload bandwidth or a tool
 - **NPM:** [@gks101/luminajs](https://www.npmjs.com/package/@gks101/luminajs)
 - **Live Demo:** [Check out the official Demo Page](https://gaurav101.github.io/LuminaJS/)
 
-
 ## ImageCropper - Props
+
 This repository includes the ImageCropper component. New props were added to allow customizing the Apply Crop and Reset buttons:
 
 - applyButtonClassName: string (optional) - CSS class for the Apply button.

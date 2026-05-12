@@ -290,8 +290,8 @@ When processing fails, the component renders a `<div className="lumina-error">` 
 - Put simple edits in props and reserve `filter` for custom chains.
 - Remember that `filter` runs after the explicit editing props, so avoid duplicating the same operation in both places unless order is intentional.
 
-
 ## ImageCropper - Props
+
 This repository includes the ImageCropper component. New props were added to allow customizing the Apply Crop and Reset buttons:
 
 - applyButtonClassName: string (optional) - CSS class for the Apply button.

@@ -67,7 +67,6 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
   outputFormat = 'blob',
   maxWidth = 600,
   maxHeight = 400,
-  showPreview = true,
   allowReset = true,
   className,
   style,
@@ -220,7 +219,6 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
       style={{
         padding: '16px',
         borderRadius: '8px',
-        backgroundColor: '#f5f5f5',
         ...style,
       }}
     >
@@ -232,7 +230,6 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
           borderRadius: '6px',
           overflow: 'hidden',
           border: '1px solid #ddd',
-          backgroundColor: '#fff',
         }}
       >
         {appliedPreviewSrc ? (
@@ -312,7 +309,7 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
               gap: '8px',
             }}
           >
-              <button
+            <button
               type="button"
               onClick={handleApplyCrop}
               disabled={isCropping}
