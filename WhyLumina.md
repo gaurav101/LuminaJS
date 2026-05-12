@@ -200,3 +200,16 @@ Whether you need a simple client-side resizer to save upload bandwidth or a tool
 - **GitHub:** [gaurav101/LuminaJS](https://github.com/gaurav101/LuminaJS)
 - **NPM:** [@gks101/luminajs](https://www.npmjs.com/package/@gks101/luminajs)
 - **Live Demo:** [Check out the official Demo Page](https://gaurav101.github.io/LuminaJS/)
+
+
+## ImageCropper - Props
+This repository includes the ImageCropper component. New props were added to allow customizing the Apply Crop and Reset buttons:
+
+- applyButtonClassName: string (optional) - CSS class for the Apply button.
+- applyButtonStyle: CSSProperties (optional) - Inline style object for the Apply button.
+- resetButtonClassName: string (optional) - CSS class for the Reset button.
+- resetButtonStyle: CSSProperties (optional) - Inline style object for the Reset button.
+- onApply: (crop) => boolean | void | Promise<boolean | void> (optional) - Callback invoked when the Apply button is clicked. Returning `false` (or a Promise resolving to `false`) will abort the component's default apply behavior.
+- onReset: () => boolean | void | Promise<boolean | void> (optional) - Callback invoked when Reset is clicked. Returning `false` will abort the default reset.
+
+These props are optional and backward-compatible.

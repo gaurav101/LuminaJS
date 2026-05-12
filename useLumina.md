@@ -324,3 +324,16 @@ export function AsciiPreview() {
 - Keep expensive processing away from every keystroke; debounce sliders or text fields when processing large images.
 - Prefer explicit editing options for common filters and reserve `operations` for custom ordering or advanced chains.
 - Handle all three states in the UI: `loading`, `error`, and `result`.
+
+
+## ImageCropper - Props
+This repository includes the ImageCropper component. New props were added to allow customizing the Apply Crop and Reset buttons:
+
+- applyButtonClassName: string (optional) - CSS class for the Apply button.
+- applyButtonStyle: CSSProperties (optional) - Inline style object for the Apply button.
+- resetButtonClassName: string (optional) - CSS class for the Reset button.
+- resetButtonStyle: CSSProperties (optional) - Inline style object for the Reset button.
+- onApply: (crop) => boolean | void | Promise<boolean | void> (optional) - Callback invoked when the Apply button is clicked. Returning `false` (or a Promise resolving to `false`) will abort the component's default apply behavior.
+- onReset: () => boolean | void | Promise<boolean | void> (optional) - Callback invoked when Reset is clicked. Returning `false` will abort the default reset.
+
+These props are optional and backward-compatible.

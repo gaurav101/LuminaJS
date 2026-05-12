@@ -289,3 +289,16 @@ When processing fails, the component renders a `<div className="lumina-error">` 
 - Use `source={null}` while waiting for a user upload or async image selection.
 - Put simple edits in props and reserve `filter` for custom chains.
 - Remember that `filter` runs after the explicit editing props, so avoid duplicating the same operation in both places unless order is intentional.
+
+
+## ImageCropper - Props
+This repository includes the ImageCropper component. New props were added to allow customizing the Apply Crop and Reset buttons:
+
+- applyButtonClassName: string (optional) - CSS class for the Apply button.
+- applyButtonStyle: CSSProperties (optional) - Inline style object for the Apply button.
+- resetButtonClassName: string (optional) - CSS class for the Reset button.
+- resetButtonStyle: CSSProperties (optional) - Inline style object for the Reset button.
+- onApply: (crop) => boolean | void | Promise<boolean | void> (optional) - Callback invoked when the Apply button is clicked. Returning `false` (or a Promise resolving to `false`) will abort the component's default apply behavior.
+- onReset: () => boolean | void | Promise<boolean | void> (optional) - Callback invoked when Reset is clicked. Returning `false` will abort the default reset.
+
+These props are optional and backward-compatible.

@@ -80,3 +80,16 @@ const { result: asciiText, loading: asciiLoading } = useLumina<string>({
 - **Vite** - Next generation frontend tooling
 - **LuminaJS** - Advanced image processing library
 - **Vite Plugin React** - Fast Refresh support
+
+
+## ImageCropper - Props
+This repository includes the ImageCropper component. New props were added to allow customizing the Apply Crop and Reset buttons:
+
+- applyButtonClassName: string (optional) - CSS class for the Apply button.
+- applyButtonStyle: CSSProperties (optional) - Inline style object for the Apply button.
+- resetButtonClassName: string (optional) - CSS class for the Reset button.
+- resetButtonStyle: CSSProperties (optional) - Inline style object for the Reset button.
+- onApply: (crop) => boolean | void | Promise<boolean | void> (optional) - Callback invoked when the Apply button is clicked. Returning `false` (or a Promise resolving to `false`) will abort the component's default apply behavior.
+- onReset: () => boolean | void | Promise<boolean | void> (optional) - Callback invoked when Reset is clicked. Returning `false` will abort the default reset.
+
+These props are optional and backward-compatible.
