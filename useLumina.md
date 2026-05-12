@@ -333,6 +333,8 @@ This repository includes the ImageCropper component. New props were added to all
 - applyButtonStyle: CSSProperties (optional) - Inline style object for the Apply button.
 - resetButtonClassName: string (optional) - CSS class for the Reset button.
 - resetButtonStyle: CSSProperties (optional) - Inline style object for the Reset button.
+- buttonPosition: 'top-left' | 'top-right' | 'top-center' | 'bottom-left' | 'bottom-center' | 'bottom-right' (optional) - Position of the Apply/Reset button container. Default: 'top-left'.
+- zIndex: number (internal) - The button container uses a high z-index (1001) to ensure the buttons render above the image selection overlay.
 - onApply: (crop) => boolean | void | Promise<boolean | void> (optional) - Callback invoked when the Apply button is clicked. Returning `false` (or a Promise resolving to `false`) will abort the component's default apply behavior.
 - onReset: () => boolean | void | Promise<boolean | void> (optional) - Callback invoked when Reset is clicked. Returning `false` will abort the default reset.
 
