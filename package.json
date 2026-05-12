@@ -21,6 +21,10 @@
     "dist",
     "!dist/examples",
     "README.md",
+    "IMAGE_CROPPER_GUIDE.md",
+    "WhyLumina.md",
+    "LuminaCanvas.md",
+    "useLumina.md",
     "LICENSE"
   ],
   "exports": {
