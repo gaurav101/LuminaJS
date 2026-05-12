@@ -1,6 +1,8 @@
 import { useState, useCallback, useMemo } from 'react';
 import { useLumina, LuminaCanvas } from '@gks101/luminajs/react';
 import './App.css';
+import { ImageCropper } from '../../../src/react';
+import ImageCropperExample from '../../../src/react/ImageCropperExample.tsx';
 
 function App() {
   const [brightness, setBrightness] = useState(0);
@@ -378,13 +380,13 @@ function App() {
           </div>
         </aside>
 
-        {/*<section>*/}
-        {/*  <div className={'preview-panel'}>*/}
-        {/*    <ImageCropper src={'sample.png'} className="card" />*/}
-        {/*  </div>*/}
+        <section>
+          <div className={'preview-panel'}>
+            <ImageCropper src={'sample.png'} className="card" />
+          </div>
 
-        {/*  <ImageCropperExample />*/}
-        {/*</section>*/}
+          <ImageCropperExample />
+        </section>
       </main>
     </div>
   );
