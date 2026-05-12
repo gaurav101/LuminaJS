@@ -5,7 +5,7 @@ import {
   useEffect,
   FC,
   MouseEvent,
-  ReactNode,
+  ReactNode
 } from 'react';
 
 export interface CropArea {
@@ -32,7 +32,7 @@ interface ImageAreaSelectorProps {
     height: number;
     scaleX: number;
     scaleY: number;
-  }) => React.ReactNode;
+  }) => ReactNode;
 }
 
 type DragMode = 'draw' | 'move';
@@ -73,6 +73,8 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
   lineWidth = 2,
   lineColor = '#fff',
   overlayOpacity = 0.5,
+  overlayControls,
+
 }) => {
   const [crop, setCrop] = useState<CropArea>({
     x: 0,
