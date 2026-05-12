@@ -239,11 +239,21 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
       case 'top-right':
         return { ...base, top: '12px', right: '12px' };
       case 'top-center':
-        return { ...base, top: '12px', left: '50%', transform: 'translateX(-50%)' };
+        return {
+          ...base,
+          top: '12px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+        };
       case 'bottom-left':
         return { ...base, bottom: '12px', left: '12px' };
       case 'bottom-center':
-        return { ...base, bottom: '12px', left: '50%', transform: 'translateX(-50%)' };
+        return {
+          ...base,
+          bottom: '12px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+        };
       case 'bottom-right':
         return { ...base, bottom: '12px', right: '12px' };
       default:
