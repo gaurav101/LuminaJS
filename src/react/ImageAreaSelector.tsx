@@ -315,7 +315,13 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
                     left: leftPx,
                     top: controlsTop,
                     zIndex: 1001,
+                    // Ensure controls receive pointer events and don't let parent start drag
+                    pointerEvents: 'auto',
                   }}
+                  // Prevent parent drag/selection handlers from reacting to clicks on controls
+                  onMouseDown={(ev) => ev.stopPropagation()}
+                  onMouseUp={(ev) => ev.stopPropagation()}
+                  onClick={(ev) => ev.stopPropagation()}
                 >
                   {overlayControls({
                     left: leftPx,
