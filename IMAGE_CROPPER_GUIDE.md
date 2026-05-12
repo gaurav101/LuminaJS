@@ -19,7 +19,7 @@ The `ImageCropper` component provides a complete, production-ready image croppin
 ### Basic Usage
 
 ```tsx
-import { ImageCropper } from '@lumina/react';
+import { ImageCropper } from '@gks101/luminajs/react';
 
 export function App() {
   const handleCropComplete = (croppedBlob: Blob) => {
@@ -77,7 +77,7 @@ export function App() {
 
 ```tsx
 import { useState, useRef } from 'react';
-import { ImageCropper } from '@lumina/react';
+import { ImageCropper } from '@gks101/luminajs/react';
 
 export function CropUpload() {
   const [file, setFile] = useState<File | null>(null);
@@ -123,7 +123,7 @@ Low-level component for interactive crop area selection. Useful if you need cust
 ### Basic Usage
 
 ```tsx
-import { ImageAreaSelector, type CropArea } from '@lumina/react';
+import { ImageAreaSelector, type CropArea } from '@gks101/luminajs/react';
 import { useState } from 'react';
 
 export function CustomCropper() {
@@ -185,7 +185,11 @@ interface CropArea {
 For advanced workflows where you need custom filtering + cropping:
 
 ```tsx
-import { ImageAreaSelector, useLumina, type CropArea } from '@lumina/react';
+import {
+  ImageAreaSelector,
+  useLumina,
+  type CropArea,
+} from '@gks101/luminajs/react';
 import { useState } from 'react';
 
 export function FilterAndCrop() {
@@ -231,7 +235,7 @@ export function FilterAndCrop() {
 Since `ImageCropper` internally uses `LuminaCanvas`, you can leverage the `filter` prop on `LuminaCanvas` for advanced workflows:
 
 ```tsx
-import { ImageCropper } from '@lumina/react';
+import { ImageCropper } from '@gks101/luminajs/react';
 
 export function FilterAndCrop() {
   const handleCropComplete = (croppedBlob: Blob) => {
@@ -258,7 +262,7 @@ export function FilterAndCrop() {
 
 ```tsx
 import { useState, useRef } from 'react';
-import { ImageCropper } from '@lumina/react';
+import { ImageCropper } from '@gks101/luminajs/react';
 
 export function UploadCrop() {
   const [file, setFile] = useState<File | null>(null);
@@ -341,7 +345,11 @@ export function ProfilePictureCropper() {
 ### Pattern 3: Multiple Crops (e.g., Banner + Thumbnail)
 
 ```tsx
-import { ImageAreaSelector, useLumina, type CropArea } from '@lumina/react';
+import {
+  ImageAreaSelector,
+  useLumina,
+  type CropArea,
+} from '@gks101/luminajs/react';
 import { useState } from 'react';
 
 export function MultipleCrops() {
@@ -507,4 +515,4 @@ const { result } = useLumina({
 
 - [LuminaCanvas Documentation](./LuminaCanvas.md)
 - [useLumina Hook Documentation](./useLumina.md)
-- [LuminaJS Core API](../core/README.md)
+- [LuminaJS Core API](./README.md)
