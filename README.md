@@ -32,7 +32,7 @@ npm install @gks101/luminajs
 ```
 
 ```jsx
-import { useLumina, LuminaCanvas } from '@gks101/luminajs/react';
+import { useLumina, LuminaCanvas, ImageCropper } from '@gks101/luminajs/react';
 ```
 
 ## Building from Source
@@ -413,6 +413,54 @@ function App() {
     />
   );
 }
+```
+
+### `ImageCropper` Component
+
+`ImageCropper` provides a complete drag-to-crop workflow. The crop is applied automatically when the user finishes selecting an area, and the same component swaps from the original image selector to the cropped `LuminaCanvas` result. The Reset button reloads the original image for another crop.
+
+```jsx
+import { useState } from 'react';
+import { ImageCropper } from '@gks101/luminajs/react';
+
+function AvatarEditor() {
+  const [avatarPreview, setAvatarPreview] = useState('');
+
+  return (
+    <>
+      <ImageCropper
+        src="portrait.jpg"
+        aspectRatio={1}
+        outputFormat="dataUrl"
+        maxWidth={500}
+        maxHeight={500}
+        onCropComplete={(result) => {
+          if (typeof result === 'string') setAvatarPreview(result);
+        }}
+        onError={(error) => console.error(error.message)}
+      />
+
+      {avatarPreview && <img src={avatarPreview} alt="Cropped avatar" />}
+    </>
+  );
+}
+```
+
+For uploads, use `outputFormat="blob"`:
+
+```jsx
+<ImageCropper
+  src={file}
+  aspectRatio={16 / 9}
+  outputFormat="blob"
+  onCropComplete={async (result) => {
+    if (!(result instanceof Blob)) return;
+
+    const body = new FormData();
+    body.append('image', result, 'banner.png');
+    await fetch('/api/upload', { method: 'POST', body });
+  }}
+/>
 ```
 
 ### Available React Props

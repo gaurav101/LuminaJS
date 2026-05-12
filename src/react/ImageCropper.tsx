@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { lumina } from '../index.js';
 import { LuminaCanvas } from './LuminaCanvas';
 import { ImageAreaSelector, type CropArea } from './ImageAreaSelector';
@@ -18,10 +18,10 @@ export interface ImageCropperProps {
 }
 
 /**
- * ImageCropper - A complete image cropping interface with preview.
+ * ImageCropper - A complete image cropping interface with automatic processing.
  *
  * Combines the `ImageAreaSelector` for interactive crop area selection with
- * `LuminaCanvas` for processing. Provides a full UI with controls.
+ * `LuminaCanvas` for rendering the applied crop in the same component.
  *
  * @param {ImageCropperProps} props
  * @param {string | File | HTMLImageElement | HTMLCanvasElement | ImageData | null} props.src - Image source
@@ -31,8 +31,7 @@ export interface ImageCropperProps {
  * @param {'blob' | 'dataUrl'} [props.outputFormat='blob'] - Output format for cropped image
  * @param {number} [props.maxWidth] - Max width of the container
  * @param {number} [props.maxHeight] - Max height of the container
- * @param {boolean} [props.showPreview=true] - Show the cropped preview
- * @param {boolean} [props.allowReset=true] - Show reset button
+ * @param {boolean} [props.allowReset=true] - Show reset button after crop is applied.
  * @param {string} [props.className] - CSS class name
  * @param {React.CSSProperties} [props.style] - Inline styles
  *
@@ -59,73 +58,97 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
   outputFormat = 'blob',
   maxWidth = 600,
   maxHeight = 400,
-  showPreview = true,
   allowReset = true,
   className,
   style,
 }) => {
-  const [crop, setCrop] = useState<CropArea>({
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0,
-  });
   const [isCropping, setIsCropping] = useState(false);
+  const [appliedPreview, setAppliedPreview] = useState<{
+    source: ImageCropperProps['src'];
+    src: string;
+  } | null>(null);
+  const appliedPreviewSrc =
+    appliedPreview?.source === src ? appliedPreview.src : null;
 
   // Convert File to URL for ImageAreaSelector
-  const imageSrc =
-    typeof src === 'string'
-      ? src
-      : src instanceof File
-        ? URL.createObjectURL(src)
-        : undefined;
+  const imageSrc = useMemo(() => {
+    if (typeof src === 'string') return src;
+    if (src instanceof File) return URL.createObjectURL(src);
+    return undefined;
+  }, [src]);
 
-  const handleCropChange = useCallback((newCrop: CropArea) => {
-    setCrop(newCrop);
-  }, []);
-
-  const handleApplyCrop = useCallback(async () => {
-    if (crop.width === 0 || crop.height === 0) {
-      onError?.(new Error('Please select a crop area'));
-      return;
-    }
-
-    if (!src) {
-      onError?.(new Error('No source image provided'));
-      return;
-    }
-
-    setIsCropping(true);
-
-    try {
-      const chain = lumina(src).crop(crop.x, crop.y, crop.width, crop.height);
-
-      if (outputFormat === 'blob') {
-        const blob = await chain.toBlob();
-        if (blob) {
-          onCropComplete?.(blob);
-        } else {
-          throw new Error('Failed to generate cropped blob.');
-        }
-      } else {
-        const dataUrl = await chain.toDataURL();
-        onCropComplete?.(dataUrl);
+  useEffect(() => {
+    return () => {
+      if (imageSrc && src instanceof File) {
+        URL.revokeObjectURL(imageSrc);
       }
-    } catch (err) {
-      const error = err instanceof Error ? err : new Error(String(err));
-      onError?.(error);
-    } finally {
-      setIsCropping(false);
-    }
-  }, [crop, onError, onCropComplete, outputFormat, src]);
+    };
+  }, [imageSrc, src]);
 
-  const handleReset = useCallback(() => {
-    setCrop({ x: 0, y: 0, width: 0, height: 0 });
+  useEffect(() => {
+    return () => {
+      if (appliedPreview?.src.startsWith('blob:')) {
+        URL.revokeObjectURL(appliedPreview.src);
+      }
+    };
+  }, [appliedPreview]);
+
+  const handleCropChange = useCallback(() => {
+    setAppliedPreview(null);
   }, []);
+
+  const handleCropComplete = useCallback(
+    async (selectedCrop: CropArea) => {
+      if (selectedCrop.width === 0 || selectedCrop.height === 0) {
+        onError?.(new Error('Please select a crop area'));
+        return;
+      }
+
+      if (!src) {
+        onError?.(new Error('No source image provided'));
+        return;
+      }
+
+      setIsCropping(true);
+
+      try {
+        const chain = lumina(src).crop(
+          selectedCrop.x,
+          selectedCrop.y,
+          selectedCrop.width,
+          selectedCrop.height,
+        );
+
+        if (outputFormat === 'blob') {
+          const blob = await chain.toBlob();
+          if (blob) {
+            setAppliedPreview({ source: src, src: URL.createObjectURL(blob) });
+            onCropComplete?.(blob);
+          } else {
+            throw new Error('Failed to generate cropped blob.');
+          }
+        } else {
+          const dataUrl = await chain.toDataURL();
+          setAppliedPreview({ source: src, src: dataUrl });
+          onCropComplete?.(dataUrl);
+        }
+      } catch (err) {
+        const error = err instanceof Error ? err : new Error(String(err));
+        onError?.(error);
+      } finally {
+        setIsCropping(false);
+      }
+    },
+    [onError, onCropComplete, outputFormat, src],
+  );
 
   const handleProcessError = (error: Error) => {
     onError?.(error);
   };
+
+  const handleReset = useCallback(() => {
+    setAppliedPreview(null);
+  }, []);
 
   return (
     <div
@@ -139,180 +162,78 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
     >
       <div
         style={{
-          display: 'flex',
-          gap: '16px',
-          flexWrap: 'wrap',
+          position: 'relative',
+          maxWidth: maxWidth,
+          maxHeight: maxHeight,
+          borderRadius: '6px',
+          overflow: 'hidden',
+          border: '1px solid #ddd',
+          backgroundColor: '#fff',
         }}
       >
-        {/* Left: Selection Area */}
-        <div
-          style={{
-            flex: 1,
-            minWidth: '300px',
-            maxWidth: maxWidth,
-            maxHeight: maxHeight,
-            borderRadius: '6px',
-            overflow: 'hidden',
-            border: '1px solid #ddd',
-            backgroundColor: '#fff',
-          }}
-        >
-          {imageSrc && (
+        {appliedPreviewSrc ? (
+          <LuminaCanvas
+            source={appliedPreviewSrc}
+            style={{
+              width: '100%',
+              height: '100%',
+              display: 'block',
+            }}
+            onProcessError={handleProcessError}
+          />
+        ) : (
+          imageSrc && (
             <ImageAreaSelector
               src={imageSrc}
               aspect={aspectRatio}
               onCropChange={handleCropChange}
+              onCropComplete={handleCropComplete}
               lineColor="#0066cc"
               overlayOpacity={0.6}
             />
-          )}
-        </div>
+          )
+        )}
 
-        {/* Right: Preview & Controls */}
-        <div
-          style={{
-            flex: 1,
-            minWidth: '250px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '12px',
-          }}
-        >
-          {/* Preview */}
-          {showPreview && (
-            <div
-              style={{
-                padding: '12px',
-                backgroundColor: '#fff',
-                borderRadius: '6px',
-                border: '1px solid #ddd',
-              }}
-            >
-              <h4
-                style={{ margin: '0 0 8px 0', fontSize: '14px', color: '#333' }}
-              >
-                Preview
-              </h4>
-              <div
-                style={{
-                  position: 'relative',
-                  width: '100%',
-                  aspectRatio: aspectRatio || 'auto',
-                  minHeight: '150px',
-                  backgroundColor: '#f0f0f0',
-                  borderRadius: '4px',
-                  overflow: 'hidden',
-                }}
-              >
-                {src && crop.width > 0 && crop.height > 0 && (
-                  <LuminaCanvas
-                    source={src}
-                    crop={crop}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      display: 'block',
-                    }}
-                    onProcessError={handleProcessError}
-                  />
-                )}
-                {crop.width === 0 && (
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      height: '100%',
-                      color: '#999',
-                      fontSize: '12px',
-                    }}
-                  >
-                    Select a crop area
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Crop Info */}
+        {isCropping && (
           <div
             style={{
-              padding: '12px',
-              backgroundColor: '#fff',
-              borderRadius: '6px',
-              border: '1px solid #ddd',
-              fontSize: '13px',
-              color: '#666',
-            }}
-          >
-            <div style={{ marginBottom: '8px' }}>
-              <strong>Crop Area:</strong>
-            </div>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: '8px',
-              }}
-            >
-              <div>X: {Math.round(crop.x)}px</div>
-              <div>Y: {Math.round(crop.y)}px</div>
-              <div>Width: {Math.round(crop.width)}px</div>
-              <div>Height: {Math.round(crop.height)}px</div>
-            </div>
-          </div>
-
-          {/* Controls */}
-          <div
-            style={{
+              position: 'absolute',
+              inset: 0,
               display: 'flex',
-              gap: '8px',
-              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(255, 255, 255, 0.75)',
+              color: '#333',
+              fontSize: '14px',
+              fontWeight: 500,
             }}
           >
-            <button
-              onClick={handleApplyCrop}
-              disabled={isCropping || crop.width === 0 || crop.height === 0}
-              style={{
-                padding: '10px 16px',
-                backgroundColor: '#0066cc',
-                color: '#fff',
-                border: 'none',
-                borderRadius: '4px',
-                cursor:
-                  crop.width === 0 || crop.height === 0 || isCropping
-                    ? 'not-allowed'
-                    : 'pointer',
-                opacity:
-                  crop.width === 0 || crop.height === 0 || isCropping ? 0.5 : 1,
-                fontSize: '14px',
-                fontWeight: '500',
-                transition: 'all 0.2s',
-              }}
-            >
-              {isCropping ? 'Processing...' : 'Apply Crop'}
-            </button>
-
-            {allowReset && (
-              <button
-                onClick={handleReset}
-                style={{
-                  padding: '10px 16px',
-                  backgroundColor: '#f0f0f0',
-                  color: '#333',
-                  border: '1px solid #ddd',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  fontWeight: '500',
-                  transition: 'all 0.2s',
-                }}
-              >
-                Reset
-              </button>
-            )}
+            Processing...
           </div>
-        </div>
+        )}
+
+        {allowReset && appliedPreviewSrc && !isCropping && (
+          <button
+            type="button"
+            onClick={handleReset}
+            style={{
+              position: 'absolute',
+              top: '12px',
+              right: '12px',
+              padding: '8px 12px',
+              backgroundColor: '#fff',
+              color: '#333',
+              border: '1px solid #ddd',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '13px',
+              fontWeight: 500,
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.12)',
+            }}
+          >
+            Reset
+          </button>
+        )}
       </div>
     </div>
   );

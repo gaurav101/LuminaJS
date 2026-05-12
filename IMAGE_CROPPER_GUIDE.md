@@ -1,124 +1,186 @@
 # ImageCropper Tool Guide
 
-This guide covers the image cropping tools available in LuminaJS React components.
+This guide covers the LuminaJS React cropping tools.
 
 ## Overview
 
-LuminaJS provides three components for image cropping:
+LuminaJS provides three ways to build cropping workflows:
 
-1. **`ImageAreaSelector`** - Low-level interactive crop area selection
-2. **`ImageCropper`** - High-level complete cropping interface with preview and controls
-3. **`useLumina` hook** - For custom cropping workflows
+1. **`ImageCropper`** - High-level automatic cropper. Drag a crop area, release, and the crop is applied immediately.
+2. **`ImageAreaSelector`** - Low-level selector for custom crop UIs.
+3. **`useLumina`** - Hook for custom crop, filter, upload, and save workflows.
 
 ---
 
-## ImageCropper (Recommended)
+## ImageCropper Recommended
 
-The `ImageCropper` component provides a complete, production-ready image cropping interface.
+`ImageCropper` is the quickest way to add image cropping to a React app. The user selects an area directly on the image. When the selection is completed, LuminaJS crops the image and replaces the original selector with a `LuminaCanvas` rendering of the cropped result.
+
+The built-in Reset button reloads the original image selector so the user can crop again.
 
 ### Basic Usage
 
 ```tsx
 import { ImageCropper } from '@gks101/luminajs/react';
 
-export function App() {
-  const handleCropComplete = (croppedBlob: Blob) => {
-    const url = URL.createObjectURL(croppedBlob);
-    console.log('Cropped image:', url);
+export function AvatarCropper() {
+  const handleCropComplete = (croppedImage: Blob | string) => {
+    console.log('Cropped image:', croppedImage);
   };
 
-  return <ImageCropper src="photo.jpg" onCropComplete={handleCropComplete} />;
+  return (
+    <ImageCropper
+      src="/photo.jpg"
+      aspectRatio={1}
+      outputFormat="blob"
+      onCropComplete={handleCropComplete}
+    />
+  );
 }
 ```
 
 ### Props
 
-| Prop             | Type                                                                           | Default  | Description                                       |
-| ---------------- | ------------------------------------------------------------------------------ | -------- | ------------------------------------------------- |
-| `src`            | `string \| File \| HTMLImageElement \| HTMLCanvasElement \| ImageData \| null` | —        | Image source (URL, File, or canvas element)       |
-| `onCropComplete` | `(result: Blob \| string) => void`                                             | —        | Callback when crop is applied                     |
-| `onError`        | `(error: Error) => void`                                                       | —        | Callback for errors                               |
-| `aspectRatio`    | `number`                                                                       | —        | Optional aspect ratio to enforce (width / height) |
-| `outputFormat`   | `'blob' \| 'dataUrl'`                                                          | `'blob'` | Output format for cropped image                   |
-| `maxWidth`       | `number`                                                                       | `600`    | Maximum width of the cropper container            |
-| `maxHeight`      | `number`                                                                       | `400`    | Maximum height of the cropper container           |
-| `showPreview`    | `boolean`                                                                      | `true`   | Show the cropped preview pane                     |
-| `allowReset`     | `boolean`                                                                      | `true`   | Show the reset button                             |
-| `className`      | `string`                                                                       | —        | CSS class name                                    |
-| `style`          | `React.CSSProperties`                                                          | —        | Inline styles                                     |
+| Prop             | Type                                                                           | Default  | Description                                                                    |
+| ---------------- | ------------------------------------------------------------------------------ | -------- | ------------------------------------------------------------------------------ |
+| `src`            | `string \| File \| HTMLImageElement \| HTMLCanvasElement \| ImageData \| null` | —        | Image source.                                                                  |
+| `onCropComplete` | `(result: Blob \| string) => void`                                             | —        | Called automatically after the user finishes selecting a crop area.            |
+| `onError`        | `(error: Error) => void`                                                       | —        | Called when source loading or crop processing fails.                           |
+| `aspectRatio`    | `number`                                                                       | —        | Optional fixed crop aspect ratio, expressed as `width / height`.               |
+| `outputFormat`   | `'blob' \| 'dataUrl'`                                                          | `'blob'` | Output format passed to `onCropComplete`.                                      |
+| `maxWidth`       | `number`                                                                       | `600`    | Maximum width of the cropper frame.                                            |
+| `maxHeight`      | `number`                                                                       | `400`    | Maximum height of the cropper frame.                                           |
+| `allowReset`     | `boolean`                                                                      | `true`   | Shows a Reset button after a crop is applied. Set `false` to hide it.          |
+| `showPreview`    | `boolean`                                                                      | —        | Deprecated. The same image area is used for both selection and cropped result. |
+| `className`      | `string`                                                                       | —        | CSS class name for the wrapper.                                                |
+| `style`          | `React.CSSProperties`                                                          | —        | Inline styles for the wrapper.                                                 |
 
-### Examples
-
-#### Square Crop (1:1)
+### Common Aspect Ratios
 
 ```tsx
-<ImageCropper src={imageUrl} aspectRatio={1} />
+<ImageCropper src={imageUrl} aspectRatio={1} />        // Square avatar
+<ImageCropper src={imageUrl} aspectRatio={16 / 9} />   // Landscape banner
+<ImageCropper src={imageUrl} aspectRatio={9 / 16} />   // Portrait story
+<ImageCropper src={imageUrl} aspectRatio={4 / 5} />    // Social post
 ```
 
-#### Portrait Aspect (9:16)
+### File Upload and Auto Crop
 
 ```tsx
-<ImageCropper src={imageUrl} aspectRatio={9 / 16} />
-```
-
-#### Landscape Aspect (16:9 - HD)
-
-```tsx
-<ImageCropper src={imageUrl} aspectRatio={16 / 9} />
-```
-
-#### Instagram Post (1.2:1)
-
-```tsx
-<ImageCropper src={imageUrl} aspectRatio={1.2} />
-```
-
-#### File Upload + Crop
-
-```tsx
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { ImageCropper } from '@gks101/luminajs/react';
 
-export function CropUpload() {
+export function UploadCropper() {
   const [file, setFile] = useState<File | null>(null);
-  const [result, setResult] = useState<Blob | null>(null);
+  const [croppedUrl, setCroppedUrl] = useState('');
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files?.[0];
-    if (f) setFile(f);
-  };
-
-  const handleCropComplete = (croppedBlob: Blob) => {
-    setResult(croppedBlob);
+  const handleCropComplete = (result: Blob | string) => {
+    if (result instanceof Blob) {
+      setCroppedUrl(URL.createObjectURL(result));
+    } else {
+      setCroppedUrl(result);
+    }
   };
 
   return (
-    <>
-      <input type="file" accept="image/*" onChange={handleFileSelect} />
+    <section>
+      <input
+        type="file"
+        accept="image/*"
+        onChange={(event) => setFile(event.target.files?.[0] ?? null)}
+      />
+
       {file && (
         <ImageCropper
           src={file}
-          aspectRatio={16 / 9}
+          aspectRatio={1}
+          outputFormat="blob"
           onCropComplete={handleCropComplete}
+          onError={(error) => console.error(error.message)}
         />
       )}
-      {result && (
-        <img
-          src={URL.createObjectURL(result)}
-          alt="Cropped"
-          style={{ maxWidth: '100%' }}
-        />
-      )}
+
+      {croppedUrl && <img src={croppedUrl} alt="Cropped result" />}
+    </section>
+  );
+}
+```
+
+### Upload Cropped Blob
+
+```tsx
+import { ImageCropper } from '@gks101/luminajs/react';
+
+export function ProfilePhotoCropper({ src }: { src: File | string }) {
+  const uploadAvatar = async (result: Blob | string) => {
+    if (!(result instanceof Blob)) return;
+
+    const formData = new FormData();
+    formData.append('avatar', result, 'avatar.png');
+
+    await fetch('/api/avatar', {
+      method: 'POST',
+      body: formData,
+    });
+  };
+
+  return (
+    <ImageCropper
+      src={src}
+      aspectRatio={1}
+      outputFormat="blob"
+      maxWidth={500}
+      maxHeight={500}
+      onCropComplete={uploadAvatar}
+    />
+  );
+}
+```
+
+### Data URL Output
+
+Use `outputFormat="dataUrl"` when the cropped result should be stored in component state or shown in an `<img>` without creating an object URL.
+
+```tsx
+import { useState } from 'react';
+import { ImageCropper } from '@gks101/luminajs/react';
+
+export function DataUrlCropper() {
+  const [preview, setPreview] = useState('');
+
+  return (
+    <>
+      <ImageCropper
+        src="/product.jpg"
+        aspectRatio={4 / 3}
+        outputFormat="dataUrl"
+        onCropComplete={(result) => {
+          if (typeof result === 'string') setPreview(result);
+        }}
+      />
+
+      {preview && <img src={preview} alt="Cropped product" />}
     </>
   );
 }
+```
+
+### Hide Reset
+
+```tsx
+<ImageCropper
+  src="/photo.jpg"
+  aspectRatio={16 / 9}
+  allowReset={false}
+  onCropComplete={(result) => console.log(result)}
+/>
 ```
 
 ---
 
 ## ImageAreaSelector
 
-Low-level component for interactive crop area selection. Useful if you need custom control over the cropping logic.
+`ImageAreaSelector` is the low-level crop selection component. It does not process the image by itself. Use it when you need a custom UI, multiple crop outputs, or filters before saving.
 
 ### Basic Usage
 
@@ -126,390 +188,120 @@ Low-level component for interactive crop area selection. Useful if you need cust
 import { ImageAreaSelector, type CropArea } from '@gks101/luminajs/react';
 import { useState } from 'react';
 
-export function CustomCropper() {
-  const [crop, setCrop] = useState<CropArea>({
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0,
-  });
+export function ManualSelector() {
+  const [crop, setCrop] = useState<CropArea | null>(null);
 
-  const handleCropChange = (newCrop: CropArea) => {
-    setCrop(newCrop);
-    console.log('Crop area:', newCrop);
-  };
+  return (
+    <>
+      <ImageAreaSelector
+        src="/photo.jpg"
+        aspect={16 / 9}
+        onCropChange={setCrop}
+        onCropComplete={(finalCrop) => {
+          console.log('Final crop:', finalCrop);
+        }}
+      />
 
-  return <ImageAreaSelector src="photo.jpg" onCropChange={handleCropChange} />;
+      {crop && <pre>{JSON.stringify(crop, null, 2)}</pre>}
+    </>
+  );
 }
 ```
 
 ### Props
 
-| Prop             | Type                       | Default  | Description                        |
-| ---------------- | -------------------------- | -------- | ---------------------------------- |
-| `src`            | `string`                   | —        | Image URL to display               |
-| `onCropChange`   | `(crop: CropArea) => void` | —        | Callback when crop area changes    |
-| `aspect`         | `number`                   | —        | Optional aspect ratio to enforce   |
-| `lineWidth`      | `number`                   | `2`      | Border line width in pixels        |
-| `lineColor`      | `string`                   | `'#fff'` | Border color (CSS color value)     |
-| `overlayOpacity` | `number`                   | `0.5`    | Opacity of darkened surround (0-1) |
-
-### CropArea Interface
-
-```tsx
-interface CropArea {
-  x: number; // Left position in pixels
-  y: number; // Top position in pixels
-  width: number; // Crop width in pixels
-  height: number; // Crop height in pixels
-}
-```
-
-### Custom Styling Example
-
-```tsx
-<ImageAreaSelector
-  src="photo.jpg"
-  onCropChange={handleCropChange}
-  aspect={1}
-  lineWidth={3}
-  lineColor="#00ff00"
-  overlayOpacity={0.7}
-/>
-```
-
----
-
-## Combining ImageAreaSelector with useLumina
-
-For advanced workflows where you need custom filtering + cropping:
-
-```tsx
-import {
-  ImageAreaSelector,
-  useLumina,
-  type CropArea,
-} from '@gks101/luminajs/react';
-import { useState } from 'react';
-
-export function FilterAndCrop() {
-  const [crop, setCrop] = useState<CropArea>({
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0,
-  });
-
-  // Apply filters AND crop
-  const { result } = useLumina({
-    source: 'photo.jpg',
-    grayscale: true, // Add filter
-    brightness: 20, // Add filter
-    crop, // Apply crop
-    outputType: 'blob',
-  });
-
-  return (
-    <>
-      <ImageAreaSelector
-        src="photo.jpg"
-        onCropChange={setCrop}
-        aspect={16 / 9}
-      />
-      {result && (
-        <img
-          src={URL.createObjectURL(result)}
-          alt="Processed"
-          style={{ maxWidth: '100%' }}
-        />
-      )}
-    </>
-  );
-}
-```
-
----
-
-## Using ImageCropper with Other Filters
-
-Since `ImageCropper` internally uses `LuminaCanvas`, you can leverage the `filter` prop on `LuminaCanvas` for advanced workflows:
-
-```tsx
-import { ImageCropper } from '@gks101/luminajs/react';
-
-export function FilterAndCrop() {
-  const handleCropComplete = (croppedBlob: Blob) => {
-    console.log('Cropped and filtered:', croppedBlob);
-  };
-
-  return (
-    <ImageCropper
-      src="photo.jpg"
-      aspectRatio={1}
-      onCropComplete={handleCropComplete}
-    />
-  );
-}
-```
-
-> **Note:** The current `ImageCropper` component focuses on the cropping workflow. For combining filters with cropping, use `useLumina` + `ImageAreaSelector` as shown above.
-
----
-
-## Common Patterns
-
-### Pattern 1: File Upload with Preview and Crop
-
-```tsx
-import { useState, useRef } from 'react';
-import { ImageCropper } from '@gks101/luminajs/react';
-
-export function UploadCrop() {
-  const [file, setFile] = useState<File | null>(null);
-  const [croppedUrl, setCroppedUrl] = useState<string>('');
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files?.[0];
-    if (f && f.type.startsWith('image/')) {
-      setFile(f);
-    }
-  };
-
-  const handleCropComplete = (blob: Blob) => {
-    setCroppedUrl(URL.createObjectURL(blob));
-  };
-
-  return (
-    <div>
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        onChange={handleFileSelect}
-        style={{ display: 'none' }}
-      />
-      <button onClick={() => fileInputRef.current?.click()}>
-        Select Image
-      </button>
-
-      {file && (
-        <ImageCropper
-          src={file}
-          aspectRatio={1}
-          onCropComplete={handleCropComplete}
-        />
-      )}
-
-      {croppedUrl && (
-        <div>
-          <h3>Result:</h3>
-          <img src={croppedUrl} alt="Cropped" />
-        </div>
-      )}
-    </div>
-  );
-}
-```
-
-### Pattern 2: Profile Picture Cropper
-
-```tsx
-export function ProfilePictureCropper() {
-  const handleCropComplete = async (blob: Blob) => {
-    // Upload to server
-    const formData = new FormData();
-    formData.append('avatar', blob, 'profile.png');
-
-    const response = await fetch('/api/upload-avatar', {
-      method: 'POST',
-      body: formData,
-    });
-
-    console.log('Avatar uploaded:', response.ok);
-  };
-
-  return (
-    <ImageCropper
-      src={userPhoto}
-      aspectRatio={1}
-      outputFormat="blob"
-      maxWidth={500}
-      maxHeight={500}
-      onCropComplete={handleCropComplete}
-    />
-  );
-}
-```
-
-### Pattern 3: Multiple Crops (e.g., Banner + Thumbnail)
-
-```tsx
-import {
-  ImageAreaSelector,
-  useLumina,
-  type CropArea,
-} from '@gks101/luminajs/react';
-import { useState } from 'react';
-
-export function MultipleCrops() {
-  const [bannerCrop, setBannerCrop] = useState<CropArea>({
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0,
-  });
-  const [thumbCrop, setThumbCrop] = useState<CropArea>({
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0,
-  });
-
-  const { result: banner } = useLumina({
-    source: 'photo.jpg',
-    crop: bannerCrop,
-    outputType: 'blob',
-  });
-
-  const { result: thumbnail } = useLumina({
-    source: 'photo.jpg',
-    crop: thumbCrop,
-    outputType: 'blob',
-  });
-
-  return (
-    <>
-      <h3>Banner (16:9)</h3>
-      <ImageAreaSelector
-        src="photo.jpg"
-        onCropChange={setBannerCrop}
-        aspect={16 / 9}
-      />
-
-      <h3>Thumbnail (1:1)</h3>
-      <ImageAreaSelector
-        src="photo.jpg"
-        onCropChange={setThumbCrop}
-        aspect={1}
-      />
-
-      <div>
-        {banner && <img src={URL.createObjectURL(banner)} alt="Banner" />}
-        {thumbnail && (
-          <img src={URL.createObjectURL(thumbnail)} alt="Thumbnail" />
-        )}
-      </div>
-    </>
-  );
-}
-```
-
----
-
-## API Reference
+| Prop             | Type                       | Default  | Description                                                 |
+| ---------------- | -------------------------- | -------- | ----------------------------------------------------------- |
+| `src`            | `string`                   | —        | Image URL to display.                                       |
+| `onCropChange`   | `(crop: CropArea) => void` | —        | Called while the user is dragging the crop selection.       |
+| `onCropComplete` | `(crop: CropArea) => void` | —        | Called once when the user finishes the selection.           |
+| `aspect`         | `number`                   | —        | Optional fixed aspect ratio, expressed as `width / height`. |
+| `lineWidth`      | `number`                   | `2`      | Border line width in pixels.                                |
+| `lineColor`      | `string`                   | `'#fff'` | Border color.                                               |
+| `overlayOpacity` | `number`                   | `0.5`    | Opacity of the dark overlay outside the selection.          |
 
 ### CropArea
 
 ```tsx
 interface CropArea {
-  x: number; // Left offset in pixels
-  y: number; // Top offset in pixels
-  width: number; // Width in pixels
-  height: number; // Height in pixels
+  x: number;
+  y: number;
+  width: number;
+  height: number;
 }
 ```
 
-All values are in **pixels** and calculated from the **original image dimensions** (not the displayed size).
-
-### Output Formats
-
-- **`'blob'`** - Returns a `Blob` object. Useful for uploading to a server.
-- **`'dataUrl'`** - Returns a data URL string. Useful for previewing in `<img src>`.
+All crop values are measured in original image pixels, not displayed CSS pixels.
 
 ---
 
-## Styling
+## Custom Workflow with useLumina
 
-### CSS Classes
-
-The components use inline styles but respect the `className` and `style` props:
+Use `ImageAreaSelector` with `useLumina` when you want filters, resize, watermarking, or multiple outputs.
 
 ```tsx
-<ImageCropper
-  src={imageUrl}
-  className="my-custom-cropper"
-  style={{ backgroundColor: '#fafafa' }}
-/>
+import {
+  ImageAreaSelector,
+  useLumina,
+  type CropArea,
+} from '@gks101/luminajs/react';
+import { useState } from 'react';
+
+export function FilteredCrop() {
+  const [crop, setCrop] = useState<CropArea | null>(null);
+
+  const { result, loading, error } = useLumina<string>({
+    source: '/portrait.jpg',
+    crop: crop ?? undefined,
+    resize: crop ? { width: 400, height: 400 } : undefined,
+    brightness: 10,
+    sharpen: true,
+    outputType: 'dataUrl',
+  });
+
+  return (
+    <>
+      <ImageAreaSelector
+        src="/portrait.jpg"
+        aspect={1}
+        onCropChange={setCrop}
+      />
+
+      {loading && <p>Processing...</p>}
+      {error && <p>{error.message}</p>}
+      {result && <img src={result} alt="Filtered crop" />}
+    </>
+  );
+}
 ```
 
-### Customizing Colors
+## Best Practices
 
-For `ImageAreaSelector`, use the props:
-
-```tsx
-<ImageAreaSelector
-  src={imageUrl}
-  lineColor="#ff0000" // Red border
-  overlayOpacity={0.8} // Darker overlay
-/>
-```
-
----
-
-## Performance Tips
-
-1. **Lazy load images** - Use file URLs or data URLs instead of loading remote images repeatedly.
-2. **Memoize callbacks** - Wrap `onCropComplete` and `onError` in `useCallback` to prevent unnecessary re-renders.
-3. **Limit preview updates** - The preview re-renders on every crop change; debounce if needed:
-
-```tsx
-import { useDeferredValue } from 'react';
-
-const deferredCrop = useDeferredValue(crop);
-
-const { result } = useLumina({
-  source: imageSrc,
-  crop: deferredCrop, // Deferred updates
-  outputType: 'blob',
-});
-```
-
----
-
-## Browser Support
-
-- Chrome/Edge: ✅ Full support
-- Firefox: ✅ Full support
-- Safari: ✅ Full support (iOS 13+)
-- IE 11: ❌ Not supported (requires modern Canvas API)
-
----
+- Use `ImageCropper` for standard upload, avatar, product, banner, and social image crops.
+- Use `outputFormat="blob"` for uploads.
+- Use `outputFormat="dataUrl"` for immediate image previews.
+- Keep `allowReset` enabled when users may need to adjust the crop after seeing the result.
+- Use `ImageAreaSelector` and `useLumina` for advanced workflows with filters, multiple crops, or custom controls.
+- Revoke object URLs you create in parent components when they are no longer needed.
+- Use `onError` to surface invalid image sources, CORS failures, or crop processing issues.
 
 ## Troubleshooting
 
-### Crop not being applied
+### Crop applies immediately
 
-- Ensure `crop.width > 0` and `crop.height > 0`
-- Check that the image source is valid and loaded
+This is expected. `ImageCropper` applies the crop when the user releases the pointer after selecting an area.
 
-### Preview not showing
+### I need an Apply button
 
-- Set `showPreview={true}` (default)
-- Ensure the image source is accessible
+Use `ImageAreaSelector` and call `useLumina` or `lumina(source).crop(...)` from your own button handler.
 
-### CORS errors
+### Reset does not show
 
-- Remote images must have CORS headers
-- Use a proxy or upload the file locally
+The Reset button only appears after a crop has been applied. Check that `allowReset` is not set to `false`.
 
-### Performance issues
+### Remote image fails to crop
 
-- Reduce `maxWidth` and `maxHeight` to lower canvas size
-- Use smaller source images
-- Debounce crop updates (see Performance Tips)
-
----
+Remote images must be accessible to the browser canvas. If you see CORS errors, use same-origin images, upload the file locally, or serve the image with the correct CORS headers.
 
 ## See Also
 

@@ -6,6 +6,8 @@
 import { LuminaCanvas } from '@gks101/luminajs/react';
 ```
 
+Use `LuminaCanvas` when you want a processed canvas in your UI. Use `ImageCropper` when you want a complete drag-to-crop interface, and use `useLumina` when you need hook state without rendering a canvas.
+
 ## Basic Usage
 
 ```tsx
@@ -99,11 +101,12 @@ export function DownloadablePreview() {
 ### Process an Uploaded File
 
 ```tsx
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { LuminaCanvas } from '@gks101/luminajs/react';
 
 export function UploadEditor() {
   const [file, setFile] = useState<File | null>(null);
+  const resize = useMemo(() => ({ width: 600, height: 400 }), []);
 
   return (
     <section>
@@ -117,11 +120,89 @@ export function UploadEditor() {
         source={file}
         brightness={10}
         contrast={12}
+        resize={file ? resize : undefined}
         gaussianBlur={file ? 1 : undefined}
         width={600}
         height={400}
       />
     </section>
+  );
+}
+```
+
+### Replace the Canvas Source After Cropping
+
+`LuminaCanvas` can render a cropped result from `ImageCropper`, a data URL, a `Blob` converted to an object URL, or the original image.
+
+```tsx
+import { useState } from 'react';
+import { ImageCropper, LuminaCanvas } from '@gks101/luminajs/react';
+
+export function CropThenFilter() {
+  const [source, setSource] = useState<string | null>('/photo.jpg');
+
+  return (
+    <>
+      <ImageCropper
+        src={source}
+        aspectRatio={1}
+        outputFormat="dataUrl"
+        onCropComplete={(result) => {
+          if (typeof result === 'string') setSource(result);
+        }}
+      />
+
+      <LuminaCanvas
+        source={source}
+        brightness={8}
+        sharpen
+        outputType="dataUrl"
+        getImage={(data) => console.log('Processed crop:', data)}
+        width={400}
+        height={400}
+      />
+    </>
+  );
+}
+```
+
+### Live Filter Controls
+
+```tsx
+import { useMemo, useState } from 'react';
+import { LuminaCanvas } from '@gks101/luminajs/react';
+
+export function LiveControls() {
+  const [brightness, setBrightness] = useState(0);
+  const [contrast, setContrast] = useState(0);
+  const resize = useMemo(() => ({ width: 800, height: 500 }), []);
+
+  return (
+    <>
+      <input
+        type="range"
+        min="-100"
+        max="100"
+        value={brightness}
+        onChange={(event) => setBrightness(Number(event.target.value))}
+      />
+      <input
+        type="range"
+        min="-100"
+        max="100"
+        value={contrast}
+        onChange={(event) => setContrast(Number(event.target.value))}
+      />
+
+      <LuminaCanvas
+        source="/photo.jpg"
+        resize={resize}
+        brightness={brightness}
+        contrast={contrast}
+        width={800}
+        height={500}
+      />
+    </>
   );
 }
 ```
@@ -202,6 +283,7 @@ When processing fails, the component renders a `<div className="lumina-error">` 
 
 - Memoize `filter`, `getImage`, `onLoad`, and `onProcessError` with `useCallback` when they depend on React state.
 - Keep `resize`, `crop`, `watermark`, and `backgroundBlur` objects stable with `useMemo` in highly interactive screens.
+- Use `ImageCropper` for user-driven crop selection; use `LuminaCanvas` for rendering a known source or crop.
 - Prefer `outputType="blob"` for uploads and `outputType="dataUrl"` for previews or downloads.
 - Set explicit `width` and `height` attributes when you know the intended output size.
 - Use `source={null}` while waiting for a user upload or async image selection.

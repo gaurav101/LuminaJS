@@ -199,7 +199,7 @@ export const LuminaCanvas = forwardRef<HTMLCanvasElement, LuminaCanvasProps>(
       onLoad,
       getImage,
       outputType,
-      JSON.stringify(editingOptions),
+      editingOptions,
     ]);
 
     if (error) {

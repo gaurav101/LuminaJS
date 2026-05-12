@@ -110,6 +110,68 @@ await lumina('product.jpg')
   .toBlob('image/jpeg', 0.9);
 ```
 
+### 4. React Components and Hooks
+
+LuminaJS also ships a React entry point for applications that need image workflows inside components.
+
+```tsx
+import { ImageCropper, LuminaCanvas, useLumina } from '@gks101/luminajs/react';
+```
+
+Use `ImageCropper` for upload and avatar flows. Users drag a selection, release the pointer, and the crop is applied automatically in the same component. Reset reloads the original image so they can choose again.
+
+```tsx
+function AvatarCropper({ file }: { file: File }) {
+  return (
+    <ImageCropper
+      src={file}
+      aspectRatio={1}
+      outputFormat="blob"
+      onCropComplete={async (result) => {
+        if (!(result instanceof Blob)) return;
+
+        const body = new FormData();
+        body.append('avatar', result, 'avatar.png');
+        await fetch('/api/avatar', { method: 'POST', body });
+      }}
+    />
+  );
+}
+```
+
+Use `LuminaCanvas` when the UI should display a processed canvas directly:
+
+```tsx
+<LuminaCanvas
+  source="/product.jpg"
+  resize={{ width: 800, height: 600 }}
+  sharpen
+  watermark={{ text: 'Preview' }}
+  outputType="dataUrl"
+  getImage={(dataUrl) => console.log(dataUrl)}
+/>
+```
+
+Use `useLumina` when you need React state for loading, errors, and generated output without rendering a canvas.
+
+```tsx
+const { result, loading, getImage } = useLumina<string>({
+  source: '/photo.jpg',
+  brightness: 12,
+  outputType: 'dataUrl',
+});
+```
+
+---
+
+## Common Use Cases
+
+- Resize images before upload to reduce bandwidth.
+- Crop avatars, banners, product photos, and social images in the browser.
+- Generate thumbnails and previews without server-side processing.
+- Add watermarks before publishing or uploading images.
+- Build creative effects such as ASCII previews, embossing, sharpening, edge detection, and background blur.
+
 ---
 
 ## 🛠️ Advanced: Custom Convolution

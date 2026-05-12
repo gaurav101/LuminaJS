@@ -14,13 +14,11 @@ export function ImageCropperExample() {
   const [croppedResult, setCroppedResult] = useState<string | Blob | null>(
     null,
   );
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && file.type.startsWith('image/')) {
-      setSelectedFile(file);
       setImageSrc(URL.createObjectURL(file));
       setCroppedResult(null);
     }
@@ -187,6 +185,7 @@ export function MyComponent() {
   const handleCropComplete = (croppedBlob: Blob) => {
     // Use the cropped image
     const url = URL.createObjectURL(croppedBlob);
+    console.log(url);
   };
 
   return (

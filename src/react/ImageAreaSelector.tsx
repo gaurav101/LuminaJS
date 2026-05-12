@@ -17,6 +17,7 @@ export interface CropArea {
 interface ImageAreaSelectorProps {
   src: string;
   onCropChange: (crop: CropArea) => void;
+  onCropComplete?: (crop: CropArea) => void;
   aspect?: number;
   lineWidth?: number;
   lineColor?: string;
@@ -32,6 +33,7 @@ interface ImageAreaSelectorProps {
  * @param {ImageAreaSelectorProps} props
  * @param {string} props.src - The image URL to display
  * @param {Function} props.onCropChange - Callback triggered when crop area changes
+ * @param {Function} [props.onCropComplete] - Callback triggered when crop selection ends
  * @param {number} [props.aspect] - Optional aspect ratio to enforce (width / height)
  * @param {number} [props.lineWidth=2] - Border line width in pixels
  * @param {string} [props.lineColor='#fff'] - Border color (CSS color value)
@@ -52,6 +54,7 @@ interface ImageAreaSelectorProps {
 export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
   src,
   onCropChange,
+  onCropComplete,
   aspect,
   lineWidth = 2,
   lineColor = '#fff',
@@ -70,6 +73,8 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
   });
   const imgRef = useRef<HTMLImageElement>(null);
   const startPos = useRef({ x: 0, y: 0 });
+  const cropRef = useRef<CropArea>(crop);
+  const isDraggingRef = useRef(false);
 
   const updateDisplayScale = useCallback(() => {
     const img = imgRef.current;
@@ -96,8 +101,11 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
     const y = (e.clientY - rect.top) * scaleY;
 
     setIsDragging(true);
+    isDraggingRef.current = true;
     startPos.current = { x, y };
-    setCrop({ x, y, width: 0, height: 0 });
+    const emptyCrop = { x, y, width: 0, height: 0 };
+    cropRef.current = emptyCrop;
+    setCrop(emptyCrop);
   }, []);
 
   const handleMouseMove = useCallback(
@@ -140,13 +148,24 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
         height: Math.abs(height),
       };
 
+      cropRef.current = newCrop;
       setCrop(newCrop);
       onCropChange(newCrop);
     },
     [isDragging, aspect, onCropChange],
   );
 
-  const stopDragging = useCallback(() => setIsDragging(false), []);
+  const stopDragging = useCallback(() => {
+    if (!isDraggingRef.current) return;
+
+    isDraggingRef.current = false;
+    setIsDragging(false);
+
+    const finalCrop = cropRef.current;
+    if (finalCrop.width > 0 && finalCrop.height > 0) {
+      onCropComplete?.(finalCrop);
+    }
+  }, [onCropComplete]);
 
   useEffect(() => {
     updateDisplayScale();

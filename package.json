@@ -44,8 +44,8 @@
     }
   },
   "scripts": {
-    "build": "rollup -c && npm run build:types && npm run generate-docs && npm run build:examples",
-    "build:types": "npx tsc",
+    "build": "rollup -c && npm run build:types && npm run generate-docs",
+    "build:types": "tsc",
     "dev": "rollup -c -w",
     "start:demo": "npm run dev --prefix react-demo",
     "test": "vitest run",

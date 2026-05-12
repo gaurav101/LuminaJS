@@ -84,15 +84,16 @@ export function Thumbnail() {
 ### Process an Uploaded File
 
 ```tsx
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useLumina } from '@gks101/luminajs/react';
 
 export function UploadPreview() {
   const [file, setFile] = useState<File | null>(null);
+  const resize = useMemo(() => ({ width: 640, height: 480 }), []);
 
   const { result, loading, error } = useLumina<string>({
     source: file,
-    resize: { width: 640, height: 480 },
+    resize,
     brightness: 12,
     outputType: 'dataUrl',
   });
@@ -109,6 +110,40 @@ export function UploadPreview() {
       {error && <p>{error.message}</p>}
       {result && <img src={result} alt="Processed upload" />}
     </section>
+  );
+}
+```
+
+### Custom Crop Workflow
+
+Use `ImageAreaSelector` with `useLumina` when you need your own crop controls or want to combine crop with filters. For a ready-made cropper, use `ImageCropper`.
+
+```tsx
+import { useState } from 'react';
+import {
+  ImageAreaSelector,
+  useLumina,
+  type CropArea,
+} from '@gks101/luminajs/react';
+
+export function ManualCropPreview() {
+  const [crop, setCrop] = useState<CropArea | null>(null);
+
+  const { result, loading } = useLumina<string>({
+    source: '/photo.jpg',
+    crop: crop ?? undefined,
+    resize: crop ? { width: 500, height: 500 } : undefined,
+    sharpen: true,
+    outputType: 'dataUrl',
+  });
+
+  return (
+    <>
+      <ImageAreaSelector src="/photo.jpg" aspect={1} onCropChange={setCrop} />
+
+      {loading && <p>Processing...</p>}
+      {result && <img src={result} alt="Cropped preview" />}
+    </>
   );
 }
 ```
@@ -145,6 +180,50 @@ export function UploadButton() {
     <button type="button" onClick={upload} disabled={loading}>
       Upload processed image
     </button>
+  );
+}
+```
+
+### Save Multiple Output Formats
+
+`result` follows the configured `outputType`, while `getImage()` can generate another format on demand from the same operations.
+
+```tsx
+import { useMemo } from 'react';
+import { useLumina } from '@gks101/luminajs/react';
+
+export function PreviewAndUpload() {
+  const resize = useMemo(() => ({ width: 1024, height: 768 }), []);
+
+  const {
+    result: preview,
+    getImage,
+    loading,
+  } = useLumina<string | Blob>({
+    source: '/photo.jpg',
+    resize,
+    contrast: 8,
+    outputType: 'dataUrl',
+  });
+
+  const upload = async () => {
+    const blob = await getImage('blob');
+    if (!(blob instanceof Blob)) return;
+
+    const body = new FormData();
+    body.append('image', blob, 'processed.png');
+    await fetch('/api/images', { method: 'POST', body });
+  };
+
+  return (
+    <>
+      {typeof preview === 'string' && (
+        <img src={preview} alt="Processed preview" />
+      )}
+      <button type="button" onClick={upload} disabled={loading}>
+        Upload
+      </button>
+    </>
   );
 }
 ```
@@ -237,6 +316,7 @@ export function AsciiPreview() {
 
 - Memoize `operations` with `useCallback`.
 - Memoize object options such as `resize`, `crop`, `watermark`, and `backgroundBlur` with `useMemo` in interactive components.
+- Use `ImageCropper` for the built-in drag-to-crop UI; use `useLumina` when you need custom crop controls or additional processing.
 - Use `outputType: 'dataUrl'` when rendering into an `<img>`.
 - Use `outputType: 'blob'` when uploading or saving binary data.
 - Use the default `imageData` output when you need pixel-level processing.
