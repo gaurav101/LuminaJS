@@ -22,6 +22,15 @@ export interface ImageCropperProps {
   resetButtonClassName?: string;
   resetButtonStyle?: React.CSSProperties;
 
+  // Button position options
+  buttonPosition?:
+    | 'top-left'
+    | 'top-right'
+    | 'top-center'
+    | 'bottom-left'
+    | 'bottom-center'
+    | 'bottom-right';
+
   // Optional callbacks invoked when user clicks Apply or Reset.
   // If the callback returns false (or a Promise that resolves to false),
   // the component will abort the default behavior.
@@ -75,6 +84,8 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
   applyButtonStyle,
   resetButtonClassName,
   resetButtonStyle,
+  // button position (default top-left)
+  buttonPosition = 'top-left',
   // optional callbacks
   onApply,
   onReset,
@@ -213,6 +224,33 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
     onError?.(error);
   };
 
+  // Compute button container style based on buttonPosition prop
+  const buttonContainerStyle = useMemo(() => {
+    const base: React.CSSProperties = {
+      position: 'absolute',
+      display: 'flex',
+      gap: '8px',
+      zIndex: 1001,
+      alignItems: 'center',
+    };
+    switch (buttonPosition) {
+      case 'top-left':
+        return { ...base, top: '12px', left: '12px' };
+      case 'top-right':
+        return { ...base, top: '12px', right: '12px' };
+      case 'top-center':
+        return { ...base, top: '12px', left: '50%', transform: 'translateX(-50%)' };
+      case 'bottom-left':
+        return { ...base, bottom: '12px', left: '12px' };
+      case 'bottom-center':
+        return { ...base, bottom: '12px', left: '50%', transform: 'translateX(-50%)' };
+      case 'bottom-right':
+        return { ...base, bottom: '12px', right: '12px' };
+      default:
+        return { ...base, top: '12px', left: '12px' };
+    }
+  }, [buttonPosition]);
+
   return (
     <div
       className={className}
@@ -275,40 +313,31 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
         )}
 
         {allowReset && appliedPreviewSrc && !isCropping && (
-          <button
-            type="button"
-            onClick={handleReset}
-            className={resetButtonClassName}
-            style={{
-              position: 'absolute',
-              top: '12px',
-              right: '12px',
-              padding: '8px 12px',
-              backgroundColor: '#fff',
-              color: '#333',
-              border: '1px solid #ddd',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '13px',
-              fontWeight: 500,
-              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.12)',
-              ...resetButtonStyle,
-            }}
-          >
-            Reset
-          </button>
+          <div style={buttonContainerStyle}>
+            <button
+              type="button"
+              onClick={handleReset}
+              className={resetButtonClassName}
+              style={{
+                padding: '8px 12px',
+                backgroundColor: '#fff',
+                color: '#333',
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '13px',
+                fontWeight: 500,
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.12)',
+                ...resetButtonStyle,
+              }}
+            >
+              Reset
+            </button>
+          </div>
         )}
 
         {!appliedPreviewSrc && hasSelectedCrop && (
-          <div
-            style={{
-              position: 'absolute',
-              right: '12px',
-              bottom: '12px',
-              display: 'flex',
-              gap: '8px',
-            }}
-          >
+          <div style={buttonContainerStyle}>
             <button
               type="button"
               onClick={handleApplyCrop}
