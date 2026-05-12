@@ -5,7 +5,7 @@ import {
   useEffect,
   FC,
   MouseEvent,
-  ReactNode
+  ReactNode,
 } from 'react';
 
 export interface CropArea {
@@ -74,7 +74,6 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
   lineColor = '#fff',
   overlayOpacity = 0.5,
   overlayControls,
-
 }) => {
   const [crop, setCrop] = useState<CropArea>({
     x: 0,
@@ -297,37 +296,38 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
           />
 
           {/* Optional controls rendered relative to the selection overlay */}
-          {overlayControls && (() => {
-            const leftPx = crop.x * displayScale.scaleX;
-            const topPx = crop.y * displayScale.scaleY;
-            const widthPx = crop.width * displayScale.scaleX;
-            const heightPx = crop.height * displayScale.scaleY;
+          {overlayControls &&
+            (() => {
+              const leftPx = crop.x * displayScale.scaleX;
+              const topPx = crop.y * displayScale.scaleY;
+              const widthPx = crop.width * displayScale.scaleX;
+              const heightPx = crop.height * displayScale.scaleY;
 
-            // Attempt to place controls above the selection; if not enough space, place below.
-            const CONTROL_HEIGHT = 40;
-            let controlsTop = topPx - CONTROL_HEIGHT - 8;
-            if (controlsTop < 8) controlsTop = topPx + heightPx + 8;
+              // Attempt to place controls above the selection; if not enough space, place below.
+              const CONTROL_HEIGHT = 40;
+              let controlsTop = topPx - CONTROL_HEIGHT - 8;
+              if (controlsTop < 8) controlsTop = topPx + heightPx + 8;
 
-            return (
-              <div
-                style={{
-                  position: 'absolute',
-                  left: leftPx,
-                  top: controlsTop,
-                  zIndex: 1001,
-                }}
-              >
-                {overlayControls({
-                  left: leftPx,
-                  top: topPx,
-                  width: widthPx,
-                  height: heightPx,
-                  scaleX: displayScale.scaleX,
-                  scaleY: displayScale.scaleY,
-                })}
-              </div>
-            );
-          })()}
+              return (
+                <div
+                  style={{
+                    position: 'absolute',
+                    left: leftPx,
+                    top: controlsTop,
+                    zIndex: 1001,
+                  }}
+                >
+                  {overlayControls({
+                    left: leftPx,
+                    top: topPx,
+                    width: widthPx,
+                    height: heightPx,
+                    scaleX: displayScale.scaleX,
+                    scaleY: displayScale.scaleY,
+                  })}
+                </div>
+              );
+            })()}
         </>
       )}
     </div>

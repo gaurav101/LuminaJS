@@ -300,7 +300,14 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
               onCropComplete={handleCropSelectionComplete}
               lineColor="#0066cc"
               overlayOpacity={0.6}
-              overlayControls={({ left, top, width, height, scaleX, scaleY }) => (
+              overlayControls={({
+                left,
+                top,
+                width,
+                height,
+                scaleX,
+                scaleY,
+              }) => (
                 <div style={{ display: 'flex', gap: 8 }}>
                   <button
                     type="button"
@@ -392,8 +399,6 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
             </button>
           </div>
         )}
-
-
       </div>
     </div>
   );
