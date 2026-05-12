@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { useLumina, LuminaCanvas } from '../../../src/react/index';
+import { useState, useCallback, useMemo } from 'react';
+import { useLumina, LuminaCanvas } from '@gks101/luminajs/react';
+import { ImageCropperExample } from './../../../src/react/ImageCropperExample';
 import './App.css';
 
 function App() {
@@ -25,18 +26,26 @@ function App() {
   const [cropW, setCropW] = useState(400);
   const [cropH, setCropH] = useState(400);
 
+  // Memoize operations to prevent infinite loops
+  const asciiOperation = useCallback((chain) => chain.ascii(), []);
+  const asciiResizeConfig = useMemo(() => ({ width: 100, height: 50 }), []);
+  const thumbnailResizeConfig = useMemo(
+    () => ({ width: 200, height: 150 }),
+    [],
+  );
+
   // ASCII logic
   const { result: asciiText, loading: asciiLoading } = useLumina<string>({
     source: '/sample.png',
-    resize: { width: 100, height: 50 },
-    operations: (chain) => chain.ascii(),
+    resize: asciiResizeConfig,
+    operations: asciiOperation,
     outputType: undefined,
   });
 
   // Thumbnail preview
   const { result: thumbnail, getImage: getThumbnailImage } = useLumina<string>({
     source: '/sample.png',
-    resize: { width: 200, height: 150 },
+    resize: thumbnailResizeConfig,
     grayscale: true,
     outputType: 'dataUrl',
   });
@@ -59,6 +68,15 @@ function App() {
       link.click();
     }
   };
+
+  const handleGetCanvasImage = useCallback(
+    (data: string | Blob | ImageData | HTMLCanvasElement) => {
+      if (typeof data === 'string') {
+        setCanvasDataUrl(data);
+      }
+    },
+    [],
+  );
 
   return (
     <div className="demo-container">
@@ -137,7 +155,7 @@ function App() {
                       : undefined
                   }
                   outputType="dataUrl"
-                  getImage={(data) => setCanvasDataUrl(data as string)}
+                  getImage={handleGetCanvasImage}
                 />
               )}
             </div>
@@ -361,6 +379,9 @@ function App() {
           </div>
         </aside>
       </main>
+      <div>
+        <ImageCropperExample />
+      </div>
     </div>
   );
 }

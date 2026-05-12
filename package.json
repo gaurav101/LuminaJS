@@ -1,6 +1,6 @@
 {
   "name": "@gks101/luminajs",
-  "version": "2.0.0",
+  "version": "2.0.0-beta.0",
   "description": "A modular, lightweight JavaScript and react utility library and hooks/components for browser-based image processing using the HTML5 Canvas API. suppport react, typescript and vanilla js",
   "homepage": "https://gaurav101.github.io/LuminaJS/",
   "repository": {
@@ -17,6 +17,12 @@
   "module": "./dist/lumina.esm.js",
   "browser": "./dist/lumina.umd.js",
   "unpkg": "./dist/lumina.min.js",
+  "files": [
+    "dist",
+    "!dist/examples",
+    "README.md",
+    "LICENSE"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -50,7 +56,7 @@
     "format:check": "prettier --check .",
     "generate-docs": "jsdoc -c jsdoc.json",
     "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky; fi",
-    "build:examples": "npm run build --prefix ./examples/react && npm run build --prefix ./examples/vanila-js"
+    "build:examples": "npm run build --prefix ./examples/react && npm run build --prefix ./examples/vanilla-js"
   },
   "peerDependencies": {
     "react": ">=16.8.0",

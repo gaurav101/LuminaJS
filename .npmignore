@@ -1,34 +1,36 @@
-# Exclude demo files
-index.html
-index.css
-demo.js
+# Source files
+src/
+tests/
+examples/
 
-# Exclude documentation and logs
+# Build and config files
+rollup.config.js
+eslint.config.js
+jsdoc.json
+tsconfig.json
+tsconfig.*.json
+vite.config.ts
+vite.config.js
+.prettierignore
+.prettierrc
+
+# IDE and system files
+.DS_Store
+.vscode/
+.idea/
+.github/
+.gitignore
+
+# Development files
+node_modules/
+package-lock.json
+
+# Documentation
+docs/
+WhyLumina.md
 walkthrough.md
 task.md
 implementation_plan.md
 
-# Exclude IDE and system files
-.DS_Store
-.vscode/
-.idea/
-node_modules/
-package-lock.json
-.github
-.gitignore
-.npmignore
-.prettierignore
-.prettierrc
-jsdoc.json
-WhyLumina.md
-eslint.config.js
-
-# Exclude tarballs
+# Archives
 *.tgz
-docs/
-tests/
-src/
-examples/
-dist/examples/
-!dist/
-

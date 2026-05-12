@@ -1,4 +1,12 @@
-import { useRef, useEffect, useState, type CanvasHTMLAttributes } from 'react';
+import {
+  useRef,
+  useEffect,
+  useState,
+  useMemo,
+  forwardRef,
+  type CanvasHTMLAttributes,
+  type Ref,
+} from 'react';
 import { lumina, type Lumina } from '../index.js';
 import { type ImageEditingOptions, applyEditingOptions } from './types.js';
 
@@ -60,120 +68,144 @@ export interface LuminaCanvasProps
  * }
  * ```
  */
-export function LuminaCanvas({
-  source,
-  filter,
-  onProcessError,
-  onLoad,
-  getImage,
-  outputType = 'canvas',
-  grayscale,
-  brightness,
-  contrast,
-  sepia,
-  ascii,
-  blur,
-  gaussianBlur,
-  watermark,
-  backgroundBlur,
-  sharpen,
-  emboss,
-  edgeDetection,
-  resize,
-  crop,
-  ...props
-}: LuminaCanvasProps) {
-  const editingOptions = {
-    grayscale,
-    brightness,
-    contrast,
-    sepia,
-    ascii,
-    blur,
-    gaussianBlur,
-    watermark,
-    backgroundBlur,
-    sharpen,
-    emboss,
-    edgeDetection,
-    resize,
-    crop,
-  };
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [error, setError] = useState<Error | null>(null);
+export const LuminaCanvas = forwardRef<HTMLCanvasElement, LuminaCanvasProps>(
+  function LuminaCanvasComponent(
+    {
+      source,
+      filter,
+      onProcessError,
+      onLoad,
+      getImage,
+      outputType = 'canvas',
+      grayscale,
+      brightness,
+      contrast,
+      sepia,
+      ascii,
+      blur,
+      gaussianBlur,
+      watermark,
+      backgroundBlur,
+      sharpen,
+      emboss,
+      edgeDetection,
+      resize,
+      crop,
+      ...props
+    }: LuminaCanvasProps,
+    ref: Ref<HTMLCanvasElement>,
+  ) {
+    const editingOptions = useMemo(
+      () => ({
+        grayscale,
+        brightness,
+        contrast,
+        sepia,
+        ascii,
+        blur,
+        gaussianBlur,
+        watermark,
+        backgroundBlur,
+        sharpen,
+        emboss,
+        edgeDetection,
+        resize,
+        crop,
+      }),
+      [
+        grayscale,
+        brightness,
+        contrast,
+        sepia,
+        ascii,
+        blur,
+        gaussianBlur,
+        watermark,
+        backgroundBlur,
+        sharpen,
+        emboss,
+        edgeDetection,
+        resize,
+        crop,
+      ],
+    );
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const [error, setError] = useState<Error | null>(null);
 
-  useEffect(() => {
-    if (!source || !canvasRef.current) return;
+    useEffect(() => {
+      if (!source || !canvasRef.current) return;
 
-    let isMounted = true;
+      let isMounted = true;
 
-    const applyFilter = async () => {
-      try {
-        let chain = lumina(source);
-        chain = applyEditingOptions(chain, editingOptions);
+      const applyFilter = async () => {
+        try {
+          let chain = lumina(source);
+          chain = applyEditingOptions(chain, editingOptions);
 
-        if (typeof filter === 'function') {
-          chain = filter(chain);
-        }
+          if (typeof filter === 'function') {
+            chain = filter(chain);
+          }
 
-        if (canvasRef.current) {
-          await chain.toCanvas(canvasRef.current);
-        }
+          if (canvasRef.current) {
+            await chain.toCanvas(canvasRef.current);
+          }
 
-        if (isMounted && onLoad) {
-          onLoad();
-        }
+          if (isMounted && onLoad) {
+            onLoad();
+          }
 
-        if (isMounted && getImage && canvasRef.current) {
-          if (outputType === 'dataUrl') {
-            getImage(canvasRef.current.toDataURL());
-          } else if (outputType === 'blob') {
-            canvasRef.current.toBlob((blob) => {
-              if (blob) getImage(blob);
-            });
-          } else if (outputType === 'imageData') {
-            const ctx = canvasRef.current.getContext('2d');
-            if (ctx) {
-              getImage(
-                ctx.getImageData(
-                  0,
-                  0,
-                  canvasRef.current.width,
-                  canvasRef.current.height,
-                ),
-              );
+          if (isMounted && getImage && canvasRef.current) {
+            if (outputType === 'dataUrl') {
+              getImage(canvasRef.current.toDataURL());
+            } else if (outputType === 'blob') {
+              canvasRef.current.toBlob((blob) => {
+                if (blob) getImage(blob);
+              });
+            } else if (outputType === 'imageData') {
+              const ctx = canvasRef.current.getContext('2d');
+              if (ctx) {
+                getImage(
+                  ctx.getImageData(
+                    0,
+                    0,
+                    canvasRef.current.width,
+                    canvasRef.current.height,
+                  ),
+                );
+              }
+            } else {
+              getImage(canvasRef.current);
             }
-          } else {
-            getImage(canvasRef.current);
+          }
+        } catch (err) {
+          const errorObject =
+            err instanceof Error ? err : new Error(String(err));
+          if (isMounted) {
+            setError(errorObject);
+            if (onProcessError) onProcessError(errorObject);
           }
         }
-      } catch (err) {
-        const errorObject = err instanceof Error ? err : new Error(String(err));
-        if (isMounted) {
-          setError(errorObject);
-          if (onProcessError) onProcessError(errorObject);
-        }
-      }
-    };
+      };
 
-    applyFilter();
+      applyFilter();
 
-    return () => {
-      isMounted = false;
-    };
-  }, [
-    source,
-    filter,
-    onProcessError,
-    onLoad,
-    getImage,
-    outputType,
-    JSON.stringify(editingOptions),
-  ]);
+      return () => {
+        isMounted = false;
+      };
+    }, [
+      source,
+      filter,
+      onProcessError,
+      onLoad,
+      getImage,
+      outputType,
+      JSON.stringify(editingOptions),
+    ]);
 
-  if (error) {
-    return <div className="lumina-error">{error.message}</div>;
-  }
+    if (error) {
+      return <div className="lumina-error">{error.message}</div>;
+    }
 
-  return <canvas ref={canvasRef} {...props} />;
-}
+    return <canvas ref={ref || canvasRef} {...props} />;
+  },
+);

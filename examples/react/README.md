@@ -1,54 +1,82 @@
-# React + TypeScript + Vite
+# LuminaJS React Example
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A comprehensive React + TypeScript example showcasing the LuminaJS image processing library with real-time image filters and transformations.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Live Image Processing**: Apply filters in real-time with the `LuminaCanvas` component
+- **Multiple Filter Effects**: Grayscale, sepia, blur, sharpen, emboss, edge detection, and more
+- **Advanced Transformations**: Resize, crop, brightness, contrast adjustments
+- **Watermarking**: Add custom text watermarks with configurable position, size, and color
+- **ASCII Art Generation**: Convert images to ASCII art using the `useLumina` hook
+- **Background Blur (Portrait Mode)**: Apply depth-of-field effects
+- **Image Download**: Export processed images as PNG files
+- **Responsive UI**: Modern, interactive control panel with live preview
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Installation
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
+```bash
+npm install
+```
+
+### Running the Development Server
+
+```bash
+npm run dev
+```
+
+The app will open at `http://localhost:5173`
+
+## Bug Fix: Infinite Loading Issue
+
+### Issue
+
+The `/sample.png` image was loading infinitely when the app was running. This was caused by inline object and function creation in the React component.
+
+### Root Cause
+
+- `resize` configuration objects were recreated on every render as new object instances
+- The `operations` callback function was recreated on every render
+- This caused the `useLumina` hook's dependency array to change on every render, triggering infinite re-renders
+
+### Solution
+
+Implemented proper memoization using React hooks:
+
+```typescript
+// Memoize operations to prevent infinite loops
+const asciiOperation = useCallback((chain) => chain.ascii(), []);
+const asciiResizeConfig = useMemo(() => ({ width: 100, height: 50 }), []);
+const thumbnailResizeConfig = useMemo(() => ({ width: 200, height: 150 }), []);
+
+// Pass stable references to useLumina hooks
+const { result: asciiText, loading: asciiLoading } = useLumina<string>({
+  source: '/sample.png',
+  resize: asciiResizeConfig,
+  operations: asciiOperation,
+  outputType: undefined,
 });
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Key Improvements
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
+- Used `useCallback` to memoize the `operations` function
+- Used `useMemo` to memoize configuration objects
+- Ensured stable references across renders to prevent unnecessary re-processing
+- Image now loads successfully without infinite loops
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-});
-```
+## Available Scripts
+
+- `npm run dev` - Start the development server with HMR
+- `npm run build` - Build for production
+- `npm run preview` - Preview the production build
+- `npm run lint` - Run ESLint
+
+## Technologies Used
+
+- **React** 18+ with TypeScript
+- **Vite** - Next generation frontend tooling
+- **LuminaJS** - Advanced image processing library
+- **Vite Plugin React** - Fast Refresh support
