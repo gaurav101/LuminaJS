@@ -3,8 +3,10 @@ import {
   useEffect,
   useState,
   useMemo,
+  useCallback,
   forwardRef,
   type CanvasHTMLAttributes,
+  type MutableRefObject,
   type Ref,
 } from 'react';
 import { lumina, type Lumina } from '../index.js';
@@ -131,6 +133,18 @@ export const LuminaCanvas = forwardRef<HTMLCanvasElement, LuminaCanvasProps>(
     );
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [error, setError] = useState<Error | null>(null);
+    const setCanvasRef = useCallback(
+      (node: HTMLCanvasElement | null) => {
+        canvasRef.current = node;
+
+        if (typeof ref === 'function') {
+          ref(node);
+        } else if (ref) {
+          (ref as MutableRefObject<HTMLCanvasElement | null>).current = node;
+        }
+      },
+      [ref],
+    );
 
     useEffect(() => {
       if (!source || !canvasRef.current) return;
@@ -206,6 +220,6 @@ export const LuminaCanvas = forwardRef<HTMLCanvasElement, LuminaCanvasProps>(
       return <div className="lumina-error">{error.message}</div>;
     }
 
-    return <canvas ref={ref || canvasRef} {...props} />;
+    return <canvas ref={setCanvasRef} {...props} />;
   },
 );

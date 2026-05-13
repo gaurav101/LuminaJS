@@ -4,20 +4,57 @@
 
 LuminaJS is a modular, chainable,lightweight, zero-dependency JavaScript utility library for browser-based image processing using the HTML5 Canvas API. It provides a functional approach to image manipulation, focusing on performance and ease of use.
 
-## Fast and small bundle size
-
-## Features
-
 - [Demo-react](https://gaurav101.github.io/LuminaJS/react)
+- [Demo-react-storybook](https://gaurav101.github.io/LuminaJS/react/storybook)
 - [Demo-vanila-js](https://gaurav101.github.io/LuminaJS/)
 - [Code](https://github.com/gaurav101/LuminaJS)
 - [NPM](https://www.npmjs.com/package/@gks101/luminajs)
 - [Documentation](https://gaurav101.github.io/LuminaJS/docs/)
 
+## Features
+
 - **🚀 High Performance**: Optimized `ImageData` loops for fast pixel processing.
 - **🧩 Modular**: Only import the filters and utilities you need.
 - **🖼️ Canvas-Powered**: Leverages the HTML5 Canvas API for seamless browser integration.
 - **📦 Lightweight**: Zero external dependencies (no jQuery, no Lodash).
+
+### Why Choose LuminaJS?
+
+While libraries like **Jimp** are built for heavy-duty server-side processing, **[LuminaJS](https://www.npmjs.com/package/@gks101/luminajs)** is a surgical tool optimized for the modern web. It trades massive dependency trees for raw browser performance.
+
+---
+
+### 🚀 Key Advantages
+
+- **Zero Latency:** Uses hardware-accelerated **HTML5 Canvas** for near-instant pixel manipulation, avoiding the slow pure-JS processing.
+- **Ultra-Lightweight:** At just **~3 KB**, it preserves your bundle size and [Core Web Vitals](https://web.dev/vitals/), whereas Jimp can add several megabytes to your frontend.
+- **Privacy-Centric:** All processing happens on the client’s machine. Sensitive user data never leaves the browser.
+- **Modern DX:** Native **TypeScript** support and a clean, chainable API designed for ESM workflows.
+
+---
+
+### 🎯 Best Use Cases
+
+| Scenario            | [LuminaJS](https://www.npmjs.com/package/@gks101/luminajs) | Jimp/Other                                |
+| ------------------- | ---------------------------------------------------------- | ----------------------------------------- |
+| **Interactive UI**  | **Best.** Real-time filters & previews.                    | Slow; often requires loaders.             |
+| **Edge Cases**      | **Best.** Works in Web Workers.                            | High memory overhead.                     |
+| **Marketing Tools** | **Best.** Dynamic watermarks & social overlays.            | Overkill; increases bounce rates.         |
+| **Server-Side**     | Use a headless fallback/not supported                      | **Best.** Built for Node.js environments. |
+
+---
+
+### ⚡ At a Glance
+
+| Feature          | [LuminaJS](https://www.npmjs.com/package/@gks101/luminajs) | Jimp/Other        |
+| ---------------- | ---------------------------------------------------------- | ----------------- |
+| **Bundle Size**  | **~2.8 KB**                                                | ~Megabytes        |
+| **Speed**        | **Extremely Fast** (Native)                                | Slower (Pure JS)  |
+| **Environment**  | Browser / OffscreenCanvas                                  | Node.js / Browser |
+| **Dependencies** | **Zero**                                                   | Multiple          |
+| **API Style**    | Chainable & Functional                                     | Chainable         |
+
+**Positioning:** Use **[LuminaJS](https://www.npmjs.com/package/@gks101/luminajs)** when you need high-performance image effects without sacrificing your application's load speed.
 
 ```bash
 npm install @gks101/luminajs

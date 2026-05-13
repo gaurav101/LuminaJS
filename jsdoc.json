@@ -5,10 +5,14 @@
   },
   "source": {
     "include": ["src", "README.md"],
-    "includePattern": ".+\\.js(doc|x)?$",
+    "includePattern": ".+\\.[jt]s(doc|x)?$",
     "excludePattern": "(^|\\/|\\\\)_"
   },
-  "plugins": ["plugins/markdown"],
+  "plugins": ["plugins/markdown", "node_modules/jsdoc-babel"],
+  "babel": {
+    "extensions": ["js", "jsx", "ts", "tsx"],
+    "presets": ["@babel/preset-typescript", "@babel/preset-react"]
+  },
   "opts": {
     "template": "node_modules/docdash",
     "encoding": "utf8",

@@ -7,6 +7,6 @@ export default defineConfig({
     open: true,
   },
   build: {
-    outDir: '../../dist/examples/vanilla-js',
+    outDir: 'dist',
   },
 });

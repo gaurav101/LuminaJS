@@ -104,8 +104,6 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
     appliedPreview?.source === src ? appliedPreview.src : null;
   const selectedCrop =
     selectedCropState?.source === src ? selectedCropState.crop : null;
-  const hasSelectedCrop =
-    !!selectedCrop && selectedCrop.width > 0 && selectedCrop.height > 0;
 
   // Convert File to URL for ImageAreaSelector
   const imageSrc = useMemo(() => {
@@ -300,14 +298,7 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
               onCropComplete={handleCropSelectionComplete}
               lineColor="#0066cc"
               overlayOpacity={0.6}
-              overlayControls={({
-                left,
-                top,
-                width,
-                height,
-                scaleX,
-                scaleY,
-              }) => (
+              overlayControls={() => (
                 <div style={{ display: 'flex', gap: 8 }}>
                   <button
                     type="button"

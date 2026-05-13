@@ -7,15 +7,19 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "@gks101/luminajs": "file:../../"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "@gks101/luminajs": "2.0.0.6-beta"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
+    "@storybook/addon-docs": "^10.3.6",
+    "@storybook/react-vite": "^10.3.6",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "@vitejs/plugin-react": "^6.0.1",
@@ -23,6 +27,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
+    "storybook": "^10.3.6",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.30.1",
     "vite": "^8.0.11"

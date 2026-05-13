@@ -1,6 +1,6 @@
 {
   "name": "@gks101/luminajs",
-  "version": "2.0.0-beta.5",
+  "version": "2.0.0",
   "description": "A modular, lightweight JavaScript and react utility library and hooks/components for browser-based image processing using the HTML5 Canvas API. suppport react, typescript and vanilla js",
   "homepage": "https://gaurav101.github.io/LuminaJS/",
   "repository": {
@@ -59,8 +59,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "generate-docs": "jsdoc -c jsdoc.json",
-    "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky; fi",
-    "build:examples": "npm run build --prefix ./examples/react && npm run build --prefix ./examples/vanilla-js"
+    "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky; fi"
   },
   "peerDependencies": {
     "react": ">=16.8.0",
@@ -75,6 +74,9 @@
     }
   },
   "devDependencies": {
+    "@babel/core": "^7.29.0",
+    "@babel/preset-react": "^7.28.5",
+    "@babel/preset-typescript": "^7.28.5",
     "@eslint/js": "^9.39.4",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-terser": "^1.0.0",
@@ -88,6 +90,7 @@
     "globals": "^17.6.0",
     "husky": "^9.1.7",
     "jsdoc": "^4.0.5",
+    "jsdoc-babel": "^0.5.0",
     "prettier": "^3.8.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

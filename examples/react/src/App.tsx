@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo } from 'react';
 import { useLumina, LuminaCanvas } from '@gks101/luminajs/react';
+import type { Lumina } from '@gks101/luminajs';
 import './App.css';
 import { ImageCropper } from '../../../src/react';
 import ImageCropperExample from '../../../src/react/ImageCropperExample.tsx';
@@ -28,7 +29,7 @@ function App() {
   const [cropH, setCropH] = useState(400);
 
   // Memoize operations to prevent infinite loops
-  const asciiOperation = useCallback((chain) => chain.ascii(), []);
+  const asciiOperation = useCallback((chain: Lumina) => chain.ascii(), []);
   const asciiResizeConfig = useMemo(() => ({ width: 100, height: 50 }), []);
   const thumbnailResizeConfig = useMemo(
     () => ({ width: 200, height: 150 }),
@@ -82,100 +83,111 @@ function App() {
   return (
     <div className="demo-container">
       <header>
-        <h1>LuminaJS Premium Demo</h1>
-        <p>A full showcase of the LuminaJS Image Processing Library</p>
+        <h1>LuminaJS React Demo</h1>
+        <p>
+          A full showcase of the LuminaJS Image Processing Component Library
+        </p>
+        <div>
+          <a href={'./storybook'}>View Story book demo</a>
+          <a href={'./docs'}>Documentation</a>
+        </div>
       </header>
 
       <main className="demo-grid">
-        <section className="preview-panel">
-          <div className="card">
-            <div className="card-header">
-              <h3>{showAscii ? 'ASCII Output' : 'Live Canvas Output'}</h3>
-              <div style={{ display: 'flex', gap: '8px' }}>
-                {!showAscii && (
+        <section id="full-demo">
+          <section className="preview-panel">
+            <div className="card">
+              <div className="card-header">
+                <h3>{showAscii ? 'ASCII Output' : 'Live Canvas Output'}</h3>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  {!showAscii && (
+                    <button
+                      className="toggle-btn"
+                      onClick={handleDownloadMain}
+                      disabled={!canvasDataUrl}
+                    >
+                      Download
+                    </button>
+                  )}
                   <button
                     className="toggle-btn"
-                    onClick={handleDownloadMain}
-                    disabled={!canvasDataUrl}
+                    onClick={() => {
+                      setShowAscii(!showAscii);
+                      console.log(asciiText);
+                    }}
                   >
-                    Download
+                    {showAscii ? 'Show Image' : 'Show ASCII'}
                   </button>
+                </div>
+              </div>
+
+              <div className="display-area">
+                {showAscii ? (
+                  <pre className="ascii-box">
+                    {asciiLoading ? 'Generating ASCII...' : asciiText}
+                  </pre>
+                ) : (
+                  <LuminaCanvas
+                    source="/sample.png"
+                    className="main-canvas"
+                    brightness={brightness}
+                    contrast={contrast}
+                    resize={isResized ? { width, height } : undefined}
+                    crop={
+                      isCropped
+                        ? { x: cropX, y: cropY, width: cropW, height: cropH }
+                        : undefined
+                    }
+                    grayscale={filterType === 'grayscale'}
+                    sepia={filterType === 'sepia'}
+                    gaussianBlur={filterType === 'blur' ? 5 : undefined}
+                    sharpen={filterType === 'sharpen'}
+                    emboss={filterType === 'emboss'}
+                    edgeDetection={filterType === 'edge'}
+                    backgroundBlur={
+                      bgBlur
+                        ? { sigma: 6, focusRadius: 150, falloff: 200 }
+                        : undefined
+                    }
+                    watermark={
+                      watermarkText
+                        ? {
+                            text: watermarkText,
+                            options: {
+                              x: watermarkX,
+                              y: watermarkY,
+                              fontSize: watermarkSize,
+                              fontFace: watermarkFont,
+                              color: watermarkColor,
+                            },
+                          }
+                        : undefined
+                    }
+                    outputType="dataUrl"
+                    getImage={handleGetCanvasImage}
+                  />
                 )}
-                <button
-                  className="toggle-btn"
-                  onClick={() => {
-                    setShowAscii(!showAscii);
-                    console.log(asciiText);
-                  }}
-                >
-                  {showAscii ? 'Show Image' : 'Show ASCII'}
-                </button>
               </div>
             </div>
 
-            <div className="display-area">
-              {showAscii ? (
-                <pre className="ascii-box">
-                  {asciiLoading ? 'Generating ASCII...' : asciiText}
-                </pre>
-              ) : (
-                <LuminaCanvas
-                  source="/sample.png"
-                  className="main-canvas"
-                  brightness={brightness}
-                  contrast={contrast}
-                  resize={isResized ? { width, height } : undefined}
-                  crop={
-                    isCropped
-                      ? { x: cropX, y: cropY, width: cropW, height: cropH }
-                      : undefined
-                  }
-                  grayscale={filterType === 'grayscale'}
-                  sepia={filterType === 'sepia'}
-                  gaussianBlur={filterType === 'blur' ? 5 : undefined}
-                  sharpen={filterType === 'sharpen'}
-                  emboss={filterType === 'emboss'}
-                  edgeDetection={filterType === 'edge'}
-                  backgroundBlur={
-                    bgBlur
-                      ? { sigma: 6, focusRadius: 150, falloff: 200 }
-                      : undefined
-                  }
-                  watermark={
-                    watermarkText
-                      ? {
-                          text: watermarkText,
-                          options: {
-                            x: watermarkX,
-                            y: watermarkY,
-                            fontSize: watermarkSize,
-                            fontFace: watermarkFont,
-                            color: watermarkColor,
-                          },
-                        }
-                      : undefined
-                  }
-                  outputType="dataUrl"
-                  getImage={handleGetCanvasImage}
-                />
-              )}
+            <div className="thumbnail-card">
+              <h4>Generated Thumbnail (useLumina Hook)</h4>
+              {thumbnail && <img src={thumbnail} alt="Preview" />}
+
+              <button
+                className="toggle-btn"
+                onClick={handleDownloadThumbnail}
+                style={{
+                  marginTop: '10px',
+                  display: 'block',
+                  margin: '0 auto',
+                }}
+              >
+                Fetch & Download Thumbnail
+              </button>
             </div>
-          </div>
-
-          <div className="thumbnail-card">
-            <h4>Generated Thumbnail (useLumina Hook)</h4>
-            {thumbnail && <img src={thumbnail} alt="Preview" />}
-
-            <button
-              className="toggle-btn"
-              onClick={handleDownloadThumbnail}
-              style={{ marginTop: '10px', display: 'block', margin: '0 auto' }}
-            >
-              Fetch & Download Thumbnail
-            </button>
-          </div>
+          </section>
         </section>
-
         <aside className="sidebar">
           <div className="controls-card">
             <h3>Adjustments</h3>
@@ -379,13 +391,41 @@ function App() {
             </div>
           </div>
         </aside>
-
-        <section>
+        <section id="cropping-tool">
           <div className={'preview-panel'}>
-            <ImageCropper src={'sample.png'} className="card" />
+            <div className="card" style={{ padding: '20px' }}>
+              <h3>
+                ImageCropper - A complete image cropping interface with explicit
+                apply.
+              </h3>
+              <p>
+                Combines the <b>`ImageAreaSelector`</b> for interactive crop
+                area selection with `LuminaCanvas` for rendering the applied
+                crop in the same component after the user clicks Apply.
+              </p>
+              <ImageCropper src={'sample.png'} />
+            </div>
           </div>
 
-          <ImageCropperExample />
+          <div className={'preview-panel'}>
+            <div
+              className="card"
+              style={{ padding: '20px', marginTop: '20px' }}
+            >
+              <h3>ImageCropper - upload image and apply crop</h3>
+              <p>
+                Combines the <b>`ImageAreaSelector`</b> for interactive crop
+                area selection with `LuminaCanvas` on uploaded image for
+                rendering the applied crop in the same component after the user
+                clicks Apply..
+              </p>
+              <p style={{ color: 'red' }}>
+                Note: this does not upload image to server
+              </p>
+
+              <ImageCropperExample />
+            </div>
+          </div>
         </section>
       </main>
     </div>

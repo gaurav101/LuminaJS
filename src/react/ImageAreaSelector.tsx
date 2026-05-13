@@ -1,12 +1,5 @@
-import {
-  useState,
-  useRef,
-  useCallback,
-  useEffect,
-  FC,
-  MouseEvent,
-  ReactNode,
-} from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
+import type { FC, MouseEvent, ReactNode } from 'react';
 
 export interface CropArea {
   x: number;
