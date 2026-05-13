@@ -4,8 +4,8 @@
 
 LuminaJS is a modular, chainable,lightweight, zero-dependency JavaScript utility library for browser-based image processing using the HTML5 Canvas API. It provides a functional approach to image manipulation, focusing on performance and ease of use.
 
-- [Demo-react](https://gaurav101.github.io/LuminaJS/react)
-- [Demo-react-storybook](https://gaurav101.github.io/LuminaJS/react/storybook)
+- [Demo-react](https://gaurav101.github.io/LuminaJS/examples/react)
+- [Demo-react-storybook](https://gaurav101.github.io/LuminaJS/examples/react/storybook/)
 - [Demo-vanila-js](https://gaurav101.github.io/LuminaJS/)
 - [Code](https://github.com/gaurav101/LuminaJS)
 - [NPM](https://www.npmjs.com/package/@gks101/luminajs)
