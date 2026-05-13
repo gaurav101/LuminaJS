@@ -1,6 +1,6 @@
 {
   "name": "@gks101/luminajs",
-  "version": "2.0.0",
+  "version": "2.0.0-beta-10",
   "description": "A modular, lightweight JavaScript and react utility library and hooks/components for browser-based image processing using the HTML5 Canvas API. suppport react, typescript and vanilla js",
   "homepage": "https://gaurav101.github.io/LuminaJS/",
   "repository": {
