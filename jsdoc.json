@@ -6,7 +6,7 @@
   "source": {
     "include": ["src", "README.md"],
     "includePattern": ".+\\.[jt]s(doc|x)?$",
-    "excludePattern": "(^|\\/|\\\\)_"
+    "excludePattern": "(^|\\/|\\\\)_|src[\\/\\\\]angular[\\/\\\\]"
   },
   "plugins": ["plugins/markdown", "node_modules/jsdoc-babel"],
   "babel": {

@@ -1,0 +1,218 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: #f6f7f9;
+  color: #17202a;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+}
+
+.shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 24px;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 32px;
+}
+
+.workspace,
+.controls {
+  background: #ffffff;
+  border: 1px solid #d8dde6;
+  border-radius: 8px;
+  box-shadow: 0 16px 40px rgb(22 34 51 / 8%);
+}
+
+.workspace {
+  overflow: hidden;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e8ee;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+h1 {
+  font-size: 24px;
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #586476;
+}
+
+p {
+  margin-top: 6px;
+  color: #586476;
+}
+
+.preview {
+  min-height: 520px;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    linear-gradient(45deg, #edf0f4 25%, transparent 25%),
+    linear-gradient(-45deg, #edf0f4 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #edf0f4 75%),
+    linear-gradient(-45deg, transparent 75%, #edf0f4 75%);
+  background-position:
+    0 0,
+    0 12px,
+    12px -12px,
+    -12px 0;
+  background-size: 24px 24px;
+}
+
+.tool-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 14px 24px;
+  border-bottom: 1px solid #e5e8ee;
+  background: #fbfcfe;
+}
+
+.tool-tabs button {
+  min-height: 34px;
+  padding: 0 14px;
+}
+
+.tool-tabs button.active {
+  border-color: #17202a;
+  background: #17202a;
+  color: #ffffff;
+}
+
+:host ::ng-deep .image-canvas {
+  max-height: 520px;
+  border-radius: 6px;
+  box-shadow: 0 18px 44px rgb(22 34 51 / 18%);
+}
+
+:host ::ng-deep lumina-image-cropper {
+  max-width: 100%;
+}
+
+:host ::ng-deep .lumina-image-cropper {
+  padding: 0;
+}
+
+:host ::ng-deep .lumina-area-selector img {
+  max-height: 520px;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 22px;
+}
+
+label {
+  display: grid;
+  gap: 8px;
+  font-weight: 600;
+}
+
+label span {
+  display: flex;
+  justify-content: space-between;
+  color: #2b3544;
+}
+
+input[type='range'] {
+  width: 100%;
+  accent-color: #1b6ef3;
+}
+
+button {
+  min-height: 38px;
+  border: 1px solid #c9d2df;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #17202a;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.toolbar button {
+  padding: 0 16px;
+  background: #1b6ef3;
+  border-color: #1b6ef3;
+  color: #ffffff;
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.filter-grid button.active {
+  background: #17202a;
+  border-color: #17202a;
+  color: #ffffff;
+}
+
+.crop-result {
+  padding: 10px;
+  border: 1px solid #d8dde6;
+  border-radius: 6px;
+  background: #ffffff;
+}
+
+.crop-result img {
+  display: block;
+  width: 100%;
+  border-radius: 4px;
+}
+
+.status {
+  margin-top: auto;
+  padding: 12px;
+  border-radius: 6px;
+  background: #eef4ff;
+  color: #174ea6;
+  font-weight: 700;
+}
+
+@media (max-width: 860px) {
+  .shell {
+    grid-template-columns: 1fr;
+    padding: 18px;
+  }
+
+  .toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .preview {
+    min-height: 360px;
+  }
+}

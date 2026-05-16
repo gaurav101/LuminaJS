@@ -1,0 +1,133 @@
+<main class="shell">
+  <section class="workspace">
+    <div class="toolbar">
+      <div>
+        <h1>LuminaJS Angular Demo</h1>
+        <p>
+          Standalone Angular components for canvas processing and crop tools.
+        </p>
+      </div>
+      <button
+        type="button"
+        (click)="download()"
+        [disabled]="activeTool === 'crop' ? !croppedPreview : !dataUrl"
+      >
+        Download
+      </button>
+    </div>
+
+    <div class="tool-tabs" aria-label="Tool selection">
+      <button
+        type="button"
+        [class.active]="activeTool === 'editor'"
+        (click)="activeTool = 'editor'"
+      >
+        Canvas Editor
+      </button>
+      <button
+        type="button"
+        [class.active]="activeTool === 'crop'"
+        (click)="activeTool = 'crop'"
+      >
+        Image Crop
+      </button>
+    </div>
+
+    <div class="preview">
+      @if (activeTool === 'editor') {
+        <lumina-canvas
+          [source]="source"
+          [brightness]="brightness"
+          [contrast]="contrast"
+          [grayscale]="grayscale"
+          [sepia]="sepia"
+          [gaussianBlur]="gaussianBlur"
+          [sharpen]="sharpen"
+          outputType="dataUrl"
+          canvasClass="image-canvas"
+          [canvasStyle]="{ maxWidth: '100%' }"
+          (processed)="handleProcessed($event)"
+          (processError)="handleError($event)"
+          (imageLoad)="status = 'Canvas updated'"
+        ></lumina-canvas>
+      } @else {
+        <lumina-image-cropper
+          [src]="source"
+          [aspectRatio]="16 / 9"
+          outputFormat="dataUrl"
+          [maxWidth]="760"
+          [maxHeight]="520"
+          buttonPosition="top-right"
+          (cropComplete)="handleCropComplete($event)"
+          (processError)="handleError($event)"
+          (resetCrop)="croppedPreview = ''; status = 'Crop reset'"
+        ></lumina-image-cropper>
+      }
+    </div>
+  </section>
+
+  <aside class="controls">
+    @if (activeTool === 'editor') {
+      <h2>Adjustments</h2>
+
+      <label>
+        <span>Brightness {{ brightness }}</span>
+        <input type="range" min="-100" max="100" [(ngModel)]="brightness" />
+      </label>
+
+      <label>
+        <span>Contrast {{ contrast }}</span>
+        <input type="range" min="-100" max="100" [(ngModel)]="contrast" />
+      </label>
+
+      <h2>Filters</h2>
+      <div class="filter-grid">
+        <button
+          type="button"
+          [class.active]="filterType === 'none'"
+          (click)="filterType = 'none'"
+        >
+          None
+        </button>
+        <button
+          type="button"
+          [class.active]="filterType === 'grayscale'"
+          (click)="filterType = 'grayscale'"
+        >
+          Grayscale
+        </button>
+        <button
+          type="button"
+          [class.active]="filterType === 'sepia'"
+          (click)="filterType = 'sepia'"
+        >
+          Sepia
+        </button>
+        <button
+          type="button"
+          [class.active]="filterType === 'blur'"
+          (click)="filterType = 'blur'"
+        >
+          Blur
+        </button>
+        <button
+          type="button"
+          [class.active]="filterType === 'sharpen'"
+          (click)="filterType = 'sharpen'"
+        >
+          Sharpen
+        </button>
+      </div>
+    } @else {
+      <h2>Crop Tool</h2>
+
+      @if (croppedPreview) {
+        <div class="crop-result">
+          <img [src]="croppedPreview" alt="Cropped preview" />
+        </div>
+      }
+    }
+
+    <div class="status">{{ status }}</div>
+  </aside>
+</main>

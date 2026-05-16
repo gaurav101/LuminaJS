@@ -1,7 +1,7 @@
 {
   "name": "@gks101/luminajs",
   "version": "2.0.1",
-  "description": "A modular, lightweight JavaScript and react utility library and hooks/components for browser-based image processing using the HTML5 Canvas API. suppport react, typescript and vanilla js",
+  "description": "A modular, lightweight JavaScript, React, and Angular utility library for browser-based image processing using the HTML5 Canvas API. Supports React, Angular, TypeScript, and vanilla JS.",
   "homepage": "https://gaurav101.github.io/LuminaJS/",
   "repository": {
     "type": "git",
@@ -45,6 +45,11 @@
       "types": "./dist/react/index.d.ts",
       "import": "./dist/react/index.js",
       "require": "./dist/react/index.js"
+    },
+    "./angular": {
+      "types": "./dist/angular/index.d.ts",
+      "import": "./dist/angular/index.js",
+      "require": "./dist/angular/index.js"
     }
   },
   "scripts": {
@@ -62,10 +67,18 @@
     "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky; fi"
   },
   "peerDependencies": {
+    "@angular/common": ">=16.0.0",
+    "@angular/core": ">=16.0.0",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
   },
   "peerDependenciesMeta": {
+    "@angular/common": {
+      "optional": true
+    },
+    "@angular/core": {
+      "optional": true
+    },
     "react": {
       "optional": true
     },
@@ -74,6 +87,8 @@
     }
   },
   "devDependencies": {
+    "@angular/common": "^20.3.0",
+    "@angular/core": "^20.3.0",
     "@babel/core": "^7.29.0",
     "@babel/preset-react": "^7.28.5",
     "@babel/preset-typescript": "^7.28.5",
@@ -103,8 +118,10 @@
   },
   "keywords": [
     "react",
+    "angular",
     "react-hooks",
     "react-component-image-filter",
+    "angular-component-image-filter",
     "react-hooks-image-filter",
     "react-image-processing",
     "react-filters",

@@ -3,7 +3,7 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import bundleSize from 'rollup-plugin-bundle-size';
 import copy from 'rollup-plugin-copy';
 
-const peerDeps = ['react', 'react-dom'];
+const peerDeps = ['@angular/common', '@angular/core', 'react', 'react-dom'];
 
 export default [
   // Development builds (ESM and UMD)
@@ -31,6 +31,8 @@ export default [
         format: 'umd',
         name: 'Lumina',
         globals: {
+          '@angular/common': 'ng.common',
+          '@angular/core': 'ng.core',
           react: 'React',
           'react-dom': 'ReactDOM',
         },
@@ -52,6 +54,8 @@ export default [
         format: 'umd',
         name: 'Lumina',
         globals: {
+          '@angular/common': 'ng.common',
+          '@angular/core': 'ng.core',
           react: 'React',
           'react-dom': 'ReactDOM',
         },
