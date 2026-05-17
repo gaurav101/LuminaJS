@@ -297,37 +297,40 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
     });
   }, []);
 
-  const getImagePoint = useCallback((e: MouseEvent<HTMLElement> | TouchEvent<HTMLElement>) => {
-    const img = imgRef.current;
-    const rect = img?.getBoundingClientRect();
-    if (!rect || !img) return null;
+  const getImagePoint = useCallback(
+    (e: MouseEvent<HTMLElement> | TouchEvent<HTMLElement>) => {
+      const img = imgRef.current;
+      const rect = img?.getBoundingClientRect();
+      if (!rect || !img) return null;
 
-    const scaleX = img.naturalWidth / rect.width;
-    const scaleY = img.naturalHeight / rect.height;
+      const scaleX = img.naturalWidth / rect.width;
+      const scaleY = img.naturalHeight / rect.height;
 
-    let clientX, clientY;
-    if ('touches' in e) {
-      if (e.touches.length === 0) return null;
-      clientX = e.touches[0].clientX;
-      clientY = e.touches[0].clientY;
-    } else {
-      clientX = e.clientX;
-      clientY = e.clientY;
-    }
+      let clientX, clientY;
+      if ('touches' in e) {
+        if (e.touches.length === 0) return null;
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+      } else {
+        clientX = e.clientX;
+        clientY = e.clientY;
+      }
 
-    return {
-      x: Math.max(
-        0,
-        Math.min((clientX - rect.left) * scaleX, img.naturalWidth),
-      ),
-      y: Math.max(
-        0,
-        Math.min((clientY - rect.top) * scaleY, img.naturalHeight),
-      ),
-      imageWidth: img.naturalWidth,
-      imageHeight: img.naturalHeight,
-    };
-  }, []);
+      return {
+        x: Math.max(
+          0,
+          Math.min((clientX - rect.left) * scaleX, img.naturalWidth),
+        ),
+        y: Math.max(
+          0,
+          Math.min((clientY - rect.top) * scaleY, img.naturalHeight),
+        ),
+        imageWidth: img.naturalWidth,
+        imageHeight: img.naturalHeight,
+      };
+    },
+    [],
+  );
 
   const getResizeHandle = useCallback(
     (point: { x: number; y: number }) => {
@@ -374,7 +377,7 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
         const touch2 = e.touches[1];
         const dist = Math.hypot(
           touch2.clientX - touch1.clientX,
-          touch2.clientY - touch1.clientY
+          touch2.clientY - touch1.clientY,
         );
         initialPinchDistanceRef.current = dist;
         pinchStartCropRef.current = cropRef.current;
@@ -444,12 +447,15 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
       if (!isDragging || !imgRef.current) return;
 
       if ('touches' in e && e.touches.length === 2) {
-        if (initialPinchDistanceRef.current !== null && pinchStartCropRef.current !== null) {
+        if (
+          initialPinchDistanceRef.current !== null &&
+          pinchStartCropRef.current !== null
+        ) {
           const touch1 = e.touches[0];
           const touch2 = e.touches[1];
           const dist = Math.hypot(
             touch2.clientX - touch1.clientX,
-            touch2.clientY - touch1.clientY
+            touch2.clientY - touch1.clientY,
           );
           const scale = dist / initialPinchDistanceRef.current;
 
@@ -471,13 +477,13 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
           const centerX = startCrop.x + startCrop.width / 2;
           const centerY = startCrop.y + startCrop.height / 2;
 
-          let newX = centerX - newWidth / 2;
-          let newY = centerY - newHeight / 2;
+          const newX = centerX - newWidth / 2;
+          const newY = centerY - newHeight / 2;
 
           const newCrop = clampAspectCrop(
             { x: newX, y: newY, width: newWidth, height: newHeight },
             imgWidth,
-            imgHeight
+            imgHeight,
           );
 
           cropRef.current = newCrop;

@@ -48,12 +48,12 @@ type CropperArgs = {
   aspectRatio?: number;
   outputFormat: 'blob' | 'dataUrl';
   buttonPosition:
-  | 'top-left'
-  | 'top-right'
-  | 'top-center'
-  | 'bottom-left'
-  | 'bottom-center'
-  | 'bottom-right';
+    | 'top-left'
+    | 'top-right'
+    | 'top-center'
+    | 'bottom-left'
+    | 'bottom-center'
+    | 'bottom-right';
   allowReset: boolean;
   allowResize: boolean;
 };
@@ -212,12 +212,12 @@ function ImageCropperDemo({
   aspectRatio?: number;
   outputFormat: 'blob' | 'dataUrl';
   buttonPosition:
-  | 'top-left'
-  | 'top-right'
-  | 'top-center'
-  | 'bottom-left'
-  | 'bottom-center'
-  | 'bottom-right';
+    | 'top-left'
+    | 'top-right'
+    | 'top-center'
+    | 'bottom-left'
+    | 'bottom-center'
+    | 'bottom-right';
   allowReset: boolean;
   allowResize: boolean;
 }) {
@@ -305,7 +305,10 @@ export const ReactExports: Story = {
           <h3>ImageAreaSelector</h3>
           <ul className="lumina-story-list">
             <li>Interactive selection rectangle over an image.</li>
-            <li>Resizable handles, drag-to-move, and touch support with pinch-to-resize.</li>
+            <li>
+              Resizable handles, drag-to-move, and touch support with
+              pinch-to-resize.
+            </li>
             <li>Optional aspect-ratio lock.</li>
             <li>Selection styling and overlayControls render prop.</li>
           </ul>
@@ -314,7 +317,10 @@ export const ReactExports: Story = {
           <h3>ImageCropper</h3>
           <ul className="lumina-story-list">
             <li>Complete crop workflow with apply and reset controls.</li>
-            <li>Resizable crop selection powered by ImageAreaSelector (supports touch & pinch).</li>
+            <li>
+              Resizable crop selection powered by ImageAreaSelector (supports
+              touch & pinch).
+            </li>
             <li>Blob or Data URL output.</li>
             <li>Custom button classes, styles, positions, and callbacks.</li>
           </ul>

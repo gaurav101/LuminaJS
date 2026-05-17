@@ -152,15 +152,15 @@ function App() {
                     watermark={
                       watermarkText
                         ? {
-                          text: watermarkText,
-                          options: {
-                            x: watermarkX,
-                            y: watermarkY,
-                            fontSize: watermarkSize,
-                            fontFace: watermarkFont,
-                            color: watermarkColor,
-                          },
-                        }
+                            text: watermarkText,
+                            options: {
+                              x: watermarkX,
+                              y: watermarkY,
+                              fontSize: watermarkSize,
+                              fontFace: watermarkFont,
+                              color: watermarkColor,
+                            },
+                          }
                         : undefined
                     }
                     outputType="dataUrl"
