@@ -5,3 +5,4 @@ examples/react/storybook-static
 *.min.js
 package-lock.json
 .DS_Store
+examples/angular/.angular
