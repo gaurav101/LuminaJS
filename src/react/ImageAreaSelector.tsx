@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
-import type { FC, MouseEvent, ReactNode } from 'react';
+import type { FC, MouseEvent, TouchEvent, ReactNode } from 'react';
 
 export interface CropArea {
   x: number;
@@ -281,6 +281,8 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
   const dragModeRef = useRef<DragMode>('draw');
   const resizeHandleRef = useRef<ResizeHandle | null>(null);
   const resizeStartCropRef = useRef<CropArea | null>(null);
+  const initialPinchDistanceRef = useRef<number | null>(null);
+  const pinchStartCropRef = useRef<CropArea | null>(null);
 
   const updateDisplayScale = useCallback(() => {
     const img = imgRef.current;
@@ -295,7 +297,7 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
     });
   }, []);
 
-  const getImagePoint = useCallback((e: MouseEvent<HTMLElement>) => {
+  const getImagePoint = useCallback((e: MouseEvent<HTMLElement> | TouchEvent<HTMLElement>) => {
     const img = imgRef.current;
     const rect = img?.getBoundingClientRect();
     if (!rect || !img) return null;
@@ -303,14 +305,24 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
     const scaleX = img.naturalWidth / rect.width;
     const scaleY = img.naturalHeight / rect.height;
 
+    let clientX, clientY;
+    if ('touches' in e) {
+      if (e.touches.length === 0) return null;
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
+    } else {
+      clientX = e.clientX;
+      clientY = e.clientY;
+    }
+
     return {
       x: Math.max(
         0,
-        Math.min((e.clientX - rect.left) * scaleX, img.naturalWidth),
+        Math.min((clientX - rect.left) * scaleX, img.naturalWidth),
       ),
       y: Math.max(
         0,
-        Math.min((e.clientY - rect.top) * scaleY, img.naturalHeight),
+        Math.min((clientY - rect.top) * scaleY, img.naturalHeight),
       ),
       imageWidth: img.naturalWidth,
       imageHeight: img.naturalHeight,
@@ -353,9 +365,27 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
     [allowResize, displayScale.scaleX, displayScale.scaleY],
   );
 
-  const handleMouseDown = useCallback(
-    (e: MouseEvent<HTMLDivElement>) => {
-      if (e.button !== 0) return;
+  const handleInteractionStart = useCallback(
+    (e: MouseEvent<HTMLDivElement> | TouchEvent<HTMLDivElement>) => {
+      if ('button' in e && e.button !== 0) return;
+
+      if ('touches' in e && e.touches.length === 2) {
+        const touch1 = e.touches[0];
+        const touch2 = e.touches[1];
+        const dist = Math.hypot(
+          touch2.clientX - touch1.clientX,
+          touch2.clientY - touch1.clientY
+        );
+        initialPinchDistanceRef.current = dist;
+        pinchStartCropRef.current = cropRef.current;
+        setIsDragging(true);
+        isDraggingRef.current = true;
+        dragModeRef.current = 'resize';
+        setDragMode('resize');
+        return;
+      }
+
+      if ('touches' in e && e.touches.length > 2) return;
 
       const point = getImagePoint(e);
       if (!point) return;
@@ -409,9 +439,53 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
     [getImagePoint, getResizeHandle],
   );
 
-  const handleMouseMove = useCallback(
-    (e: MouseEvent<HTMLDivElement>) => {
+  const handleInteractionMove = useCallback(
+    (e: MouseEvent<HTMLDivElement> | TouchEvent<HTMLDivElement>) => {
       if (!isDragging || !imgRef.current) return;
+
+      if ('touches' in e && e.touches.length === 2) {
+        if (initialPinchDistanceRef.current !== null && pinchStartCropRef.current !== null) {
+          const touch1 = e.touches[0];
+          const touch2 = e.touches[1];
+          const dist = Math.hypot(
+            touch2.clientX - touch1.clientX,
+            touch2.clientY - touch1.clientY
+          );
+          const scale = dist / initialPinchDistanceRef.current;
+
+          const startCrop = pinchStartCropRef.current;
+          const imgWidth = imgRef.current.naturalWidth;
+          const imgHeight = imgRef.current.naturalHeight;
+
+          let newWidth = startCrop.width * scale;
+          let newHeight = aspect ? newWidth / aspect : startCrop.height * scale;
+
+          newWidth = Math.max(MIN_CROP_SIZE, Math.min(newWidth, imgWidth));
+          newHeight = Math.max(MIN_CROP_SIZE, Math.min(newHeight, imgHeight));
+
+          if (aspect && newHeight > imgHeight) {
+            newHeight = imgHeight;
+            newWidth = newHeight * aspect;
+          }
+
+          const centerX = startCrop.x + startCrop.width / 2;
+          const centerY = startCrop.y + startCrop.height / 2;
+
+          let newX = centerX - newWidth / 2;
+          let newY = centerY - newHeight / 2;
+
+          const newCrop = clampAspectCrop(
+            { x: newX, y: newY, width: newWidth, height: newHeight },
+            imgWidth,
+            imgHeight
+          );
+
+          cropRef.current = newCrop;
+          setCrop(newCrop);
+          onCropChange(newCrop);
+        }
+        return;
+      }
 
       const point = getImagePoint(e);
       if (!point) return;
@@ -499,6 +573,8 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
     resizeHandleRef.current = null;
     setActiveResizeHandle(null);
     resizeStartCropRef.current = null;
+    initialPinchDistanceRef.current = null;
+    pinchStartCropRef.current = null;
 
     const finalCrop = cropRef.current;
     if (finalCrop.width > 0 && finalCrop.height > 0) {
@@ -530,11 +606,16 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
               ? 'crosshair'
               : 'crosshair'),
         userSelect: 'none',
+        touchAction: 'none',
       }}
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
+      onMouseDown={handleInteractionStart}
+      onMouseMove={handleInteractionMove}
       onMouseUp={stopDragging}
       onMouseLeave={stopDragging}
+      onTouchStart={handleInteractionStart}
+      onTouchMove={handleInteractionMove}
+      onTouchEnd={stopDragging}
+      onTouchCancel={stopDragging}
     >
       <img
         ref={imgRef}

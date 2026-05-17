@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo } from 'react';
-import { useLumina, LuminaCanvas } from '@gks101/luminajs/react';
-import type { Lumina } from '@gks101/luminajs';
+import { useLumina, LuminaCanvas } from '../../../src/react';
+import type { Lumina } from '../../../src/';
 import './App.css';
 import { ImageCropper } from '../../../src/react';
 import ImageCropperExample from '../../../src/react/ImageCropperExample.tsx';
@@ -152,15 +152,15 @@ function App() {
                     watermark={
                       watermarkText
                         ? {
-                            text: watermarkText,
-                            options: {
-                              x: watermarkX,
-                              y: watermarkY,
-                              fontSize: watermarkSize,
-                              fontFace: watermarkFont,
-                              color: watermarkColor,
-                            },
-                          }
+                          text: watermarkText,
+                          options: {
+                            x: watermarkX,
+                            y: watermarkY,
+                            fontSize: watermarkSize,
+                            fontFace: watermarkFont,
+                            color: watermarkColor,
+                          },
+                        }
                         : undefined
                     }
                     outputType="dataUrl"

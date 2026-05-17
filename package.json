@@ -144,7 +144,13 @@
     "ascii art",
     "image-editor",
     "canvas-filters",
-    "fast-gaussian-blur"
+    "fast-gaussian-blur",
+    "mobile-friendly-cropper",
+    "touch-friendly-cropper",
+    "responsive-cropper",
+    "cross-platform-cropper",
+    "browser-cropper",
+    "lightweight-cropper"
   ],
   "author": "LuminaJS and Gaurav",
   "license": "MIT",

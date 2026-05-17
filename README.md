@@ -454,7 +454,7 @@ function App() {
 
 ### `ImageCropper` Component
 
-`ImageCropper` provides a complete drag-to-crop workflow. Draw a crop area, drag inside it to move it, or drag any handle to resize it before clicking Apply Crop. The same component swaps from the original image selector to the cropped `LuminaCanvas` result. The Reset button reloads the original image for another crop.
+`ImageCropper` provides a complete drag-to-crop workflow. Draw a crop area, drag inside it to move it, or drag any handle to resize it before clicking Apply Crop. The same component swaps from the original image selector to the cropped `LuminaCanvas` result. The Reset button reloads the original image for another crop. It natively supports mobile touch interactions, including pinch-to-resize for two-finger gestures.
 
 ```jsx
 import { useState } from 'react';

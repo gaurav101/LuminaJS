@@ -6,8 +6,8 @@ This guide covers the LuminaJS React cropping tools.
 
 LuminaJS provides three ways to build cropping workflows:
 
-1. **`ImageCropper`** - High-level cropper. Draw a crop area, resize it with handles, then click Apply Crop.
-2. **`ImageAreaSelector`** - Low-level selector for custom crop UIs with move and resize interactions.
+1. **`ImageCropper`** - High-level cropper. Draw a crop area, resize it with handles, then click Apply Crop. Full mobile touch support including pinch-to-resize.
+2. **`ImageAreaSelector`** - Low-level selector for custom crop UIs with move, resize interactions, and native multi-touch gestures (pinch-to-resize).
 3. **`useLumina`** - Hook for custom crop, filter, upload, and save workflows.
 
 ---
@@ -181,7 +181,7 @@ export function DataUrlCropper() {
 
 ## ImageAreaSelector
 
-`ImageAreaSelector` is the low-level crop selection component. It does not process the image by itself. Use it when you need a custom UI, multiple crop outputs, or filters before saving. Users can draw a crop area, move it, and resize it with handles.
+`ImageAreaSelector` is the low-level crop selection component. It does not process the image by itself. Use it when you need a custom UI, multiple crop outputs, or filters before saving. Users can draw a crop area, move it, and resize it with handles. It includes full touch support for mobile devices, including two-finger pinch-to-resize gestures.
 
 ### Basic Usage
 

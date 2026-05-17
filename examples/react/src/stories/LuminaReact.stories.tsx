@@ -6,8 +6,8 @@ import {
   LuminaCanvas,
   useLumina,
   type CropArea,
-} from '@gks101/luminajs/react';
-import type { Lumina } from '@gks101/luminajs';
+} from '../../../../src/react';
+import type { Lumina } from '../../../../src';
 
 const SAMPLE_IMAGE = './sample.png';
 const ASCII_SAMPLE = './lumina.png';
@@ -48,12 +48,12 @@ type CropperArgs = {
   aspectRatio?: number;
   outputFormat: 'blob' | 'dataUrl';
   buttonPosition:
-    | 'top-left'
-    | 'top-right'
-    | 'top-center'
-    | 'bottom-left'
-    | 'bottom-center'
-    | 'bottom-right';
+  | 'top-left'
+  | 'top-right'
+  | 'top-center'
+  | 'bottom-left'
+  | 'bottom-center'
+  | 'bottom-right';
   allowReset: boolean;
   allowResize: boolean;
 };
@@ -212,12 +212,12 @@ function ImageCropperDemo({
   aspectRatio?: number;
   outputFormat: 'blob' | 'dataUrl';
   buttonPosition:
-    | 'top-left'
-    | 'top-right'
-    | 'top-center'
-    | 'bottom-left'
-    | 'bottom-center'
-    | 'bottom-right';
+  | 'top-left'
+  | 'top-right'
+  | 'top-center'
+  | 'bottom-left'
+  | 'bottom-center'
+  | 'bottom-right';
   allowReset: boolean;
   allowResize: boolean;
 }) {
@@ -305,7 +305,7 @@ export const ReactExports: Story = {
           <h3>ImageAreaSelector</h3>
           <ul className="lumina-story-list">
             <li>Interactive selection rectangle over an image.</li>
-            <li>Resizable handles and drag-to-move behavior.</li>
+            <li>Resizable handles, drag-to-move, and touch support with pinch-to-resize.</li>
             <li>Optional aspect-ratio lock.</li>
             <li>Selection styling and overlayControls render prop.</li>
           </ul>
@@ -314,7 +314,7 @@ export const ReactExports: Story = {
           <h3>ImageCropper</h3>
           <ul className="lumina-story-list">
             <li>Complete crop workflow with apply and reset controls.</li>
-            <li>Resizable crop selection powered by ImageAreaSelector.</li>
+            <li>Resizable crop selection powered by ImageAreaSelector (supports touch & pinch).</li>
             <li>Blob or Data URL output.</li>
             <li>Custom button classes, styles, positions, and callbacks.</li>
           </ul>
