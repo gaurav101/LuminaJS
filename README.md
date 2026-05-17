@@ -27,7 +27,7 @@ While libraries like **Jimp** are built for heavy-duty server-side processing, *
 ### 🚀 Key Advantages
 
 - **Zero Latency:** Uses hardware-accelerated **HTML5 Canvas** for near-instant pixel manipulation, avoiding the slow pure-JS processing.
-- **Ultra-Lightweight:** At just **~3 KB**, it preserves your bundle size and [Core Web Vitals](https://web.dev/vitals/), whereas Jimp can add several megabytes to your frontend.
+- **Ultra-Lightweight:** At just **~3.5 KB**, it preserves your bundle size and [Core Web Vitals](https://web.dev/vitals/), whereas Jimp can add several megabytes to your frontend.
 - **Privacy-Centric:** All processing happens on the client’s machine. Sensitive user data never leaves the browser.
 - **Modern DX:** Native **TypeScript** support and a clean, chainable API designed for ESM workflows.
 
@@ -48,7 +48,7 @@ While libraries like **Jimp** are built for heavy-duty server-side processing, *
 
 | Feature          | [LuminaJS](https://www.npmjs.com/package/@gks101/luminajs) | Jimp/Other        |
 | ---------------- | ---------------------------------------------------------- | ----------------- |
-| **Bundle Size**  | **~2.8 KB**                                                | ~Megabytes        |
+| **Bundle Size**  | **~3.5 KB**                                                | ~Megabytes        |
 | **Speed**        | **Extremely Fast** (Native)                                | Slower (Pure JS)  |
 | **Environment**  | Browser / OffscreenCanvas                                  | Node.js / Browser |
 | **Dependencies** | **Zero**                                                   | Multiple          |
