@@ -695,6 +695,10 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
                   onMouseDown={(ev) => ev.stopPropagation()}
                   onMouseUp={(ev) => ev.stopPropagation()}
                   onClick={(ev) => ev.stopPropagation()}
+                  onTouchStart={(ev) => ev.stopPropagation()}
+                  onTouchMove={(ev) => ev.stopPropagation()}
+                  onTouchEnd={(ev) => ev.stopPropagation()}
+                  onTouchCancel={(ev) => ev.stopPropagation()}
                 >
                   {overlayControls({
                     left: leftPx,
