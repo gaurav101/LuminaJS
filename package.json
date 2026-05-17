@@ -149,8 +149,7 @@
   "author": "LuminaJS and Gaurav",
   "license": "MIT",
   "engines": {
-    "node": ">=14.0.0"
-  }
- "funding": "https://github.com/sponsors/gaurav101"
-]
+    "node": ">=20.0.0"
+  },
+  "funding": "https://github.com/sponsors/gaurav101"
 }
