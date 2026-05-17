@@ -454,7 +454,7 @@ function App() {
 
 ### `ImageCropper` Component
 
-`ImageCropper` provides a complete drag-to-crop workflow. The crop is applied automatically when the user finishes selecting an area, and the same component swaps from the original image selector to the cropped `LuminaCanvas` result. The Reset button reloads the original image for another crop.
+`ImageCropper` provides a complete drag-to-crop workflow. Draw a crop area, drag inside it to move it, or drag any handle to resize it before clicking Apply Crop. The same component swaps from the original image selector to the cropped `LuminaCanvas` result. The Reset button reloads the original image for another crop.
 
 ```jsx
 import { useState } from 'react';
@@ -471,6 +471,7 @@ function AvatarEditor() {
         outputFormat="dataUrl"
         maxWidth={500}
         maxHeight={500}
+        allowResize={true}
         onCropComplete={(result) => {
           if (typeof result === 'string') setAvatarPreview(result);
         }}
@@ -556,6 +557,7 @@ The component accepts a `getImage` prop. This is a callback that will be trigger
 
 This repository includes the ImageCropper component. New props were added to allow customizing the Apply Crop and Reset buttons:
 
+- allowResize: boolean (optional) - Shows resize handles on the crop area so users can adjust an existing selection before applying. Default: true.
 - applyButtonClassName: string (optional) - CSS class for the Apply button.
 - applyButtonStyle: CSSProperties (optional) - Inline style object for the Apply button.
 - resetButtonClassName: string (optional) - CSS class for the Reset button.

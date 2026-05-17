@@ -4,6 +4,7 @@ import { ImageCropper } from './index';
 /**
  * Complete image cropper example demonstrating:
  * - Basic cropping with ImageCropper component
+ * - Resizing an existing crop area with selection handles
  * - Custom aspect ratios
  * - Handling the cropped result
  * - Combining ImageAreaSelector with useLumina for custom workflows
@@ -89,6 +90,7 @@ export function ImageCropperExample() {
           maxHeight={500}
           showPreview={true}
           allowReset={true}
+          allowResize={true}
           style={{ marginBottom: '20px' }}
         />
       )}

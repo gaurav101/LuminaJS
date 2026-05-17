@@ -13,6 +13,7 @@ export interface ImageCropperProps {
   maxHeight?: number;
   showPreview?: boolean;
   allowReset?: boolean;
+  allowResize?: boolean;
   className?: string;
   style?: React.CSSProperties;
 
@@ -51,6 +52,7 @@ export interface ImageCropperProps {
  * - aspectRatio: Optional aspect ratio to enforce (width / height)
  * - outputFormat: 'blob' | 'dataUrl'
  * - allowReset: show reset button
+ * - allowResize: show resize handles on the selected crop area
  * - applyButtonClassName / applyButtonStyle: Customize the Apply button class/style
  * - resetButtonClassName / resetButtonStyle: Customize the Reset button class/style
  * - onApply / onReset: Optional callbacks fired when Apply or Reset are clicked. If the callback returns false (or a Promise that resolves to false), the default behavior is aborted.
@@ -77,6 +79,7 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
   maxWidth = 600,
   maxHeight = 400,
   allowReset = true,
+  allowResize = true,
   className,
   style,
   // button customization
@@ -298,6 +301,7 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
               onCropComplete={handleCropSelectionComplete}
               lineColor="#0066cc"
               overlayOpacity={0.6}
+              allowResize={allowResize}
               overlayControls={() => (
                 <div style={{ display: 'flex', gap: 8 }}>
                   <button

@@ -401,9 +401,10 @@ function App() {
               <p>
                 Combines the <b>`ImageAreaSelector`</b> for interactive crop
                 area selection with `LuminaCanvas` for rendering the applied
-                crop in the same component after the user clicks Apply.
+                crop in the same component after the user clicks Apply. Drag the
+                handles on the selected area to resize it before applying.
               </p>
-              <ImageCropper src={'sample.png'} />
+              <ImageCropper src={'sample.png'} allowResize={true} />
             </div>
           </div>
 
@@ -417,7 +418,7 @@ function App() {
                 Combines the <b>`ImageAreaSelector`</b> for interactive crop
                 area selection with `LuminaCanvas` on uploaded image for
                 rendering the applied crop in the same component after the user
-                clicks Apply..
+                clicks Apply. Drag a handle to resize an existing selection.
               </p>
               <p style={{ color: 'red' }}>
                 Note: this does not upload image to server

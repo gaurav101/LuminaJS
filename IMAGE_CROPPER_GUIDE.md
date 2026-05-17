@@ -6,15 +6,15 @@ This guide covers the LuminaJS React cropping tools.
 
 LuminaJS provides three ways to build cropping workflows:
 
-1. **`ImageCropper`** - High-level automatic cropper. Drag a crop area, release, and the crop is applied immediately.
-2. **`ImageAreaSelector`** - Low-level selector for custom crop UIs.
+1. **`ImageCropper`** - High-level cropper. Draw a crop area, resize it with handles, then click Apply Crop.
+2. **`ImageAreaSelector`** - Low-level selector for custom crop UIs with move and resize interactions.
 3. **`useLumina`** - Hook for custom crop, filter, upload, and save workflows.
 
 ---
 
 ## ImageCropper Recommended
 
-`ImageCropper` is the quickest way to add image cropping to a React app. The user selects an area directly on the image. When the selection is completed, LuminaJS crops the image and replaces the original selector with a `LuminaCanvas` rendering of the cropped result.
+`ImageCropper` is the quickest way to add image cropping to a React app. The user selects an area directly on the image, can drag handles to resize it, and clicks Apply Crop when ready. LuminaJS then crops the image and replaces the original selector with a `LuminaCanvas` rendering of the cropped result.
 
 The built-in Reset button reloads the original image selector so the user can crop again.
 
@@ -51,6 +51,7 @@ export function AvatarCropper() {
 | `maxWidth`       | `number`                                                                       | `600`    | Maximum width of the cropper frame.                                            |
 | `maxHeight`      | `number`                                                                       | `400`    | Maximum height of the cropper frame.                                           |
 | `allowReset`     | `boolean`                                                                      | `true`   | Shows a Reset button after a crop is applied. Set `false` to hide it.          |
+| `allowResize`    | `boolean`                                                                      | `true`   | Shows handles for resizing an existing crop selection before applying.         |
 | `showPreview`    | `boolean`                                                                      | —        | Deprecated. The same image area is used for both selection and cropped result. |
 | `className`      | `string`                                                                       | —        | CSS class name for the wrapper.                                                |
 | `style`          | `React.CSSProperties`                                                          | —        | Inline styles for the wrapper.                                                 |
@@ -180,7 +181,7 @@ export function DataUrlCropper() {
 
 ## ImageAreaSelector
 
-`ImageAreaSelector` is the low-level crop selection component. It does not process the image by itself. Use it when you need a custom UI, multiple crop outputs, or filters before saving.
+`ImageAreaSelector` is the low-level crop selection component. It does not process the image by itself. Use it when you need a custom UI, multiple crop outputs, or filters before saving. Users can draw a crop area, move it, and resize it with handles.
 
 ### Basic Usage
 
@@ -196,6 +197,7 @@ export function ManualSelector() {
       <ImageAreaSelector
         src="/photo.jpg"
         aspect={16 / 9}
+        allowResize={true}
         onCropChange={setCrop}
         onCropComplete={(finalCrop) => {
           console.log('Final crop:', finalCrop);
@@ -219,6 +221,7 @@ export function ManualSelector() {
 | `lineWidth`      | `number`                   | `2`      | Border line width in pixels.                                |
 | `lineColor`      | `string`                   | `'#fff'` | Border color.                                               |
 | `overlayOpacity` | `number`                   | `0.5`    | Opacity of the dark overlay outside the selection.          |
+| `allowResize`    | `boolean`                  | `true`   | Shows resize handles on the selected crop area.             |
 
 ### CropArea
 
