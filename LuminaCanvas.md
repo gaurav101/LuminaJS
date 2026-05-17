@@ -294,6 +294,7 @@ When processing fails, the component renders a `<div className="lumina-error">` 
 
 This repository includes the ImageCropper component. New props were added to allow customizing the Apply Crop and Reset buttons:
 
+- allowResize: boolean (optional) - Shows resize handles on the crop area so users can adjust an existing selection before applying. Default: true.
 - applyButtonClassName: string (optional) - CSS class for the Apply button.
 - applyButtonStyle: CSSProperties (optional) - Inline style object for the Apply button.
 - resetButtonClassName: string (optional) - CSS class for the Reset button.

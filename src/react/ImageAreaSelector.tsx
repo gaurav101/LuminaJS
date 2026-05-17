@@ -16,6 +16,7 @@ interface ImageAreaSelectorProps {
   lineWidth?: number;
   lineColor?: string;
   overlayOpacity?: number;
+  allowResize?: boolean;
   // Optional render prop to display controls relative to the selection overlay.
   // Receives overlay dimensions (CSS pixels) and display scale.
   overlayControls?: (params: {
@@ -28,7 +29,195 @@ interface ImageAreaSelectorProps {
   }) => ReactNode;
 }
 
-type DragMode = 'draw' | 'move';
+type ResizeHandle = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw';
+type DragMode = 'draw' | 'move' | 'resize';
+
+const HANDLE_SIZE = 12;
+const MIN_CROP_SIZE = 1;
+
+const resizeHandles: Array<{
+  id: ResizeHandle;
+  cursor: string;
+  style: {
+    left?: string;
+    top?: string;
+    right?: string;
+    bottom?: string;
+    transform?: string;
+  };
+}> = [
+  {
+    id: 'nw',
+    cursor: 'nwse-resize',
+    style: { left: '0%', top: '0%', transform: 'translate(-50%, -50%)' },
+  },
+  {
+    id: 'n',
+    cursor: 'ns-resize',
+    style: { left: '50%', top: '0%', transform: 'translate(-50%, -50%)' },
+  },
+  {
+    id: 'ne',
+    cursor: 'nesw-resize',
+    style: { right: '0%', top: '0%', transform: 'translate(50%, -50%)' },
+  },
+  {
+    id: 'e',
+    cursor: 'ew-resize',
+    style: { right: '0%', top: '50%', transform: 'translate(50%, -50%)' },
+  },
+  {
+    id: 'se',
+    cursor: 'nwse-resize',
+    style: { right: '0%', bottom: '0%', transform: 'translate(50%, 50%)' },
+  },
+  {
+    id: 's',
+    cursor: 'ns-resize',
+    style: { left: '50%', bottom: '0%', transform: 'translate(-50%, 50%)' },
+  },
+  {
+    id: 'sw',
+    cursor: 'nesw-resize',
+    style: { left: '0%', bottom: '0%', transform: 'translate(-50%, 50%)' },
+  },
+  {
+    id: 'w',
+    cursor: 'ew-resize',
+    style: { left: '0%', top: '50%', transform: 'translate(-50%, -50%)' },
+  },
+];
+
+function clamp(value: number, min: number, max: number) {
+  return Math.max(min, Math.min(value, max));
+}
+
+function normalizeCrop(
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+): CropArea {
+  return {
+    x: Math.min(x1, x2),
+    y: Math.min(y1, y2),
+    width: Math.abs(x2 - x1),
+    height: Math.abs(y2 - y1),
+  };
+}
+
+function clampAspectCrop(
+  crop: CropArea,
+  imageWidth: number,
+  imageHeight: number,
+) {
+  const x = clamp(crop.x, 0, imageWidth - crop.width);
+  const y = clamp(crop.y, 0, imageHeight - crop.height);
+
+  return {
+    ...crop,
+    x,
+    y,
+  };
+}
+
+function getAspectResizeCrop(
+  point: { x: number; y: number; imageWidth: number; imageHeight: number },
+  currentCrop: CropArea,
+  handle: ResizeHandle,
+  aspect: number,
+) {
+  const left = currentCrop.x;
+  const right = currentCrop.x + currentCrop.width;
+  const top = currentCrop.y;
+  const bottom = currentCrop.y + currentCrop.height;
+  const centerX = left + currentCrop.width / 2;
+  const centerY = top + currentCrop.height / 2;
+
+  if (handle === 'e' || handle === 'w') {
+    const anchorX = handle === 'e' ? left : right;
+    const maxWidth = handle === 'e' ? point.imageWidth - anchorX : anchorX;
+    const width = clamp(
+      Math.abs(point.x - anchorX),
+      MIN_CROP_SIZE,
+      Math.min(maxWidth, point.imageHeight * aspect),
+    );
+    const height = width / aspect;
+    const crop = {
+      x: handle === 'e' ? anchorX : anchorX - width,
+      y: centerY - height / 2,
+      width,
+      height,
+    };
+
+    return clampAspectCrop(crop, point.imageWidth, point.imageHeight);
+  }
+
+  if (handle === 'n' || handle === 's') {
+    const anchorY = handle === 's' ? top : bottom;
+    const maxHeight = handle === 's' ? point.imageHeight - anchorY : anchorY;
+    const height = clamp(
+      Math.abs(point.y - anchorY),
+      MIN_CROP_SIZE,
+      Math.min(maxHeight, point.imageWidth / aspect),
+    );
+    const width = height * aspect;
+    const crop = {
+      x: centerX - width / 2,
+      y: handle === 's' ? anchorY : anchorY - height,
+      width,
+      height,
+    };
+
+    return clampAspectCrop(crop, point.imageWidth, point.imageHeight);
+  }
+
+  const anchorX = handle.includes('e') ? left : right;
+  const anchorY = handle.includes('s') ? top : bottom;
+  const deltaX = point.x - anchorX;
+  const deltaY = point.y - anchorY;
+  const signX = deltaX >= 0 ? 1 : -1;
+  const signY = deltaY >= 0 ? 1 : -1;
+  let width = Math.max(
+    Math.abs(deltaX),
+    Math.abs(deltaY) * aspect,
+    MIN_CROP_SIZE,
+  );
+  let height = width / aspect;
+
+  const maxWidth = signX > 0 ? point.imageWidth - anchorX : anchorX;
+  const maxHeight = signY > 0 ? point.imageHeight - anchorY : anchorY;
+  width = Math.min(width, maxWidth, maxHeight * aspect);
+  height = width / aspect;
+
+  return normalizeCrop(
+    anchorX,
+    anchorY,
+    anchorX + signX * width,
+    anchorY + signY * height,
+  );
+}
+
+function getResizeCrop(
+  point: { x: number; y: number; imageWidth: number; imageHeight: number },
+  currentCrop: CropArea,
+  handle: ResizeHandle,
+  aspect?: number,
+) {
+  if (aspect) return getAspectResizeCrop(point, currentCrop, handle, aspect);
+
+  const left = currentCrop.x;
+  const right = currentCrop.x + currentCrop.width;
+  const top = currentCrop.y;
+  const bottom = currentCrop.y + currentCrop.height;
+
+  const x1 = handle.includes('w') ? point.x : left;
+  const x2 = handle.includes('e') ? point.x : right;
+  const y1 = handle.includes('n') ? point.y : top;
+  const y2 = handle.includes('s') ? point.y : bottom;
+
+  return normalizeCrop(x1, y1, x2, y2);
+}
 
 /**
  * ImageAreaSelector - An interactive image cropping tool.
@@ -45,6 +234,7 @@ type DragMode = 'draw' | 'move';
  * @param {number} [props.lineWidth=2] - Border line width in pixels
  * @param {string} [props.lineColor='#fff'] - Border color (CSS color value)
  * @param {number} [props.overlayOpacity=0.5] - Opacity of the darkened surround area (0-1)
+ * @param {boolean} [props.allowResize=true] - Enables resize handles on the crop area
  *
  * @example
  * ```tsx
@@ -66,6 +256,7 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
   lineWidth = 2,
   lineColor = '#fff',
   overlayOpacity = 0.5,
+  allowResize = true,
   overlayControls,
 }) => {
   const [crop, setCrop] = useState<CropArea>({
@@ -76,6 +267,8 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
   });
   const [isDragging, setIsDragging] = useState(false);
   const [dragMode, setDragMode] = useState<DragMode>('draw');
+  const [activeResizeHandle, setActiveResizeHandle] =
+    useState<ResizeHandle | null>(null);
   const [displayScale, setDisplayScale] = useState({
     scaleX: 1,
     scaleY: 1,
@@ -86,6 +279,8 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
   const cropRef = useRef<CropArea>(crop);
   const isDraggingRef = useRef(false);
   const dragModeRef = useRef<DragMode>('draw');
+  const resizeHandleRef = useRef<ResizeHandle | null>(null);
+  const resizeStartCropRef = useRef<CropArea | null>(null);
 
   const updateDisplayScale = useCallback(() => {
     const img = imgRef.current;
@@ -122,6 +317,42 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
     };
   }, []);
 
+  const getResizeHandle = useCallback(
+    (point: { x: number; y: number }) => {
+      if (!allowResize) return null;
+
+      const currentCrop = cropRef.current;
+      if (currentCrop.width <= 0 || currentCrop.height <= 0) return null;
+
+      const thresholdX = HANDLE_SIZE / Math.max(displayScale.scaleX, 0.001);
+      const thresholdY = HANDLE_SIZE / Math.max(displayScale.scaleY, 0.001);
+      const left = currentCrop.x;
+      const right = currentCrop.x + currentCrop.width;
+      const top = currentCrop.y;
+      const bottom = currentCrop.y + currentCrop.height;
+      const centerX = left + currentCrop.width / 2;
+      const centerY = top + currentCrop.height / 2;
+      const nearX = (x: number) => Math.abs(point.x - x) <= thresholdX;
+      const nearY = (y: number) => Math.abs(point.y - y) <= thresholdY;
+
+      if (nearX(left) && nearY(top)) return 'nw';
+      if (nearX(right) && nearY(top)) return 'ne';
+      if (nearX(right) && nearY(bottom)) return 'se';
+      if (nearX(left) && nearY(bottom)) return 'sw';
+      if (nearY(top) && point.x >= left && point.x <= right) return 'n';
+      if (nearX(right) && point.y >= top && point.y <= bottom) return 'e';
+      if (nearY(bottom) && point.x >= left && point.x <= right) return 's';
+      if (nearX(left) && point.y >= top && point.y <= bottom) return 'w';
+      if (nearX(centerX) && nearY(top)) return 'n';
+      if (nearX(right) && nearY(centerY)) return 'e';
+      if (nearX(centerX) && nearY(bottom)) return 's';
+      if (nearX(left) && nearY(centerY)) return 'w';
+
+      return null;
+    },
+    [allowResize, displayScale.scaleX, displayScale.scaleY],
+  );
+
   const handleMouseDown = useCallback(
     (e: MouseEvent<HTMLDivElement>) => {
       if (e.button !== 0) return;
@@ -133,6 +364,17 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
       isDraggingRef.current = true;
 
       const currentCrop = cropRef.current;
+      const resizeHandle = getResizeHandle(point);
+
+      if (resizeHandle) {
+        dragModeRef.current = 'resize';
+        setDragMode('resize');
+        resizeHandleRef.current = resizeHandle;
+        setActiveResizeHandle(resizeHandle);
+        resizeStartCropRef.current = currentCrop;
+        return;
+      }
+
       const isInsideCrop =
         currentCrop.width > 0 &&
         currentCrop.height > 0 &&
@@ -144,6 +386,9 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
       if (isInsideCrop) {
         dragModeRef.current = 'move';
         setDragMode('move');
+        resizeHandleRef.current = null;
+        setActiveResizeHandle(null);
+        resizeStartCropRef.current = null;
         moveOffset.current = {
           x: point.x - currentCrop.x,
           y: point.y - currentCrop.y,
@@ -153,12 +398,15 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
 
       dragModeRef.current = 'draw';
       setDragMode('draw');
+      resizeHandleRef.current = null;
+      setActiveResizeHandle(null);
+      resizeStartCropRef.current = null;
       startPos.current = { x: point.x, y: point.y };
       const emptyCrop = { x: point.x, y: point.y, width: 0, height: 0 };
       cropRef.current = emptyCrop;
       setCrop(emptyCrop);
     },
-    [getImagePoint],
+    [getImagePoint, getResizeHandle],
   );
 
   const handleMouseMove = useCallback(
@@ -167,6 +415,24 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
 
       const point = getImagePoint(e);
       if (!point) return;
+
+      if (
+        dragModeRef.current === 'resize' &&
+        resizeHandleRef.current &&
+        resizeStartCropRef.current
+      ) {
+        const newCrop = getResizeCrop(
+          point,
+          resizeStartCropRef.current,
+          resizeHandleRef.current,
+          aspect,
+        );
+
+        cropRef.current = newCrop;
+        setCrop(newCrop);
+        onCropChange(newCrop);
+        return;
+      }
 
       if (dragModeRef.current === 'move') {
         const currentCrop = cropRef.current;
@@ -230,6 +496,9 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
 
     isDraggingRef.current = false;
     setIsDragging(false);
+    resizeHandleRef.current = null;
+    setActiveResizeHandle(null);
+    resizeStartCropRef.current = null;
 
     const finalCrop = cropRef.current;
     if (finalCrop.width > 0 && finalCrop.height > 0) {
@@ -243,17 +512,23 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
     return () => window.removeEventListener('resize', updateDisplayScale);
   }, [src, updateDisplayScale]);
 
+  const resizeCursor =
+    dragMode === 'resize' && activeResizeHandle
+      ? resizeHandles.find((handle) => handle.id === activeResizeHandle)?.cursor
+      : undefined;
+
   return (
     <div
       style={{
         position: 'relative',
         display: 'inline-block',
         cursor:
-          isDragging && dragMode === 'move'
+          resizeCursor ??
+          (isDragging && dragMode === 'move'
             ? 'grabbing'
             : isDragging
               ? 'crosshair'
-              : 'crosshair',
+              : 'crosshair'),
         userSelect: 'none',
       }}
       onMouseDown={handleMouseDown}
@@ -286,7 +561,25 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
               height: crop.height * displayScale.scaleY,
               zIndex: 10,
             }}
-          />
+          >
+            {allowResize &&
+              resizeHandles.map((handle) => (
+                <span
+                  key={handle.id}
+                  style={{
+                    position: 'absolute',
+                    width: HANDLE_SIZE,
+                    height: HANDLE_SIZE,
+                    borderRadius: '50%',
+                    border: `2px solid ${lineColor}`,
+                    backgroundColor: '#fff',
+                    boxSizing: 'border-box',
+                    cursor: handle.cursor,
+                    ...handle.style,
+                  }}
+                />
+              ))}
+          </div>
 
           {/* Optional controls rendered relative to the selection overlay */}
           {overlayControls &&

@@ -42,6 +42,7 @@ type AreaSelectorArgs = {
   aspect?: number;
   lineColor: string;
   overlayOpacity: number;
+  allowResize: boolean;
 };
 type CropperArgs = {
   aspectRatio?: number;
@@ -54,6 +55,7 @@ type CropperArgs = {
     | 'bottom-center'
     | 'bottom-right';
   allowReset: boolean;
+  allowResize: boolean;
 };
 
 function StoryShell({
@@ -157,10 +159,12 @@ function ImageAreaSelectorDemo({
   aspect,
   lineColor,
   overlayOpacity,
+  allowResize,
 }: {
   aspect?: number;
   lineColor: string;
   overlayOpacity: number;
+  allowResize: boolean;
 }) {
   const [crop, setCrop] = useState<CropArea>({
     x: 0,
@@ -172,7 +176,7 @@ function ImageAreaSelectorDemo({
   return (
     <StoryShell
       title="ImageAreaSelector"
-      description="Drag on the image to create a crop region. Drag inside the region to move it."
+      description="Drag on the image to create a crop region. Drag inside the region to move it, or drag a handle to resize it."
     >
       <div className="lumina-story-panel lumina-story-stack">
         <ImageAreaSelector
@@ -180,6 +184,7 @@ function ImageAreaSelectorDemo({
           aspect={aspect}
           lineColor={lineColor}
           overlayOpacity={overlayOpacity}
+          allowResize={allowResize}
           onCropChange={setCrop}
           onCropComplete={setCrop}
           overlayControls={({ width, height }) => (
@@ -202,6 +207,7 @@ function ImageCropperDemo({
   outputFormat,
   buttonPosition,
   allowReset,
+  allowResize,
 }: {
   aspectRatio?: number;
   outputFormat: 'blob' | 'dataUrl';
@@ -213,6 +219,7 @@ function ImageCropperDemo({
     | 'bottom-center'
     | 'bottom-right';
   allowReset: boolean;
+  allowResize: boolean;
 }) {
   const [result, setResult] = useState<string>('No crop applied yet');
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -245,6 +252,7 @@ function ImageCropperDemo({
             outputFormat={outputFormat}
             buttonPosition={buttonPosition}
             allowReset={allowReset}
+            allowResize={allowResize}
             maxWidth={520}
             maxHeight={360}
             onCropComplete={handleCropComplete}
@@ -297,6 +305,7 @@ export const ReactExports: Story = {
           <h3>ImageAreaSelector</h3>
           <ul className="lumina-story-list">
             <li>Interactive selection rectangle over an image.</li>
+            <li>Resizable handles and drag-to-move behavior.</li>
             <li>Optional aspect-ratio lock.</li>
             <li>Selection styling and overlayControls render prop.</li>
           </ul>
@@ -305,6 +314,7 @@ export const ReactExports: Story = {
           <h3>ImageCropper</h3>
           <ul className="lumina-story-list">
             <li>Complete crop workflow with apply and reset controls.</li>
+            <li>Resizable crop selection powered by ImageAreaSelector.</li>
             <li>Blob or Data URL output.</li>
             <li>Custom button classes, styles, positions, and callbacks.</li>
           </ul>
@@ -504,11 +514,13 @@ export const ImageAreaSelectorFreeform: StoryObj<AreaSelectorArgs> = {
   args: {
     lineColor: '#1c64d1',
     overlayOpacity: 0.55,
+    allowResize: true,
   },
   render: (args) => (
     <ImageAreaSelectorDemo
       lineColor={args.lineColor}
       overlayOpacity={args.overlayOpacity}
+      allowResize={args.allowResize}
     />
   ),
   parameters: {
@@ -518,6 +530,7 @@ export const ImageAreaSelectorFreeform: StoryObj<AreaSelectorArgs> = {
   src="/sample.png"
   lineColor="#1c64d1"
   overlayOpacity={0.55}
+  allowResize
   onCropChange={setCrop}
   onCropComplete={setCrop}
 />`,
@@ -532,12 +545,14 @@ export const ImageAreaSelectorAspectLocked: StoryObj<AreaSelectorArgs> = {
     aspect: 16 / 9,
     lineColor: '#d14d1c',
     overlayOpacity: 0.62,
+    allowResize: true,
   },
   render: (args) => (
     <ImageAreaSelectorDemo
       aspect={args.aspect}
       lineColor={args.lineColor}
       overlayOpacity={args.overlayOpacity}
+      allowResize={args.allowResize}
     />
   ),
   parameters: {
@@ -547,6 +562,7 @@ export const ImageAreaSelectorAspectLocked: StoryObj<AreaSelectorArgs> = {
   src="/sample.png"
   aspect={16 / 9}
   lineColor="#d14d1c"
+  allowResize
   overlayControls={({ width, height }) => (
     <span>{Math.round(width)} x {Math.round(height)}</span>
   )}
@@ -564,6 +580,7 @@ export const ImageCropperBlob: StoryObj<CropperArgs> = {
     outputFormat: 'blob',
     buttonPosition: 'top-left',
     allowReset: true,
+    allowResize: true,
   },
   render: (args) => (
     <ImageCropperDemo
@@ -571,6 +588,7 @@ export const ImageCropperBlob: StoryObj<CropperArgs> = {
       outputFormat={args.outputFormat}
       buttonPosition={args.buttonPosition}
       allowReset={args.allowReset}
+      allowResize={args.allowResize}
     />
   ),
   parameters: {
@@ -580,6 +598,7 @@ export const ImageCropperBlob: StoryObj<CropperArgs> = {
   src="/sample.png"
   aspectRatio={1}
   outputFormat="blob"
+  allowResize
   onCropComplete={(blob) => console.log(blob)}
   onError={(error) => console.error(error)}
 />`,
@@ -595,6 +614,7 @@ export const ImageCropperDataUrl: StoryObj<CropperArgs> = {
     outputFormat: 'dataUrl',
     buttonPosition: 'bottom-left',
     allowReset: true,
+    allowResize: true,
   },
   render: (args) => (
     <ImageCropperDemo
@@ -602,6 +622,7 @@ export const ImageCropperDataUrl: StoryObj<CropperArgs> = {
       outputFormat={args.outputFormat}
       buttonPosition={args.buttonPosition}
       allowReset={args.allowReset}
+      allowResize={args.allowResize}
     />
   ),
   parameters: {
@@ -612,6 +633,7 @@ export const ImageCropperDataUrl: StoryObj<CropperArgs> = {
   aspectRatio={16 / 9}
   outputFormat="dataUrl"
   buttonPosition="bottom-right"
+  allowResize
   applyButtonStyle={{ backgroundColor: '#1c64d1' }}
   resetButtonStyle={{ borderColor: '#c4ccda' }}
   onApply={(crop) => crop.width > 20}
