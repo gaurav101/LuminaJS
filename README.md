@@ -10,8 +10,8 @@ LuminaJS is a modular, chainable,lightweight, zero-dependency JavaScript utility
 - [Code](https://github.com/gaurav101/LuminaJS)
 - [NPM](https://www.npmjs.com/package/@gks101/luminajs)
 - [Documentation](https://gaurav101.github.io/LuminaJS/docs/)
-- [ Full Image Editor implemented with LuminaJS ] (https://luminna-image-editor.vercel.app/)
-- [ Lumina Image Editor Storybook_- implemented with LuminaJS ]  (https://luminna-image-editor-story-book.vercel.app)
+- [Full-Image-Editor-implemented-with-LuminaJS ] (https://luminna-image-editor.vercel.app/)
+- [Lumina-Image-Editor Storybook-implemented-with-LuminaJS ]  (https://luminna-image-editor-story-book.vercel.app)
 
 ## Features
 
