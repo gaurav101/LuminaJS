@@ -1,0 +1,1116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lumina Image | Micro CSS Framework Dashboard</title>
+    <meta
+      name="description"
+      content="Interactive dashboard showcasing the Lumina Image micro CSS framework for composeable image filters, hovers, aspect ratios, and 3D transforms."
+    />
+
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Local styles -->
+    <link rel="stylesheet" href="./src/demo.css" />
+  </head>
+  <body>
+    <div class="container">
+      <a href="/" class="back-link" id="linkBackToRoot">
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Back to LuminaJS Portal
+      </a>
+
+      <header>
+        <h1>Lumina Image CSS</h1>
+        <p class="subtitle">
+          A high-performance, composeable, micro CSS framework for responsive
+          images, filter variables, 3D tilts, hover overlays, and text reveals.
+        </p>
+        <div class="badges">
+          <span class="badge badge-accent">Micro ~2.5KB</span>
+          <span class="badge">CSS Custom Properties</span>
+          <span class="badge">Responsive Grid</span>
+          <span class="badge">Mobile Optimized</span>
+          <span class="badge">Zero JS Needed</span>
+        </div>
+      </header>
+
+      <main>
+        <!-- Interactive Sandbox -->
+        <section class="app-grid">
+          <!-- Sandbox Preview Area -->
+          <div class="sandbox-panel" id="panelSandbox">
+            <div class="sandbox-preview">
+              <div class="lum-frame" id="sandboxFrame">
+                <img
+                  id="sandboxImage"
+                  class="lum-img lum-fit-cover"
+                  src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80"
+                  alt="Sandbox Live Preview"
+                />
+              </div>
+            </div>
+
+            <!-- Live Code Snippet Display -->
+            <div class="code-panel">
+              <div class="code-header">
+                <span>Generated HTML Markup</span>
+                <button
+                  class="btn-copy"
+                  id="btnCopy"
+                  aria-label="Copy code markup to clipboard"
+                >
+                  Copy HTML
+                </button>
+              </div>
+              <pre class="code-output" id="codeOutput"></pre>
+            </div>
+          </div>
+
+          <!-- Sandbox Controls Sidebar -->
+          <aside class="controls-sidebar" id="sidebarControls">
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+                padding-bottom: 0.75rem;
+              "
+            >
+              <h2 style="font-size: 1.15rem; font-weight: 700">
+                Sandbox Configurator
+              </h2>
+              <button
+                class="control-btn"
+                id="btnResetSandbox"
+                style="
+                  background: rgba(239, 68, 68, 0.15);
+                  border-color: rgba(239, 68, 68, 0.3);
+                  color: #f87171;
+                "
+              >
+                Reset All
+              </button>
+            </div>
+
+            <!-- Aspect Ratios Section -->
+            <div class="control-section">
+              <h3>Aspect Ratios (.lum-aspect-*)</h3>
+              <div class="control-buttons">
+                <button
+                  class="control-btn"
+                  data-category="aspect"
+                  data-class="lum-aspect-square"
+                >
+                  1:1 Square
+                </button>
+                <button
+                  class="control-btn"
+                  data-category="aspect"
+                  data-class="lum-aspect-video"
+                >
+                  16:9 Video
+                </button>
+                <button
+                  class="control-btn"
+                  data-category="aspect"
+                  data-class="lum-aspect-standard"
+                >
+                  4:3 Photo
+                </button>
+                <button
+                  class="control-btn"
+                  data-category="aspect"
+                  data-class="lum-aspect-portrait"
+                >
+                  3:4 Portrait
+                </button>
+                <button
+                  class="control-btn"
+                  data-category="aspect"
+                  data-class="lum-aspect-cinematic"
+                >
+                  21:9 Wide
+                </button>
+              </div>
+            </div>
+
+            <!-- Image Filters Section -->
+            <div class="control-section">
+              <h3>Image Filters (.lum-*)</h3>
+              <p
+                style="
+                  font-size: 0.75rem;
+                  color: var(--text-muted);
+                  margin-top: -0.5rem;
+                  margin-bottom: 0.75rem;
+                "
+              >
+                Multi-select allowed (composeable variables!)
+              </p>
+              <div class="control-buttons">
+                <button
+                  class="control-btn"
+                  data-category="filter"
+                  data-class="lum-grayscale"
+                >
+                  Grayscale
+                </button>
+                <button
+                  class="control-btn"
+                  data-category="filter"
+                  data-class="lum-sepia"
+                >
+                  Sepia
+                </button>
+                <button
+                  class="control-btn"
+                  data-category="filter"
+                  data-class="lum-invert"
+                >
+                  Invert
+                </button>
+                <button
+                  class="control-btn"
+                  data-category="filter"
+                  data-class="lum-blur-sm"
+                >
+                  Blur SM
+                </button>
+                <button
+                  class="control-btn"
+                  data-category="filter"
+                  data-class="lum-blur"
+                >
+                  Blur MD
+                </button>
+                <button
+                  class="control-btn"
+                  data-category="filter"
+                  data-class="lum-bright-150"
+                >
+                  Brighten
+                </button>
+                <button
+                  class="control-btn"
+                  data-category="filter"
+                  data-class="lum-contrast-150"
+                >
+                  Contrast
+                </button>
+                <button
+                  class="control-btn"
+                  data-category="filter"
+                  data-class="lum-saturate-200"
+                >
+                  Saturate
+                </button>
+                <button
+                  class="control-btn"
+                  data-category="filter"
+                  data-class="lum-hue-90"
+                >
+                  Hue Rotate
+                </button>
+                <button
+                  class="control-btn"
+                  data-category="filter"
+                  data-class="lum-shadow-glow"
+                >
+                  Neon Glow
+                </button>
+              </div>
+            </div>
+
+            <!-- Image Transformations Section -->
+            <div class="control-section">
+              <h3>Transforms (.lum-*)</h3>
+              <div class="control-buttons">
+                <button
+                  class="control-btn"
+                  data-category="transform"
+                  data-class="lum-rotate-45"
+                >
+                  Rotate 45°
+                </button>
+                <button
+                  class="control-btn"
+                  data-category="transform"
+                  data-class="lum-rotate-180"
+                >
+                  Rotate 180°
+                </button>
+                <button
+                  class="control-btn"
+                  data-category="transform"
+                  data-class="lum-flip-h"
+                >
+                  Flip Horizontal
+                </button>
+                <button
+                  class="control-btn"
+                  data-category="transform"
+                  data-class="lum-flip-v"
+                >
+                  Flip Vertical
+                </button>
+                <button
+                  class="control-btn"
+                  data-category="transform"
+                  data-class="lum-skew-x-12"
+                >
+                  Skew X
+                </button>
+                <button
+                  class="control-btn"
+                  data-category="transform"
+                  data-class="lum-tilt-l"
+                >
+                  Tilt Left (3D)
+                </button>
+                <button
+                  class="control-btn"
+                  data-category="transform"
+                  data-class="lum-tilt-r"
+                >
+                  Tilt Right (3D)
+                </button>
+                <button
+                  class="control-btn"
+                  data-category="transform"
+                  data-class="lum-tilt-u"
+                >
+                  Tilt Up (3D)
+                </button>
+              </div>
+            </div>
+
+            <!-- Interactive Hover states -->
+            <div class="control-section">
+              <h3>Hover Effects (.lum-hover-*)</h3>
+              <div class="control-buttons">
+                <button
+                  class="control-btn"
+                  data-category="hover"
+                  data-class="lum-hover-zoom"
+                >
+                  Zoom Scale
+                </button>
+                <button
+                  class="control-btn"
+                  data-category="hover"
+                  data-class="lum-hover-shrink"
+                >
+                  Shrink Scale
+                </button>
+                <button
+                  class="control-btn"
+                  data-category="hover"
+                  data-class="lum-hover-rotate-r"
+                >
+                  Rotate Right
+                </button>
+                <button
+                  class="control-btn"
+                  data-category="hover"
+                  data-class="lum-hover-rotate-3d"
+                >
+                  Rotate 3D
+                </button>
+                <button
+                  class="control-btn"
+                  data-category="hover"
+                  data-class="lum-hover-tilt-r"
+                >
+                  Tilt Right 3D
+                </button>
+                <button
+                  class="control-btn"
+                  data-category="hover"
+                  data-class="lum-hover-flip-h"
+                >
+                  Flip H 3D
+                </button>
+                <button
+                  class="control-btn"
+                  data-category="hover"
+                  data-class="lum-hover-grayscale-off"
+                >
+                  Grayscale Off
+                </button>
+                <button
+                  class="control-btn"
+                  data-category="hover"
+                  data-class="lum-hover-blur-off"
+                >
+                  Blur Clear
+                </button>
+              </div>
+            </div>
+
+            <!-- Object Fits Section -->
+            <div class="control-section">
+              <h3>Object Fit Layout (.lum-fit-*)</h3>
+              <div class="control-buttons">
+                <button
+                  class="control-btn active"
+                  data-category="fit"
+                  data-class="lum-fit-cover"
+                >
+                  Cover (Fit)
+                </button>
+                <button
+                  class="control-btn"
+                  data-category="fit"
+                  data-class="lum-fit-contain"
+                >
+                  Contain
+                </button>
+                <button
+                  class="control-btn"
+                  data-category="fit"
+                  data-class="lum-fit-fill"
+                >
+                  Fill Stretch
+                </button>
+              </div>
+            </div>
+          </aside>
+        </section>
+
+        <!-- Static Feature Showcase Galleries -->
+
+        <!-- Filters Gallery -->
+        <section class="showcase-section" id="secFilters">
+          <div class="showcase-header">
+            <div>
+              <h2>Composeable Filters</h2>
+              <p>
+                Apply blurs, sepia tints, color inversions, brightness
+                adjustments, and neon drop-shadows instantly using fast CSS
+                filters.
+              </p>
+            </div>
+            <span class="badge badge-accent">GPU-Accelerated</span>
+          </div>
+
+          <div class="showcase-grid">
+            <!-- Grayscale -->
+            <div class="demo-card">
+              <div class="card-preview">
+                <img
+                  class="lum-img lum-grayscale"
+                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80"
+                  alt="Grayscale demonstration"
+                />
+              </div>
+              <div class="card-info">
+                <span class="card-title">Grayscale Effect</span>
+                <p class="card-desc">
+                  Converts all image color channels into neutral grey
+                  intensities.
+                </p>
+                <span class="card-tag">.lum-grayscale</span>
+              </div>
+            </div>
+
+            <!-- Sepia -->
+            <div class="demo-card">
+              <div class="card-preview">
+                <img
+                  class="lum-img lum-sepia"
+                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80"
+                  alt="Sepia demonstration"
+                />
+              </div>
+              <div class="card-info">
+                <span class="card-title">Classic Sepia</span>
+                <p class="card-desc">
+                  Applies an antique, warm, brownish-gold nostalgia color
+                  filter.
+                </p>
+                <span class="card-tag">.lum-sepia</span>
+              </div>
+            </div>
+
+            <!-- Blur Levels -->
+            <div class="demo-card">
+              <div class="card-preview">
+                <img
+                  class="lum-img lum-blur-sm"
+                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80"
+                  alt="Blur demonstration"
+                />
+              </div>
+              <div class="card-info">
+                <span class="card-title">Gaussian Blur</span>
+                <p class="card-desc">
+                  Softens the image focus using a lightweight GPU shader blur
+                  filter.
+                </p>
+                <span class="card-tag">.lum-blur-sm</span>
+              </div>
+            </div>
+
+            <!-- Multiple Combined Filters -->
+            <div class="demo-card">
+              <div class="card-preview">
+                <img
+                  class="lum-img lum-grayscale lum-bright-75 lum-contrast-150"
+                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80"
+                  alt="Combined filters demonstration"
+                />
+              </div>
+              <div class="card-info">
+                <span class="card-title">High-Contrast Noir</span>
+                <p class="card-desc">
+                  Combines grayscale, reduced brightness, and boosted contrast
+                  using CSS variables.
+                </p>
+                <span class="card-tag">.lum-grayscale.lum-bright-75...</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Hover & Overlays Gallery -->
+        <section class="showcase-section" id="secHovers">
+          <div class="showcase-header">
+            <div>
+              <h2>Hover Interactions & Reveals</h2>
+              <p>
+                Add smooth micro-animations on mouse hover or touch activations,
+                including sliding frames, overlays, and fading labels.
+              </p>
+            </div>
+            <span class="badge badge-accent">350ms Transitions</span>
+          </div>
+
+          <div class="showcase-grid">
+            <!-- Card Zoom -->
+            <div class="demo-card">
+              <div class="card-preview">
+                <div class="lum-frame">
+                  <img
+                    class="lum-img lum-hover-zoom"
+                    src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=400&q=80"
+                    alt="Zoom hover demonstration"
+                  />
+                </div>
+              </div>
+              <div class="card-info">
+                <span class="card-title">Scale Zoom</span>
+                <p class="card-desc">
+                  Gently scales the image outward on hover without altering
+                  layout boundaries.
+                </p>
+                <span class="card-tag">.lum-hover-zoom</span>
+              </div>
+            </div>
+
+            <!-- Grayscale Off -->
+            <div class="demo-card">
+              <div class="card-preview">
+                <img
+                  class="lum-img lum-hover-grayscale-off"
+                  src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=400&q=80"
+                  alt="Grayscale toggle hover demonstration"
+                />
+              </div>
+              <div class="card-info">
+                <span class="card-title">Color Reveal</span>
+                <p class="card-desc">
+                  Starts in grayscale, fading back to full color vibrance when
+                  hovered.
+                </p>
+                <span class="card-tag">.lum-hover-grayscale-off</span>
+              </div>
+            </div>
+
+            <!-- Overlay Blur & Slide Up -->
+            <div class="demo-card">
+              <div class="card-preview">
+                <div class="lum-frame lum-aspect-video">
+                  <img
+                    class="lum-img lum-hover-zoom"
+                    src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=400&q=80"
+                    alt="Overlay reveal demonstration"
+                  />
+                  <div class="lum-overlay lum-overlay-blur">
+                    <h4 style="font-weight: 700; margin-bottom: 0.25rem">
+                      Modern Architecture
+                    </h4>
+                    <p
+                      style="
+                        font-size: 0.8rem;
+                        text-align: center;
+                        color: #d1d5db;
+                      "
+                    >
+                      Hover reveals backdrop blurs and typography overlays.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="card-info">
+                <span class="card-title">Overlay Blur & Text</span>
+                <p class="card-desc">
+                  Fades in a glassmorphic dark overlay cover exposing readable
+                  text on top of the image.
+                </p>
+                <span class="card-tag">.lum-overlay.lum-overlay-blur</span>
+              </div>
+            </div>
+
+            <!-- Slide Up Caption -->
+            <div class="demo-card">
+              <div class="card-preview">
+                <div class="lum-frame">
+                  <img
+                    class="lum-img lum-hover-shrink"
+                    src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=400&q=80"
+                    alt="Caption slide up demonstration"
+                  />
+                  <div class="lum-caption lum-caption-slide-up">
+                    <span style="font-weight: 600; font-size: 0.9rem"
+                      >Slide-Up Caption</span
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="card-info">
+                <span class="card-title">Slide-up Caption Panel</span>
+                <p class="card-desc">
+                  Slides a solid text panel upward from the bottom frame edge on
+                  hover.
+                </p>
+                <span class="card-tag">.lum-caption-slide-up</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3D Transforms Gallery -->
+        <section class="showcase-section" id="secTransforms">
+          <div class="showcase-header">
+            <div>
+              <h2>3D Perspective & Transforms</h2>
+              <p>
+                Manipulate images in three-dimensional space using tilt
+                properties, rotations, flips, and perspective depth.
+              </p>
+            </div>
+            <span class="badge badge-accent">1000px Perspective</span>
+          </div>
+
+          <div class="showcase-grid">
+            <!-- Tilt Left -->
+            <div class="demo-card">
+              <div class="card-preview" style="perspective: 1000px">
+                <img
+                  class="lum-img lum-tilt-l lum-shadow-lg"
+                  src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=400&q=80"
+                  alt="Tilt left demonstration"
+                />
+              </div>
+              <div class="card-info">
+                <span class="card-title">3D Tilt Left</span>
+                <p class="card-desc">
+                  Rotates the image -22 degrees around the Y axis, producing
+                  depth.
+                </p>
+                <span class="card-tag">.lum-tilt-l</span>
+              </div>
+            </div>
+
+            <!-- 3D Rotate Hover -->
+            <div class="demo-card">
+              <div class="card-preview">
+                <img
+                  class="lum-img lum-hover-rotate-3d lum-shadow"
+                  src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=400&q=80"
+                  alt="3D rotation hover demonstration"
+                />
+              </div>
+              <div class="card-info">
+                <span class="card-title">3D Tilt Hover Rotation</span>
+                <p class="card-desc">
+                  Tilts the image along both X and Y axes on hover and drops a
+                  deep composite shadow.
+                </p>
+                <span class="card-tag">.lum-hover-rotate-3d</span>
+              </div>
+            </div>
+
+            <!-- 3D Flip H -->
+            <div class="demo-card">
+              <div class="card-preview">
+                <img
+                  class="lum-img lum-hover-flip-h"
+                  src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=400&q=80"
+                  alt="3D flip hover demonstration"
+                />
+              </div>
+              <div class="card-info">
+                <span class="card-title">3D Horizontal Flip</span>
+                <p class="card-desc">
+                  Performs a full 180-degree flip around the vertical axis on
+                  hover.
+                </p>
+                <span class="card-tag">.lum-hover-flip-h</span>
+              </div>
+            </div>
+
+            <!-- Skew and Shadows -->
+            <div class="demo-card">
+              <div class="card-preview">
+                <img
+                  class="lum-img lum-skew-x-12"
+                  src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=400&q=80"
+                  alt="Skew demonstration"
+                />
+              </div>
+              <div class="card-info">
+                <span class="card-title">Skew Transformation</span>
+                <p class="card-desc">
+                  Slants the image along the horizontal axis by 12 degrees.
+                </p>
+                <span class="card-tag">.lum-skew-x-12</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Variable Customizer Playground -->
+        <section class="customizer-box" id="secCustomizer">
+          <div class="customizer-controls">
+            <h2
+              style="
+                font-size: 1.6rem;
+                font-weight: 700;
+                margin-bottom: 0.5rem;
+                letter-spacing: -0.02em;
+              "
+            >
+              CSS Variable Customizer
+            </h2>
+            <p
+              style="
+                color: var(--text-muted);
+                font-size: 0.95rem;
+                margin-bottom: 1.5rem;
+              "
+            >
+              Lumina Image uses CSS variables to bind controls. Move these
+              sliders to see how your JavaScript can dynamically set CSS custom
+              properties on `.lum-img`.
+            </p>
+
+            <!-- Sliders -->
+            <div class="slider-group">
+              <div class="slider-labels">
+                <span>Scale (--lum-scale)</span>
+                <span
+                  id="customScaleVal"
+                  style="color: var(--text-accent); font-weight: 600"
+                  >1</span
+                >
+              </div>
+              <input
+                type="range"
+                id="customScale"
+                min="0.5"
+                max="1.5"
+                step="0.05"
+                value="1"
+              />
+            </div>
+
+            <div class="slider-group">
+              <div class="slider-labels">
+                <span>Rotate Z (--lum-rotate)</span>
+                <span
+                  id="customRotateVal"
+                  style="color: var(--text-accent); font-weight: 600"
+                  >0deg</span
+                >
+              </div>
+              <input
+                type="range"
+                id="customRotate"
+                min="-180"
+                max="180"
+                step="5"
+                value="0"
+              />
+            </div>
+
+            <div class="slider-group">
+              <div class="slider-labels">
+                <span>3D Rotate Y (--lum-rotate-y)</span>
+                <span
+                  id="customRotateYVal"
+                  style="color: var(--text-accent); font-weight: 600"
+                  >0deg</span
+                >
+              </div>
+              <input
+                type="range"
+                id="customRotateY"
+                min="-60"
+                max="60"
+                step="2"
+                value="0"
+              />
+            </div>
+
+            <div class="slider-group">
+              <div class="slider-labels">
+                <span>Blur Intensity (--lum-blur)</span>
+                <span
+                  id="customBlurVal"
+                  style="color: var(--text-accent); font-weight: 600"
+                  >0px</span
+                >
+              </div>
+              <input
+                type="range"
+                id="customBlur"
+                min="0"
+                max="24"
+                step="1"
+                value="0"
+              />
+            </div>
+
+            <div class="slider-group">
+              <div class="slider-labels">
+                <span>Grayscale (--lum-grayscale)</span>
+                <span
+                  id="customGrayVal"
+                  style="color: var(--text-accent); font-weight: 600"
+                  >0%</span
+                >
+              </div>
+              <input
+                type="range"
+                id="customGray"
+                min="0"
+                max="100"
+                step="5"
+                value="0"
+              />
+            </div>
+          </div>
+
+          <!-- Customizer Preview Visual -->
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              background: rgba(0, 0, 0, 0.3);
+              border-radius: 16px;
+              border: 1px dashed var(--border-color);
+              padding: 2rem;
+              min-height: 350px;
+            "
+          >
+            <div
+              class="lum-frame"
+              style="width: 100%; max-width: 380px; aspect-ratio: 16/10"
+            >
+              <img
+                id="customizerImage"
+                class="lum-img lum-fit-cover"
+                src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80"
+                alt="Customizer Variable Target"
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- Responsive Grid & Ratios Gallery -->
+        <section class="showcase-section" id="secGrid">
+          <div class="showcase-header">
+            <div>
+              <h2>Responsive Grid & Aspect Ratios</h2>
+              <p>
+                Arrange images into fluid grids that automatically adjust column
+                numbers based on viewport widths, keeping aspect ratios locked.
+              </p>
+            </div>
+            <span class="badge badge-accent">CSS Container Queries</span>
+          </div>
+
+          <div
+            class="lum-grid lum-grid-cols-3 lum-grid-gap"
+            style="margin-bottom: 2rem"
+          >
+            <!-- Grid Card 1 (Square) -->
+            <div class="lum-frame lum-aspect-square">
+              <img
+                class="lum-img lum-fit-cover lum-hover-zoom"
+                src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=400&q=80"
+                alt="Square ratio"
+              />
+              <div
+                class="lum-caption lum-caption-slide-up"
+                style="background: rgba(0, 0, 0, 0.85)"
+              >
+                <span style="font-size: 0.85rem; font-weight: 600"
+                  >Square aspect (1:1)</span
+                >
+              </div>
+            </div>
+
+            <!-- Grid Card 2 (Video 16:9) -->
+            <div class="lum-frame lum-aspect-video">
+              <img
+                class="lum-img lum-fit-cover lum-hover-zoom"
+                src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=400&q=80"
+                alt="Video ratio"
+              />
+              <div
+                class="lum-caption lum-caption-slide-up"
+                style="background: rgba(0, 0, 0, 0.85)"
+              >
+                <span style="font-size: 0.85rem; font-weight: 600"
+                  >Video aspect (16:9)</span
+                >
+              </div>
+            </div>
+
+            <!-- Grid Card 3 (Portrait 3:4) -->
+            <div class="lum-frame lum-aspect-portrait">
+              <img
+                class="lum-img lum-fit-cover lum-hover-zoom"
+                src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=400&q=80"
+                alt="Portrait ratio"
+              />
+              <div
+                class="lum-caption lum-caption-slide-up"
+                style="background: rgba(0, 0, 0, 0.85)"
+              >
+                <span style="font-size: 0.85rem; font-weight: 600"
+                  >Portrait aspect (3:4)</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div
+            style="
+              background: rgba(255, 255, 255, 0.02);
+              border: 1px solid var(--border-color);
+              border-radius: 12px;
+              padding: 1.25rem;
+              font-size: 0.9rem;
+              color: var(--text-muted);
+            "
+          >
+            <strong>Responsive Grid Logic:</strong> Grids are styled using
+            <code>display: grid</code> and
+            <code
+              >grid-template-columns: repeat(auto-fit, minmax(280px, 1fr))</code
+            >. This means they automatically drop from 3 columns down to 2 and 1
+            as the screen narrows, without requiring verbose CSS media query
+            duplicates.
+          </div>
+        </section>
+
+        <!-- Mobile & Performance Features -->
+        <section class="showcase-section" id="secPerformance">
+          <div class="showcase-header">
+            <div>
+              <h2>Accessibility & Mobile Performance</h2>
+              <p>
+                Designed with web standards in mind to maintain fast page
+                rendering speeds (Core Web Vitals) and respect user options.
+              </p>
+            </div>
+          </div>
+
+          <div
+            style="
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+              gap: 1.5rem;
+            "
+          >
+            <!-- Mobile throttling -->
+            <div
+              style="
+                background: rgba(255, 255, 255, 0.03);
+                border: 1px solid var(--border-color);
+                border-radius: 16px;
+                padding: 1.5rem;
+              "
+            >
+              <h4
+                style="
+                  font-weight: 600;
+                  margin-bottom: 0.5rem;
+                  color: var(--text-accent);
+                  display: flex;
+                  align-items: center;
+                  gap: 0.5rem;
+                "
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                  <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                </svg>
+                Mobile CPU Optimization
+              </h4>
+              <p style="font-size: 0.88rem; color: var(--text-muted)">
+                On viewports below <code>768px</code>, CPU-intensive blurs and
+                complex 3D transformations are overridden. This prevents
+                rendering lag on mobile devices and boosts Largest Contentful
+                Paint (LCP) and Interaction to Next Paint (INP) scores.
+              </p>
+            </div>
+
+            <!-- Reduced Motion -->
+            <div
+              style="
+                background: rgba(255, 255, 255, 0.03);
+                border: 1px solid var(--border-color);
+                border-radius: 16px;
+                padding: 1.5rem;
+              "
+            >
+              <h4
+                style="
+                  font-weight: 600;
+                  margin-bottom: 0.5rem;
+                  color: var(--text-accent);
+                  display: flex;
+                  align-items: center;
+                  gap: 0.5rem;
+                "
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+                  <line x1="12" y1="2" x2="12" y2="12"></line>
+                </svg>
+                Prefers-Reduced-Motion Support
+              </h4>
+              <p style="font-size: 0.88rem; color: var(--text-muted)">
+                Lumina Image detects the system reduced motion flag. If active,
+                transitions revert instantly (<code>0.001s duration</code>) to
+                prevent motion sickness and respect accessibility guidelines
+                (WCAG 2.3.3).
+              </p>
+            </div>
+
+            <!-- Touch Gestures -->
+            <div
+              style="
+                background: rgba(255, 255, 255, 0.03);
+                border: 1px solid var(--border-color);
+                border-radius: 16px;
+                padding: 1.5rem;
+              "
+            >
+              <h4
+                style="
+                  font-weight: 600;
+                  margin-bottom: 0.5rem;
+                  color: var(--text-accent);
+                  display: flex;
+                  align-items: center;
+                  gap: 0.5rem;
+                "
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M17 11V6a2 2 0 0 0-2-2h0a2 2 0 0 0-2 2v5m4 0a2 2 0 0 0-2-2h0a2 2 0 0 0-2 2m4 0V9a2 2 0 0 0-2-2h0a2 2 0 0 0-2 2m-4 2V5a2 2 0 0 0-2-2h0a2 2 0 0 0-2 2v6"
+                  ></path>
+                  <path
+                    d="M21 12c0 1.66-4 9-4 9H7s-4-6.75-4-9C3 9.3 4.5 8 6 8a6 6 0 0 1 5 3V4a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v9h3c1.5 0 3 1.3 3 3z"
+                  ></path>
+                </svg>
+                Touch Gestures Support
+              </h4>
+              <p style="font-size: 0.88rem; color: var(--text-muted)">
+                Since mouse hover events do not exist natively on touch screens,
+                hover-effects map to <code>:active</code> triggers and support
+                <code>.lum-touch-active</code> toggling to guarantee
+                accessibility across all touch-enabled mobile clients.
+              </p>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer
+        style="
+          margin-top: 6rem;
+          border-top: 1px solid rgba(255, 255, 255, 0.05);
+          padding-top: 2rem;
+          text-align: center;
+          font-size: 0.85rem;
+          color: var(--text-muted);
+        "
+      >
+        <p>&copy; 2026 LuminaJS & Gaurav. Under MIT License.</p>
+      </footer>
+    </div>
+
+    <!-- Clipboard Toast Notification -->
+    <div class="toast" id="toast" role="status" aria-live="polite">
+      HTML code snippet copied to clipboard!
+    </div>
+
+    <!-- Local logic script -->
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
