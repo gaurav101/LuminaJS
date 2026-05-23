@@ -11,7 +11,9 @@
     "url": "https://github.com/gaurav101/LuminaJS/issues"
   },
   "type": "module",
-  "sideEffects": false,
+  "sideEffects": [
+    "./dist/lumina-image.css"
+  ],
   "types": "./dist/index.d.ts",
   "main": "./dist/lumina.umd.js",
   "module": "./dist/lumina.esm.js",
