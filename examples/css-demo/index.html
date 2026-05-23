@@ -52,6 +52,42 @@
           <span class="badge">Mobile Optimized</span>
           <span class="badge">Zero JS Needed</span>
         </div>
+
+        <div class="dev-quickstart">
+          <article class="snippet-card">
+            <div class="snippet-head">
+              <span class="snippet-title">Install</span>
+              <button
+                class="snippet-copy"
+                type="button"
+                data-copy-target="snippetInstall"
+                data-copy-label="Install command copied"
+              >
+                Copy
+              </button>
+            </div>
+            <pre class="snippet-code" id="snippetInstall">
+npm install @gks101/luminajs</pre
+            >
+          </article>
+
+          <article class="snippet-card">
+            <div class="snippet-head">
+              <span class="snippet-title">Import CSS</span>
+              <button
+                class="snippet-copy"
+                type="button"
+                data-copy-target="snippetImport"
+                data-copy-label="Import statement copied"
+              >
+                Copy
+              </button>
+            </div>
+            <pre class="snippet-code" id="snippetImport">
+import '@gks101/luminajs/lumina-image.css';</pre
+            >
+          </article>
+        </div>
       </header>
 
       <main>
@@ -83,6 +119,15 @@
                 </button>
               </div>
               <pre class="code-output" id="codeOutput"></pre>
+              <div class="class-list-panel">
+                <div class="class-list-head">
+                  <span>Active class names</span>
+                  <button class="btn-copy" id="btnCopyClassList" type="button">
+                    Copy classes
+                  </button>
+                </div>
+                <div class="active-class-list" id="activeClassList"></div>
+              </div>
             </div>
           </div>
 
@@ -430,7 +475,14 @@
                   Converts all image color channels into neutral grey
                   intensities.
                 </p>
-                <span class="card-tag">.lum-grayscale</span>
+                <button
+                  class="card-tag"
+                  type="button"
+                  data-copy-value="lum-grayscale"
+                  data-copy-label="Class copied: lum-grayscale"
+                >
+                  .lum-grayscale
+                </button>
               </div>
             </div>
 
@@ -449,7 +501,14 @@
                   Applies an antique, warm, brownish-gold nostalgia color
                   filter.
                 </p>
-                <span class="card-tag">.lum-sepia</span>
+                <button
+                  class="card-tag"
+                  type="button"
+                  data-copy-value="lum-sepia"
+                  data-copy-label="Class copied: lum-sepia"
+                >
+                  .lum-sepia
+                </button>
               </div>
             </div>
 
@@ -468,7 +527,14 @@
                   Softens the image focus using a lightweight GPU shader blur
                   filter.
                 </p>
-                <span class="card-tag">.lum-blur-sm</span>
+                <button
+                  class="card-tag"
+                  type="button"
+                  data-copy-value="lum-blur-sm"
+                  data-copy-label="Class copied: lum-blur-sm"
+                >
+                  .lum-blur-sm
+                </button>
               </div>
             </div>
 
@@ -487,7 +553,14 @@
                   Combines grayscale, reduced brightness, and boosted contrast
                   using CSS variables.
                 </p>
-                <span class="card-tag">.lum-grayscale.lum-bright-75...</span>
+                <button
+                  class="card-tag"
+                  type="button"
+                  data-copy-value="lum-grayscale lum-bright-75 lum-contrast-150"
+                  data-copy-label="Class set copied"
+                >
+                  .lum-grayscale .lum-bright-75 .lum-contrast-150
+                </button>
               </div>
             </div>
           </div>
@@ -524,7 +597,14 @@
                   Gently scales the image outward on hover without altering
                   layout boundaries.
                 </p>
-                <span class="card-tag">.lum-hover-zoom</span>
+                <button
+                  class="card-tag"
+                  type="button"
+                  data-copy-value="lum-hover-zoom"
+                  data-copy-label="Class copied: lum-hover-zoom"
+                >
+                  .lum-hover-zoom
+                </button>
               </div>
             </div>
 
@@ -543,7 +623,14 @@
                   Starts in grayscale, fading back to full color vibrance when
                   hovered.
                 </p>
-                <span class="card-tag">.lum-hover-grayscale-off</span>
+                <button
+                  class="card-tag"
+                  type="button"
+                  data-copy-value="lum-hover-grayscale-off"
+                  data-copy-label="Class copied: lum-hover-grayscale-off"
+                >
+                  .lum-hover-grayscale-off
+                </button>
               </div>
             </div>
 
@@ -578,7 +665,14 @@
                   Fades in a glassmorphic dark overlay cover exposing readable
                   text on top of the image.
                 </p>
-                <span class="card-tag">.lum-overlay.lum-overlay-blur</span>
+                <button
+                  class="card-tag"
+                  type="button"
+                  data-copy-value="lum-overlay lum-overlay-blur"
+                  data-copy-label="Class set copied"
+                >
+                  .lum-overlay .lum-overlay-blur
+                </button>
               </div>
             </div>
 
@@ -604,7 +698,14 @@
                   Slides a solid text panel upward from the bottom frame edge on
                   hover.
                 </p>
-                <span class="card-tag">.lum-caption-slide-up</span>
+                <button
+                  class="card-tag"
+                  type="button"
+                  data-copy-value="lum-caption lum-caption-slide-up"
+                  data-copy-label="Class set copied"
+                >
+                  .lum-caption .lum-caption-slide-up
+                </button>
               </div>
             </div>
           </div>
@@ -639,7 +740,14 @@
                   Rotates the image -22 degrees around the Y axis, producing
                   depth.
                 </p>
-                <span class="card-tag">.lum-tilt-l</span>
+                <button
+                  class="card-tag"
+                  type="button"
+                  data-copy-value="lum-tilt-l"
+                  data-copy-label="Class copied: lum-tilt-l"
+                >
+                  .lum-tilt-l
+                </button>
               </div>
             </div>
 
@@ -658,7 +766,14 @@
                   Tilts the image along both X and Y axes on hover and drops a
                   deep composite shadow.
                 </p>
-                <span class="card-tag">.lum-hover-rotate-3d</span>
+                <button
+                  class="card-tag"
+                  type="button"
+                  data-copy-value="lum-hover-rotate-3d"
+                  data-copy-label="Class copied: lum-hover-rotate-3d"
+                >
+                  .lum-hover-rotate-3d
+                </button>
               </div>
             </div>
 
@@ -677,7 +792,14 @@
                   Performs a full 180-degree flip around the vertical axis on
                   hover.
                 </p>
-                <span class="card-tag">.lum-hover-flip-h</span>
+                <button
+                  class="card-tag"
+                  type="button"
+                  data-copy-value="lum-hover-flip-h"
+                  data-copy-label="Class copied: lum-hover-flip-h"
+                >
+                  .lum-hover-flip-h
+                </button>
               </div>
             </div>
 
@@ -695,7 +817,197 @@
                 <p class="card-desc">
                   Slants the image along the horizontal axis by 12 degrees.
                 </p>
-                <span class="card-tag">.lum-skew-x-12</span>
+                <button
+                  class="card-tag"
+                  type="button"
+                  data-copy-value="lum-skew-x-12"
+                  data-copy-label="Class copied: lum-skew-x-12"
+                >
+                  .lum-skew-x-12
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="showcase-section" id="secUseCases">
+          <div class="showcase-header">
+            <div>
+              <h2>Production Use Cases</h2>
+              <p>
+                Practical, copy-ready examples for storefronts, portfolios, team
+                pages, and media-heavy UI surfaces.
+              </p>
+            </div>
+            <span class="badge badge-accent">Developer Recipes</span>
+          </div>
+
+          <div class="showcase-grid">
+            <div class="demo-card">
+              <div class="card-preview">
+                <div class="lum-frame lum-aspect-square">
+                  <img
+                    class="lum-img lum-fit-cover lum-hover-zoom"
+                    src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=500&q=80"
+                    alt="Ecommerce product card"
+                  />
+                  <div class="lum-caption lum-caption-slide-up">Quick View</div>
+                </div>
+              </div>
+              <div class="card-info">
+                <span class="card-title">Ecommerce Product Card</span>
+                <p class="card-desc">
+                  Add zoom + quick-view cue on product grids without JavaScript
+                  animation code.
+                </p>
+                <span class="usecase-meta">Use case: PLP gallery cards</span>
+                <button
+                  class="card-tag"
+                  type="button"
+                  data-copy-value="lum-frame lum-aspect-square | lum-img lum-fit-cover lum-hover-zoom | lum-caption lum-caption-slide-up"
+                  data-copy-label="Use-case class set copied"
+                >
+                  .lum-hover-zoom .lum-caption-slide-up
+                </button>
+              </div>
+            </div>
+
+            <div class="demo-card">
+              <div class="card-preview">
+                <img
+                  class="lum-img lum-hover-grayscale-off lum-shadow"
+                  src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=500&q=80"
+                  alt="Team member portrait"
+                />
+              </div>
+              <div class="card-info">
+                <span class="card-title">Team Directory Portrait</span>
+                <p class="card-desc">
+                  Start in grayscale and reveal full color on hover for
+                  interactive people cards.
+                </p>
+                <span class="usecase-meta">Use case: about/team pages</span>
+                <button
+                  class="card-tag"
+                  type="button"
+                  data-copy-value="lum-img lum-hover-grayscale-off lum-shadow"
+                  data-copy-label="Use-case class set copied"
+                >
+                  .lum-hover-grayscale-off .lum-shadow
+                </button>
+              </div>
+            </div>
+
+            <div class="demo-card">
+              <div class="card-preview">
+                <div class="lum-frame lum-aspect-video">
+                  <img
+                    class="lum-img lum-fit-cover lum-hover-zoom"
+                    src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=500&q=80"
+                    alt="Portfolio case study cover"
+                  />
+                  <div class="lum-overlay lum-overlay-blur">
+                    <p style="font-size: 0.85rem">View Case Study</p>
+                  </div>
+                </div>
+              </div>
+              <div class="card-info">
+                <span class="card-title">Portfolio Thumbnail</span>
+                <p class="card-desc">
+                  Reveal call-to-action overlay on hover for project grids and
+                  case-study collections.
+                </p>
+                <span class="usecase-meta">Use case: agency portfolios</span>
+                <button
+                  class="card-tag"
+                  type="button"
+                  data-copy-value="lum-frame lum-aspect-video | lum-img lum-fit-cover lum-hover-zoom | lum-overlay lum-overlay-blur"
+                  data-copy-label="Use-case class set copied"
+                >
+                  .lum-overlay .lum-overlay-blur
+                </button>
+              </div>
+            </div>
+
+            <div class="demo-card">
+              <div class="card-preview">
+                <img
+                  class="lum-img lum-bright-110 lum-contrast-125 lum-shadow-lg"
+                  src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=500&q=80"
+                  alt="Editorial hero image"
+                />
+              </div>
+              <div class="card-info">
+                <span class="card-title">Editorial Hero Image</span>
+                <p class="card-desc">
+                  Lift visual contrast and brightness for cleaner text
+                  legibility over featured imagery.
+                </p>
+                <span class="usecase-meta">Use case: blog/article hero</span>
+                <button
+                  class="card-tag"
+                  type="button"
+                  data-copy-value="lum-img lum-bright-110 lum-contrast-125 lum-shadow-lg"
+                  data-copy-label="Use-case class set copied"
+                >
+                  .lum-bright-110 .lum-contrast-125 .lum-shadow-lg
+                </button>
+              </div>
+            </div>
+
+            <div class="demo-card">
+              <div class="card-preview">
+                <img
+                  class="lum-img lum-tilt-l lum-shadow lum-hover-rotate-3d"
+                  src="https://images.unsplash.com/photo-1518773553398-650c184e0bb3?auto=format&fit=crop&w=500&q=80"
+                  alt="SaaS feature visual"
+                />
+              </div>
+              <div class="card-info">
+                <span class="card-title">Feature Spotlight Card</span>
+                <p class="card-desc">
+                  Add subtle depth to screenshots and mockups in product feature
+                  sections.
+                </p>
+                <span class="usecase-meta">Use case: SaaS feature blocks</span>
+                <button
+                  class="card-tag"
+                  type="button"
+                  data-copy-value="lum-img lum-tilt-l lum-shadow lum-hover-rotate-3d"
+                  data-copy-label="Use-case class set copied"
+                >
+                  .lum-tilt-l .lum-hover-rotate-3d
+                </button>
+              </div>
+            </div>
+
+            <div class="demo-card">
+              <div class="card-preview">
+                <div class="lum-frame lum-aspect-standard">
+                  <img
+                    class="lum-img lum-fit-contain lum-hover-bright-on"
+                    src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=500&q=80"
+                    alt="Marketplace listing image"
+                  />
+                </div>
+              </div>
+              <div class="card-info">
+                <span class="card-title">Marketplace Listing Image</span>
+                <p class="card-desc">
+                  Preserve full product visibility with contain-fit and brighten
+                  on hover for higher scanability.
+                </p>
+                <span class="usecase-meta"
+                  >Use case: listing/detail previews</span
+                >
+                <button
+                  class="card-tag"
+                  type="button"
+                  data-copy-value="lum-frame lum-aspect-standard | lum-img lum-fit-contain lum-hover-bright-on"
+                  data-copy-label="Use-case class set copied"
+                >
+                  .lum-fit-contain .lum-hover-bright-on
+                </button>
               </div>
             </div>
           </div>
