@@ -5,24 +5,45 @@ document.addEventListener('DOMContentLoaded', () => {
   const previewImg = document.getElementById('sandboxImage');
   const previewFrame = document.getElementById('sandboxFrame');
   const codeOutput = document.getElementById('codeOutput');
+  const codeHeaderLabel = document.getElementById('codeHeaderLabel');
   const copyBtn = document.getElementById('btnCopy');
   const copyClassListBtn = document.getElementById('btnCopyClassList');
   const activeClassList = document.getElementById('activeClassList');
   const toast = document.getElementById('toast');
-  let toastTimer;
 
-  // Interactive selectors configuration
+  const modeButtons = document.querySelectorAll('[data-markup-mode]');
   const filterButtons = document.querySelectorAll('[data-category="filter"]');
   const transformButtons = document.querySelectorAll(
     '[data-category="transform"]',
   );
+  const animationButtons = document.querySelectorAll(
+    '[data-category="animation"]',
+  );
   const aspectButtons = document.querySelectorAll('[data-category="aspect"]');
   const fitButtons = document.querySelectorAll('[data-category="fit"]');
   const hoverButtons = document.querySelectorAll('[data-category="hover"]');
+  const presetButtons = document.querySelectorAll('[data-preset]');
+  const classSearchInput = document.getElementById('classSearchInput');
+  const classSearchResults = document.getElementById('classSearchResults');
+  const clearClassSearchBtn = document.getElementById('btnClearClassSearch');
+  const randomizeBtn = document.getElementById('btnRandomizeSandbox');
+  const resetBtn = document.getElementById('btnResetSandbox');
 
-  // Currently active sandbox classes
+  const classControlButtons = Array.from(
+    document.querySelectorAll('.control-btn[data-class]'),
+  );
+  const classButtonMap = new Map(
+    classControlButtons.map((btn) => [btn.dataset.class, btn]),
+  );
+  const searchableClassNames = Array.from(
+    new Set(classControlButtons.map((btn) => btn.dataset.class)),
+  ).sort();
+
+  let toastTimer;
+  let markupMode = 'html';
   let activeFilters = new Set();
   let activeTransform = null;
+  let activeAnimation = null;
   let activeAspect = null;
   let activeFit = 'lum-fit-cover';
   let activeHover = null;
@@ -46,8 +67,53 @@ document.addEventListener('DOMContentLoaded', () => {
     'invert',
   ];
 
+  const presetConfigs = {
+    portraitPop: {
+      filters: ['lum-bright-125', 'lum-contrast-125', 'lum-shadow'],
+      transform: 'lum-scale-105',
+      animation: 'lum-animate-float',
+      aspect: 'lum-aspect-portrait',
+      fit: 'lum-fit-cover',
+      hover: 'lum-hover-grayscale-off',
+    },
+    cinematicHero: {
+      filters: ['lum-contrast-150', 'lum-shadow-lg'],
+      transform: null,
+      animation: 'lum-animate-kenburns',
+      aspect: 'lum-aspect-cinematic',
+      fit: 'lum-fit-cover',
+      hover: 'lum-hover-bright-on',
+    },
+    productCard: {
+      filters: ['lum-bright-110', 'lum-shadow'],
+      transform: null,
+      animation: null,
+      aspect: 'lum-aspect-square',
+      fit: 'lum-fit-contain',
+      hover: 'lum-hover-zoom',
+    },
+    monoEditorial: {
+      filters: ['lum-grayscale', 'lum-contrast-150', 'lum-bright-75'],
+      transform: null,
+      animation: 'lum-animate-pulse',
+      aspect: 'lum-aspect-standard',
+      fit: 'lum-fit-cover',
+      hover: 'lum-hover-grayscale-off',
+    },
+    neonShowcase: {
+      filters: ['lum-hue-90', 'lum-saturate-200', 'lum-shadow-glow'],
+      transform: 'lum-tilt-r',
+      animation: 'lum-animate-breathe',
+      aspect: 'lum-aspect-video',
+      fit: 'lum-fit-cover',
+      hover: 'lum-hover-rotate-3d',
+    },
+  };
+
   const isImageHoverClass = (className) =>
     imageHoverTokens.some((token) => className.includes(token));
+
+  const pickRandom = (items) => items[Math.floor(Math.random() * items.length)];
 
   function showToast(message) {
     if (!toast) return;
@@ -68,9 +134,62 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  function syncMarkupModeUI() {
+    modeButtons.forEach((btn) => {
+      btn.classList.toggle('active', btn.dataset.markupMode === markupMode);
+    });
+    codeHeaderLabel.textContent =
+      markupMode === 'jsx' ? 'Generated JSX Markup' : 'Generated HTML Markup';
+  }
+
+  function syncControlButtons() {
+    filterButtons.forEach((btn) => {
+      btn.classList.toggle('active', activeFilters.has(btn.dataset.class));
+    });
+    transformButtons.forEach((btn) => {
+      btn.classList.toggle('active', activeTransform === btn.dataset.class);
+    });
+    animationButtons.forEach((btn) => {
+      btn.classList.toggle('active', activeAnimation === btn.dataset.class);
+    });
+    aspectButtons.forEach((btn) => {
+      btn.classList.toggle('active', activeAspect === btn.dataset.class);
+    });
+    fitButtons.forEach((btn) => {
+      btn.classList.toggle('active', activeFit === btn.dataset.class);
+    });
+    hoverButtons.forEach((btn) => {
+      btn.classList.toggle('active', activeHover === btn.dataset.class);
+    });
+  }
+
+  function buildClassListsFromState() {
+    const imgClasses = ['lum-img'];
+    const frameClasses = ['lum-frame'];
+
+    if (activeFit) imgClasses.push(activeFit);
+    if (activeFilters.size) imgClasses.push(...Array.from(activeFilters));
+    if (activeTransform) imgClasses.push(activeTransform);
+    if (activeAnimation) imgClasses.push(activeAnimation);
+
+    if (activeAspect) frameClasses.push(activeAspect);
+    if (activeHover) {
+      if (isImageHoverClass(activeHover)) {
+        imgClasses.push(activeHover);
+      } else {
+        frameClasses.push(activeHover);
+      }
+    }
+
+    return {
+      imgClasses,
+      frameClasses,
+      needsFrameWrapper: frameClasses.length > 1,
+    };
+  }
+
   function renderActiveClassChips() {
     if (!activeClassList) return;
-
     const chips = [];
 
     classSnapshot.imgClasses.forEach((className) => {
@@ -106,176 +225,83 @@ document.addEventListener('DOMContentLoaded', () => {
     activeClassList.innerHTML = chips.join('');
   }
 
-  // Initial code rendering
-  updateSandboxCode();
+  function renderClassSearchResults(query = '') {
+    if (!classSearchResults) return;
+    const normalized = query.trim().toLowerCase();
+    const filtered = normalized
+      ? searchableClassNames.filter((name) =>
+          name.toLowerCase().includes(normalized),
+        )
+      : searchableClassNames;
 
-  // Handle Multi-select filters
-  filterButtons.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const cls = btn.dataset.class;
-      if (activeFilters.has(cls)) {
-        activeFilters.delete(cls);
-        btn.classList.remove('active');
-        previewImg.classList.remove(cls);
-      } else {
-        activeFilters.add(cls);
-        btn.classList.add('active');
-        previewImg.classList.add(cls);
-      }
-      updateSandboxCode();
-    });
-  });
-
-  // Handle Single-select transforms
-  transformButtons.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const cls = btn.dataset.class;
-      transformButtons.forEach((b) => b.classList.remove('active'));
-
-      if (activeTransform === cls) {
-        activeTransform = null;
-        previewImg.classList.remove(cls);
-      } else {
-        if (activeTransform) previewImg.classList.remove(activeTransform);
-        activeTransform = cls;
-        btn.classList.add('active');
-        previewImg.classList.add(cls);
-      }
-      updateSandboxCode();
-    });
-  });
-
-  // Handle Single-select aspect ratios on frame
-  aspectButtons.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const cls = btn.dataset.class;
-      aspectButtons.forEach((b) => b.classList.remove('active'));
-
-      if (activeAspect === cls) {
-        activeAspect = null;
-        previewFrame.classList.remove(cls);
-      } else {
-        if (activeAspect) previewFrame.classList.remove(activeAspect);
-        activeAspect = cls;
-        btn.classList.add('active');
-        previewFrame.classList.add(cls);
-      }
-      updateSandboxCode();
-    });
-  });
-
-  // Handle Single-select object fit
-  fitButtons.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const cls = btn.dataset.class;
-      fitButtons.forEach((b) => b.classList.remove('active'));
-
-      if (activeFit) previewImg.classList.remove(activeFit);
-      activeFit = cls;
-      btn.classList.add('active');
-      previewImg.classList.add(cls);
-      updateSandboxCode();
-    });
-  });
-
-  // Handle Single-select hovers on frame or image
-  hoverButtons.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const cls = btn.dataset.class;
-      hoverButtons.forEach((b) => b.classList.remove('active'));
-
-      // Clean up previous hover classes
-      const allHovers = Array.from(hoverButtons).map((b) => b.dataset.class);
-      allHovers.forEach((h) => {
-        previewImg.classList.remove(h);
-        previewFrame.classList.remove(h);
-      });
-
-      if (activeHover === cls) {
-        activeHover = null;
-      } else {
-        activeHover = cls;
-        btn.classList.add('active');
-
-        // Some hover states apply to frame, some to image
-        if (isImageHoverClass(cls)) {
-          previewImg.classList.add(cls);
-        } else {
-          previewFrame.classList.add(cls);
-        }
-      }
-      updateSandboxCode();
-    });
-  });
-
-  // Reset sandbox control
-  document.getElementById('btnResetSandbox').addEventListener('click', () => {
-    // Reset buttons
-    const allButtons = document.querySelectorAll('.control-btn');
-    allButtons.forEach((b) => b.classList.remove('active'));
-
-    // Reset variables
-    activeFilters.clear();
-    activeTransform = null;
-    activeAspect = null;
-    activeFit = 'lum-fit-cover';
-    activeHover = null;
-
-    // Reset default active fit class
-    document
-      .querySelector('[data-class="lum-fit-cover"]')
-      .classList.add('active');
-
-    // Reset element classes
-    previewImg.className = 'lum-img lum-fit-cover';
-    previewFrame.className = 'lum-frame';
-
-    updateSandboxCode();
-  });
-
-  // Update HTML Code Box
-  function updateSandboxCode() {
-    const imgClasses = ['lum-img'];
-    const frameClasses = ['lum-frame'];
-
-    if (activeFit) imgClasses.push(activeFit);
-    if (activeFilters.size) imgClasses.push(...Array.from(activeFilters));
-    if (activeTransform) imgClasses.push(activeTransform);
-
-    if (activeAspect) frameClasses.push(activeAspect);
-    if (activeHover) {
-      if (isImageHoverClass(activeHover)) {
-        imgClasses.push(activeHover);
-      } else {
-        frameClasses.push(activeHover);
-      }
+    if (!filtered.length) {
+      classSearchResults.innerHTML =
+        '<div class="class-result-empty">No class matches found.</div>';
+      return;
     }
 
-    const imgClassString = imgClasses.join(' ');
-    const frameClassString = frameClasses.join(' ');
-    const needsFrameWrapper = frameClasses.length > 1;
+    classSearchResults.innerHTML = filtered
+      .map(
+        (className) => `
+        <div class="class-result-row">
+          <span class="class-result-name">.${className}</span>
+          <button
+            type="button"
+            class="class-result-btn"
+            data-class-apply="${className}"
+          >
+            Apply
+          </button>
+          <button
+            type="button"
+            class="class-result-btn"
+            data-class-copy="${className}"
+          >
+            Copy
+          </button>
+        </div>
+      `,
+      )
+      .join('');
+  }
 
-    classSnapshot = {
-      imgClasses,
-      frameClasses,
-      needsFrameWrapper,
-    };
+  function updateSandboxCode() {
+    classSnapshot = buildClassListsFromState();
+    const imgClassString = classSnapshot.imgClasses.join(' ');
+    const frameClassString = classSnapshot.frameClasses.join(' ');
 
-    let codeText;
-    if (needsFrameWrapper) {
-      // If frame is active, wrap in lum-frame
+    previewImg.className = imgClassString;
+    previewFrame.className = frameClassString;
+
+    let codeText = '';
+    if (markupMode === 'jsx') {
+      if (classSnapshot.needsFrameWrapper) {
+        codeText = `<div className="${frameClassString}">
+  <img
+    className="${imgClassString}"
+    src="landscape.jpg"
+    alt="Demo Image"
+  />
+</div>`;
+      } else {
+        codeText = `<img
+  className="${imgClassString}"
+  src="landscape.jpg"
+  alt="Demo Image"
+/>`;
+      }
+    } else if (classSnapshot.needsFrameWrapper) {
       codeText = `<div class="${frameClassString}">
-  <img 
-    class="${imgClassString}" 
-    src="landscape.jpg" 
+  <img
+    class="${imgClassString}"
+    src="landscape.jpg"
     alt="Demo Image"
   />
 </div>`;
     } else {
-      // Just bare image
-      codeText = `<img 
-  class="${imgClassString}" 
-  src="landscape.jpg" 
+      codeText = `<img
+  class="${imgClassString}"
+  src="landscape.jpg"
   alt="Demo Image"
 />`;
     }
@@ -284,9 +310,181 @@ document.addEventListener('DOMContentLoaded', () => {
     renderActiveClassChips();
   }
 
-  // Handle Copy Snippet Action
+  function applyPreset(presetKey) {
+    const preset = presetConfigs[presetKey];
+    if (!preset) return;
+
+    activeFilters = new Set(preset.filters || []);
+    activeTransform = preset.transform || null;
+    activeAnimation = preset.animation || null;
+    activeAspect = preset.aspect || null;
+    activeFit = preset.fit || 'lum-fit-cover';
+    activeHover = preset.hover || null;
+
+    syncControlButtons();
+    updateSandboxCode();
+    showToast(`Preset applied: ${presetKey}`);
+  }
+
+  function randomizeSandboxState() {
+    const filterClasses = Array.from(filterButtons).map(
+      (btn) => btn.dataset.class,
+    );
+    const transformClasses = Array.from(transformButtons).map(
+      (btn) => btn.dataset.class,
+    );
+    const animationClasses = Array.from(animationButtons).map(
+      (btn) => btn.dataset.class,
+    );
+    const aspectClasses = Array.from(aspectButtons).map(
+      (btn) => btn.dataset.class,
+    );
+    const fitClasses = Array.from(fitButtons).map((btn) => btn.dataset.class);
+    const hoverClasses = Array.from(hoverButtons).map(
+      (btn) => btn.dataset.class,
+    );
+
+    const selectedFilterCount = Math.floor(Math.random() * 4);
+    const shuffledFilters = [...filterClasses].sort(() => Math.random() - 0.5);
+    activeFilters = new Set(shuffledFilters.slice(0, selectedFilterCount));
+
+    activeTransform =
+      Math.random() > 0.45 ? pickRandom(transformClasses) : null;
+    activeAnimation = Math.random() > 0.4 ? pickRandom(animationClasses) : null;
+    activeAspect = Math.random() > 0.4 ? pickRandom(aspectClasses) : null;
+    activeFit = pickRandom(fitClasses);
+    activeHover = Math.random() > 0.35 ? pickRandom(hoverClasses) : null;
+
+    syncControlButtons();
+    updateSandboxCode();
+    showToast('Sandbox randomized');
+  }
+
+  function resetSandboxState() {
+    activeFilters = new Set();
+    activeTransform = null;
+    activeAnimation = null;
+    activeAspect = null;
+    activeFit = 'lum-fit-cover';
+    activeHover = null;
+    syncControlButtons();
+    updateSandboxCode();
+  }
+
+  syncMarkupModeUI();
+  syncControlButtons();
+  updateSandboxCode();
+  renderClassSearchResults();
+
+  modeButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      markupMode = btn.dataset.markupMode || 'html';
+      syncMarkupModeUI();
+      updateSandboxCode();
+    });
+  });
+
+  filterButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const cls = btn.dataset.class;
+      if (activeFilters.has(cls)) activeFilters.delete(cls);
+      else activeFilters.add(cls);
+      syncControlButtons();
+      updateSandboxCode();
+    });
+  });
+
+  transformButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const cls = btn.dataset.class;
+      activeTransform = activeTransform === cls ? null : cls;
+      syncControlButtons();
+      updateSandboxCode();
+    });
+  });
+
+  animationButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const cls = btn.dataset.class;
+      activeAnimation = activeAnimation === cls ? null : cls;
+      syncControlButtons();
+      updateSandboxCode();
+    });
+  });
+
+  aspectButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const cls = btn.dataset.class;
+      activeAspect = activeAspect === cls ? null : cls;
+      syncControlButtons();
+      updateSandboxCode();
+    });
+  });
+
+  fitButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      activeFit = btn.dataset.class;
+      syncControlButtons();
+      updateSandboxCode();
+    });
+  });
+
+  hoverButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const cls = btn.dataset.class;
+      activeHover = activeHover === cls ? null : cls;
+      syncControlButtons();
+      updateSandboxCode();
+    });
+  });
+
+  presetButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const preset = btn.dataset.preset;
+      applyPreset(preset);
+    });
+  });
+
+  randomizeBtn.addEventListener('click', randomizeSandboxState);
+  resetBtn.addEventListener('click', resetSandboxState);
+
+  classSearchInput.addEventListener('input', () => {
+    renderClassSearchResults(classSearchInput.value);
+  });
+
+  classSearchInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      classSearchInput.value = '';
+      renderClassSearchResults('');
+    }
+  });
+
+  clearClassSearchBtn.addEventListener('click', () => {
+    classSearchInput.value = '';
+    classSearchInput.focus();
+    renderClassSearchResults('');
+  });
+
+  classSearchResults.addEventListener('click', (event) => {
+    const applyClass = event.target.getAttribute('data-class-apply');
+    const copyClass = event.target.getAttribute('data-class-copy');
+
+    if (applyClass) {
+      const btn = classButtonMap.get(applyClass);
+      if (btn) btn.click();
+      showToast(`Applied .${applyClass}`);
+      return;
+    }
+
+    if (copyClass) {
+      copyText(copyClass, `Class copied: ${copyClass}`);
+    }
+  });
+
   copyBtn.addEventListener('click', () => {
-    copyText(codeOutput.textContent, 'Generated HTML copied');
+    const label =
+      markupMode === 'jsx' ? 'Generated JSX copied' : 'Generated HTML copied';
+    copyText(codeOutput.textContent, label);
   });
 
   copyClassListBtn.addEventListener('click', () => {
@@ -329,13 +527,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const customBlur = document.getElementById('customBlur');
   const customGray = document.getElementById('customGray');
   const customRotateY = document.getElementById('customRotateY');
-
   const customScaleVal = document.getElementById('customScaleVal');
   const customRotateVal = document.getElementById('customRotateVal');
   const customBlurVal = document.getElementById('customBlurVal');
   const customGrayVal = document.getElementById('customGrayVal');
   const customRotateYVal = document.getElementById('customRotateYVal');
-
   const customizerImage = document.getElementById('customizerImage');
 
   function updateCustomizer() {
@@ -346,17 +542,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const rotateY = customRotateY.value;
 
     customScaleVal.textContent = scale;
-    customRotateVal.textContent = rotate + 'deg';
-    customBlurVal.textContent = blur + 'px';
-    customGrayVal.textContent = gray + '%';
-    customRotateYVal.textContent = rotateY + 'deg';
+    customRotateVal.textContent = `${rotate}deg`;
+    customBlurVal.textContent = `${blur}px`;
+    customGrayVal.textContent = `${gray}%`;
+    customRotateYVal.textContent = `${rotateY}deg`;
 
-    // Write directly to CSS variables on element
     customizerImage.style.setProperty('--lum-scale', scale);
-    customizerImage.style.setProperty('--lum-rotate', rotate + 'deg');
+    customizerImage.style.setProperty('--lum-rotate', `${rotate}deg`);
     customizerImage.style.setProperty('--lum-blur', `blur(${blur}px)`);
     customizerImage.style.setProperty('--lum-grayscale', `grayscale(${gray}%)`);
-    customizerImage.style.setProperty('--lum-rotate-y', rotateY + 'deg');
+    customizerImage.style.setProperty('--lum-rotate-y', `${rotateY}deg`);
   }
 
   [customScale, customRotate, customBlur, customGray, customRotateY].forEach(
@@ -365,23 +560,30 @@ document.addEventListener('DOMContentLoaded', () => {
     },
   );
 
-  // Touch triggers fallback support using standard click events
+  // Touch fallback support
   const frames = document.querySelectorAll('.lum-frame, .lum-img');
   frames.forEach((el) => {
-    el.addEventListener('click', (e) => {
-      e.stopPropagation();
+    el.addEventListener('click', (event) => {
+      event.stopPropagation();
       const isActive = el.classList.contains('lum-touch-active');
-      frames.forEach((f) => f.classList.remove('lum-touch-active'));
-      if (!isActive) {
-        el.classList.add('lum-touch-active');
-      }
+      frames.forEach((node) => node.classList.remove('lum-touch-active'));
+      if (!isActive) el.classList.add('lum-touch-active');
     });
   });
 
-  // Close touch highlights on clicking anywhere else
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.lum-frame') && !e.target.closest('.lum-img')) {
-      frames.forEach((f) => f.classList.remove('lum-touch-active'));
+  document.addEventListener('click', (event) => {
+    if (
+      !event.target.closest('.lum-frame') &&
+      !event.target.closest('.lum-img')
+    ) {
+      frames.forEach((node) => node.classList.remove('lum-touch-active'));
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === '/' && document.activeElement !== classSearchInput) {
+      event.preventDefault();
+      classSearchInput.focus();
     }
   });
 });

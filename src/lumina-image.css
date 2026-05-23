@@ -7,7 +7,7 @@
  * @license MIT
  */
 
-@layer base, filters, transforms, hovers, layout;
+@layer base, filters, transforms, hovers, layout, utilities, animations;
 
 @layer base {
   :where(.lum-img) {
@@ -39,6 +39,14 @@
     --lum-rotate-x: 0deg;
     --lum-rotate-y: 0deg;
     --lum-rotate-z: 0deg;
+    --lum-anim-name: none;
+    --lum-anim-duration: 6s;
+    --lum-anim-timing: ease-in-out;
+    --lum-anim-delay: 0s;
+    --lum-anim-iteration: infinite;
+    --lum-anim-direction: normal;
+    --lum-anim-fill-mode: both;
+    --lum-anim-play-state: running;
 
     /* Base Layout */
     display: inline-block;
@@ -63,6 +71,11 @@
       transform var(--lum-trans-duration) var(--lum-trans-timing),
       opacity var(--lum-trans-duration) var(--lum-trans-timing),
       outline-offset 0.2s ease;
+    animation: var(--lum-anim-name) var(--lum-anim-duration)
+      var(--lum-anim-timing) var(--lum-anim-delay) var(--lum-anim-iteration)
+      var(--lum-anim-direction) var(--lum-anim-fill-mode);
+    animation-play-state: var(--lum-anim-play-state);
+    will-change: transform, filter;
   }
 
   /* Accessible Focus Style */
@@ -412,6 +425,8 @@
     overflow: hidden;
     border-radius: var(--lum-border-radius, 16px);
     background-color: var(--lum-frame-bg, #090d16);
+    border: var(--lum-frame-border-width, 0) solid
+      var(--lum-frame-border-color, transparent);
     box-shadow:
       0 4px 20px -2px rgba(0, 0, 0, 0.15),
       0 2px 10px -1px rgba(0, 0, 0, 0.1);
@@ -445,6 +460,42 @@
   .lum-overlay-blur {
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
+  }
+
+  .lum-overlay-top {
+    justify-content: flex-start;
+    align-items: stretch;
+  }
+  .lum-overlay-bottom {
+    justify-content: flex-end;
+    align-items: stretch;
+  }
+  .lum-overlay-left {
+    justify-content: center;
+    align-items: flex-start;
+    text-align: left;
+  }
+  .lum-overlay-right {
+    justify-content: center;
+    align-items: flex-end;
+    text-align: right;
+  }
+  .lum-overlay-dark {
+    --lum-overlay-bg: rgba(0, 0, 0, 0.6);
+  }
+  .lum-overlay-brand {
+    --lum-overlay-bg: linear-gradient(
+      145deg,
+      rgba(37, 99, 235, 0.68),
+      rgba(14, 116, 144, 0.58)
+    );
+  }
+  .lum-overlay-warm {
+    --lum-overlay-bg: linear-gradient(
+      145deg,
+      rgba(180, 83, 9, 0.52),
+      rgba(120, 53, 15, 0.64)
+    );
   }
 
   /* Hover transitions for overlay */
@@ -568,6 +619,30 @@
   .lum-fit-fill {
     object-fit: fill;
   }
+  .lum-pos-top {
+    object-position: top center;
+  }
+  .lum-pos-bottom {
+    object-position: bottom center;
+  }
+  .lum-pos-left {
+    object-position: center left;
+  }
+  .lum-pos-right {
+    object-position: center right;
+  }
+  .lum-pos-top-left {
+    object-position: top left;
+  }
+  .lum-pos-top-right {
+    object-position: top right;
+  }
+  .lum-pos-bottom-left {
+    object-position: bottom left;
+  }
+  .lum-pos-bottom-right {
+    object-position: bottom right;
+  }
 
   /* Responsive Grid Utility */
   .lum-grid {
@@ -597,6 +672,65 @@
     --lum-grid-gap: 2.5rem;
   }
 
+  .lum-frame-soft {
+    --lum-border-radius: 22px;
+  }
+  .lum-frame-sharp {
+    --lum-border-radius: 0;
+  }
+  .lum-frame-flat {
+    box-shadow: none;
+  }
+  .lum-frame-border {
+    --lum-frame-border-width: 1px;
+    --lum-frame-border-color: rgba(255, 255, 255, 0.18);
+  }
+  .lum-frame-border-strong {
+    --lum-frame-border-width: 2px;
+    --lum-frame-border-color: rgba(255, 255, 255, 0.4);
+  }
+  .lum-frame-glass {
+    --lum-frame-bg: rgba(11, 17, 28, 0.58);
+    --lum-frame-border-width: 1px;
+    --lum-frame-border-color: rgba(255, 255, 255, 0.26);
+    box-shadow:
+      0 16px 36px rgba(0, 0, 0, 0.28),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .lum-loading {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(90deg, #101827 25%, #1b2738 37%, #101827 63%);
+    background-size: 300% 100%;
+  }
+
+  .lum-loading::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      110deg,
+      transparent 20%,
+      rgba(255, 255, 255, 0.22) 45%,
+      transparent 70%
+    );
+    transform: translateX(-110%);
+    animation: lumFrameShimmer 1.8s linear infinite;
+    z-index: 4;
+    pointer-events: none;
+  }
+
+  .lum-loading > .lum-img {
+    opacity: 0;
+  }
+
+  .lum-loaded > .lum-img {
+    opacity: 1;
+  }
+
   /* Mobile Performance Degradation - Override blurs and complex 3D transforms */
   @media (max-width: 768px) {
     :where(.lum-img) {
@@ -612,9 +746,208 @@
   @media (prefers-reduced-motion: reduce) {
     :where(.lum-img),
     .lum-overlay,
-    .lum-caption {
+    .lum-caption,
+    .lum-loading::before {
       --lum-trans-duration: 0.001s !important;
       transition: none !important;
+      animation: none !important;
+    }
+  }
+}
+
+@layer utilities {
+  .lum-transition-fast {
+    --lum-trans-duration: 0.18s;
+  }
+  .lum-transition-slow {
+    --lum-trans-duration: 0.65s;
+  }
+  .lum-ease-smooth {
+    --lum-trans-timing: cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+  .lum-ease-snappy {
+    --lum-trans-timing: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .lum-ease-linear {
+    --lum-trans-timing: linear;
+  }
+
+  .lum-interactive {
+    cursor: pointer;
+  }
+  .lum-select-none {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+}
+
+@layer animations {
+  @keyframes lumFloat {
+    0%,
+    100% {
+      transform: perspective(var(--lum-perspective))
+        translate(var(--lum-translate-x), calc(var(--lum-translate-y) + 0px))
+        scale(var(--lum-scale)) rotate(var(--lum-rotate))
+        rotateX(var(--lum-rotate-x)) rotateY(var(--lum-rotate-y))
+        rotateZ(var(--lum-rotate-z)) skew(var(--lum-skew-x), var(--lum-skew-y));
+    }
+    50% {
+      transform: perspective(var(--lum-perspective))
+        translate(var(--lum-translate-x), calc(var(--lum-translate-y) - 10px))
+        scale(var(--lum-scale)) rotate(var(--lum-rotate))
+        rotateX(var(--lum-rotate-x)) rotateY(var(--lum-rotate-y))
+        rotateZ(var(--lum-rotate-z)) skew(var(--lum-skew-x), var(--lum-skew-y));
+    }
+  }
+
+  @keyframes lumPulse {
+    0%,
+    100% {
+      opacity: 1;
+      filter: var(--lum-blur) var(--lum-grayscale) var(--lum-sepia)
+        var(--lum-brightness) var(--lum-contrast) var(--lum-saturate)
+        var(--lum-hue-rotate) var(--lum-invert) var(--lum-opacity)
+        var(--lum-drop-shadow);
+    }
+    50% {
+      opacity: 0.78;
+      filter: var(--lum-blur) var(--lum-grayscale) var(--lum-sepia)
+        brightness(1.06) var(--lum-contrast) var(--lum-saturate)
+        var(--lum-hue-rotate) var(--lum-invert) var(--lum-opacity)
+        var(--lum-drop-shadow);
+    }
+  }
+
+  @keyframes lumBreathe {
+    0%,
+    100% {
+      transform: perspective(var(--lum-perspective))
+        translate(var(--lum-translate-x), var(--lum-translate-y))
+        scale(var(--lum-scale)) rotate(var(--lum-rotate))
+        rotateX(var(--lum-rotate-x)) rotateY(var(--lum-rotate-y))
+        rotateZ(var(--lum-rotate-z)) skew(var(--lum-skew-x), var(--lum-skew-y));
+      filter: var(--lum-blur) var(--lum-grayscale) var(--lum-sepia)
+        var(--lum-brightness) var(--lum-contrast) var(--lum-saturate)
+        var(--lum-hue-rotate) var(--lum-invert) var(--lum-opacity)
+        var(--lum-drop-shadow);
+    }
+    50% {
+      transform: perspective(var(--lum-perspective))
+        translate(var(--lum-translate-x), var(--lum-translate-y))
+        scale(calc(var(--lum-scale) * 1.05)) rotate(var(--lum-rotate))
+        rotateX(var(--lum-rotate-x)) rotateY(var(--lum-rotate-y))
+        rotateZ(var(--lum-rotate-z)) skew(var(--lum-skew-x), var(--lum-skew-y));
+      filter: var(--lum-blur) var(--lum-grayscale) var(--lum-sepia)
+        brightness(1.08) var(--lum-contrast) var(--lum-saturate)
+        var(--lum-hue-rotate) var(--lum-invert) var(--lum-opacity)
+        var(--lum-drop-shadow);
+    }
+  }
+
+  @keyframes lumKenBurns {
+    0% {
+      transform: perspective(var(--lum-perspective))
+        translate(
+          calc(var(--lum-translate-x) - 2%),
+          calc(var(--lum-translate-y) - 1.4%)
+        )
+        scale(calc(var(--lum-scale) * 1.03)) rotate(var(--lum-rotate))
+        rotateX(var(--lum-rotate-x)) rotateY(var(--lum-rotate-y))
+        rotateZ(var(--lum-rotate-z)) skew(var(--lum-skew-x), var(--lum-skew-y));
+    }
+    100% {
+      transform: perspective(var(--lum-perspective))
+        translate(
+          calc(var(--lum-translate-x) + 2%),
+          calc(var(--lum-translate-y) + 1.4%)
+        )
+        scale(calc(var(--lum-scale) * 1.16)) rotate(var(--lum-rotate))
+        rotateX(var(--lum-rotate-x)) rotateY(var(--lum-rotate-y))
+        rotateZ(var(--lum-rotate-z)) skew(var(--lum-skew-x), var(--lum-skew-y));
+    }
+  }
+
+  @keyframes lumSpinSlow {
+    from {
+      transform: perspective(var(--lum-perspective))
+        translate(var(--lum-translate-x), var(--lum-translate-y))
+        scale(var(--lum-scale)) rotate(0deg) rotateX(var(--lum-rotate-x))
+        rotateY(var(--lum-rotate-y)) rotateZ(var(--lum-rotate-z))
+        skew(var(--lum-skew-x), var(--lum-skew-y));
+    }
+    to {
+      transform: perspective(var(--lum-perspective))
+        translate(var(--lum-translate-x), var(--lum-translate-y))
+        scale(var(--lum-scale)) rotate(360deg) rotateX(var(--lum-rotate-x))
+        rotateY(var(--lum-rotate-y)) rotateZ(var(--lum-rotate-z))
+        skew(var(--lum-skew-x), var(--lum-skew-y));
+    }
+  }
+
+  @keyframes lumFrameShimmer {
+    0% {
+      transform: translateX(-110%);
+    }
+    100% {
+      transform: translateX(110%);
+    }
+  }
+
+  .lum-animate-float {
+    --lum-anim-name: lumFloat;
+    --lum-anim-duration: 5.4s;
+  }
+
+  .lum-animate-pulse {
+    --lum-anim-name: lumPulse;
+    --lum-anim-duration: 2.6s;
+  }
+
+  .lum-animate-breathe {
+    --lum-anim-name: lumBreathe;
+    --lum-anim-duration: 4.2s;
+  }
+
+  .lum-animate-kenburns {
+    --lum-anim-name: lumKenBurns;
+    --lum-anim-duration: 9s;
+    --lum-anim-direction: alternate;
+  }
+
+  .lum-animate-spin-slow {
+    --lum-anim-name: lumSpinSlow;
+    --lum-anim-duration: 14s;
+    --lum-anim-timing: linear;
+  }
+
+  .lum-anim-fast {
+    --lum-anim-duration: 1.8s;
+  }
+  .lum-anim-slow {
+    --lum-anim-duration: 10s;
+  }
+  .lum-anim-once {
+    --lum-anim-iteration: 1;
+  }
+  .lum-anim-loop {
+    --lum-anim-iteration: infinite;
+  }
+  .lum-anim-paused {
+    --lum-anim-play-state: paused;
+  }
+  .lum-anim-delay-1 {
+    --lum-anim-delay: 0.15s;
+  }
+  .lum-anim-delay-2 {
+    --lum-anim-delay: 0.35s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :where(.lum-img) {
+      animation: none !important;
+    }
+    .lum-loading::before {
+      animation: none !important;
     }
   }
 }

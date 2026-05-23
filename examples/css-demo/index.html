@@ -109,14 +109,38 @@ import '@gks101/luminajs/lumina-image.css';</pre
             <!-- Live Code Snippet Display -->
             <div class="code-panel">
               <div class="code-header">
-                <span>Generated HTML Markup</span>
-                <button
-                  class="btn-copy"
-                  id="btnCopy"
-                  aria-label="Copy code markup to clipboard"
-                >
-                  Copy HTML
-                </button>
+                <span id="codeHeaderLabel">Generated HTML Markup</span>
+                <div class="code-actions">
+                  <div
+                    class="mode-toggle"
+                    role="tablist"
+                    aria-label="Markup mode"
+                  >
+                    <button
+                      class="mode-btn active"
+                      id="modeHtml"
+                      type="button"
+                      data-markup-mode="html"
+                    >
+                      HTML
+                    </button>
+                    <button
+                      class="mode-btn"
+                      id="modeJsx"
+                      type="button"
+                      data-markup-mode="jsx"
+                    >
+                      JSX
+                    </button>
+                  </div>
+                  <button
+                    class="btn-copy"
+                    id="btnCopy"
+                    aria-label="Copy code markup to clipboard"
+                  >
+                    Copy
+                  </button>
+                </div>
               </div>
               <pre class="code-output" id="codeOutput"></pre>
               <div class="class-list-panel">
@@ -145,17 +169,63 @@ import '@gks101/luminajs/lumina-image.css';</pre
               <h2 style="font-size: 1.15rem; font-weight: 700">
                 Sandbox Configurator
               </h2>
-              <button
-                class="control-btn"
-                id="btnResetSandbox"
-                style="
-                  background: rgba(239, 68, 68, 0.15);
-                  border-color: rgba(239, 68, 68, 0.3);
-                  color: #f87171;
-                "
-              >
-                Reset All
-              </button>
+              <div style="display: flex; gap: 0.45rem">
+                <button class="control-btn" id="btnRandomizeSandbox">
+                  Randomize
+                </button>
+                <button
+                  class="control-btn"
+                  id="btnResetSandbox"
+                  style="
+                    background: rgba(239, 68, 68, 0.15);
+                    border-color: rgba(239, 68, 68, 0.3);
+                    color: #f87171;
+                  "
+                >
+                  Reset All
+                </button>
+              </div>
+            </div>
+
+            <div class="control-section">
+              <h3>Preset Recipes</h3>
+              <div class="preset-grid">
+                <button
+                  class="control-btn preset-btn"
+                  type="button"
+                  data-preset="portraitPop"
+                >
+                  Portrait Pop
+                </button>
+                <button
+                  class="control-btn preset-btn"
+                  type="button"
+                  data-preset="cinematicHero"
+                >
+                  Cinematic Hero
+                </button>
+                <button
+                  class="control-btn preset-btn"
+                  type="button"
+                  data-preset="productCard"
+                >
+                  Product Card
+                </button>
+                <button
+                  class="control-btn preset-btn"
+                  type="button"
+                  data-preset="monoEditorial"
+                >
+                  Mono Editorial
+                </button>
+                <button
+                  class="control-btn preset-btn"
+                  type="button"
+                  data-preset="neonShowcase"
+                >
+                  Neon Showcase
+                </button>
+              </div>
             </div>
 
             <!-- Aspect Ratios Section -->
@@ -350,6 +420,48 @@ import '@gks101/luminajs/lumina-image.css';</pre
               </div>
             </div>
 
+            <!-- Animation Section -->
+            <div class="control-section">
+              <h3>Animation Utilities (.lum-animate-*)</h3>
+              <div class="control-buttons">
+                <button
+                  class="control-btn"
+                  data-category="animation"
+                  data-class="lum-animate-float"
+                >
+                  Float
+                </button>
+                <button
+                  class="control-btn"
+                  data-category="animation"
+                  data-class="lum-animate-pulse"
+                >
+                  Pulse
+                </button>
+                <button
+                  class="control-btn"
+                  data-category="animation"
+                  data-class="lum-animate-breathe"
+                >
+                  Breathe
+                </button>
+                <button
+                  class="control-btn"
+                  data-category="animation"
+                  data-class="lum-animate-kenburns"
+                >
+                  Ken Burns
+                </button>
+                <button
+                  class="control-btn"
+                  data-category="animation"
+                  data-class="lum-animate-spin-slow"
+                >
+                  Spin Slow
+                </button>
+              </div>
+            </div>
+
             <!-- Interactive Hover states -->
             <div class="control-section">
               <h3>Hover Effects (.lum-hover-*)</h3>
@@ -439,6 +551,29 @@ import '@gks101/luminajs/lumina-image.css';</pre
                   Fill Stretch
                 </button>
               </div>
+            </div>
+
+            <div class="control-section">
+              <h3>Class Explorer</h3>
+              <div class="class-search-wrap">
+                <input
+                  id="classSearchInput"
+                  class="class-search-input"
+                  type="search"
+                  placeholder="Search class name (try: blur, hover, tilt)"
+                />
+                <button
+                  class="control-btn"
+                  id="btnClearClassSearch"
+                  type="button"
+                >
+                  Clear
+                </button>
+              </div>
+              <p class="class-search-hint">
+                Select from results to apply instantly, or copy class name.
+              </p>
+              <div class="class-search-results" id="classSearchResults"></div>
             </div>
           </aside>
         </section>
@@ -824,6 +959,255 @@ import '@gks101/luminajs/lumina-image.css';</pre
                   data-copy-label="Class copied: lum-skew-x-12"
                 >
                   .lum-skew-x-12
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="showcase-section" id="secAnimations">
+          <div class="showcase-header">
+            <div>
+              <h2>Motion & Timeline Utilities</h2>
+              <p>
+                Add ambient motion, subtle pulse, or cinematic pan effects with
+                class-only animation utilities and timing modifiers.
+              </p>
+            </div>
+            <span class="badge badge-accent">Class-Only Motion</span>
+          </div>
+
+          <div class="showcase-grid">
+            <div class="demo-card">
+              <div class="card-preview">
+                <img
+                  class="lum-img lum-animate-float lum-shadow-lg"
+                  src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=500&q=80"
+                  alt="Float animation example"
+                />
+              </div>
+              <div class="card-info">
+                <span class="card-title">Ambient Float</span>
+                <p class="card-desc">
+                  A subtle lift cycle for hero images, avatar highlights, and
+                  spotlight cards.
+                </p>
+                <button
+                  class="card-tag"
+                  type="button"
+                  data-copy-value="lum-img lum-animate-float lum-shadow-lg"
+                  data-copy-label="Animation class set copied"
+                >
+                  .lum-animate-float .lum-shadow-lg
+                </button>
+              </div>
+            </div>
+
+            <div class="demo-card">
+              <div class="card-preview">
+                <div class="lum-frame lum-aspect-video">
+                  <img
+                    class="lum-img lum-fit-cover lum-animate-kenburns lum-anim-slow"
+                    src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=500&q=80"
+                    alt="Ken Burns animation example"
+                  />
+                  <div class="lum-overlay lum-overlay-bottom lum-overlay-dark">
+                    <p style="font-size: 0.82rem">Cinematic Cover Motion</p>
+                  </div>
+                </div>
+              </div>
+              <div class="card-info">
+                <span class="card-title">Ken Burns Cover</span>
+                <p class="card-desc">
+                  Slow pan + zoom treatment for banners, featured stories, and
+                  media headers.
+                </p>
+                <button
+                  class="card-tag"
+                  type="button"
+                  data-copy-value="lum-animate-kenburns lum-anim-slow"
+                  data-copy-label="Animation class set copied"
+                >
+                  .lum-animate-kenburns .lum-anim-slow
+                </button>
+              </div>
+            </div>
+
+            <div class="demo-card">
+              <div class="card-preview">
+                <img
+                  class="lum-img lum-animate-breathe lum-bright-110 lum-shadow"
+                  src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=500&q=80"
+                  alt="Breathe animation example"
+                />
+              </div>
+              <div class="card-info">
+                <span class="card-title">Breathe + Brightness</span>
+                <p class="card-desc">
+                  Gentle pulse for live dashboards, status visuals, and active
+                  campaign modules.
+                </p>
+                <button
+                  class="card-tag"
+                  type="button"
+                  data-copy-value="lum-animate-breathe lum-bright-110"
+                  data-copy-label="Animation class set copied"
+                >
+                  .lum-animate-breathe .lum-bright-110
+                </button>
+              </div>
+            </div>
+
+            <div class="demo-card">
+              <div class="card-preview">
+                <img
+                  class="lum-img lum-animate-spin-slow lum-anim-fast lum-anim-once lum-shadow-glow"
+                  src="https://images.unsplash.com/photo-1518773553398-650c184e0bb3?auto=format&fit=crop&w=500&q=80"
+                  alt="Spin animation example"
+                />
+              </div>
+              <div class="card-info">
+                <span class="card-title">Timed Spin (One-shot)</span>
+                <p class="card-desc">
+                  Use timing modifiers to create entrance choreography without
+                  writing custom keyframes.
+                </p>
+                <button
+                  class="card-tag"
+                  type="button"
+                  data-copy-value="lum-animate-spin-slow lum-anim-fast lum-anim-once"
+                  data-copy-label="Animation class set copied"
+                >
+                  .lum-animate-spin-slow .lum-anim-fast .lum-anim-once
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="showcase-section" id="secFrameUtils">
+          <div class="showcase-header">
+            <div>
+              <h2>Frame, Overlay, and Loading Helpers</h2>
+              <p>
+                Combine frame presets, overlay variants, image positioning, and
+                skeleton loading states for production-ready UI blocks.
+              </p>
+            </div>
+            <span class="badge badge-accent">UI Assembly</span>
+          </div>
+
+          <div class="showcase-grid">
+            <div class="demo-card">
+              <div class="card-preview">
+                <div class="lum-frame lum-frame-glass lum-aspect-video">
+                  <img
+                    class="lum-img lum-fit-cover"
+                    src="https://images.unsplash.com/photo-1526948128573-703ee1aeb6fa?auto=format&fit=crop&w=500&q=80"
+                    alt="Glass frame"
+                  />
+                </div>
+              </div>
+              <div class="card-info">
+                <span class="card-title">Glass Frame Preset</span>
+                <p class="card-desc">
+                  A polished frame surface for cards, previews, and visual
+                  modules.
+                </p>
+                <button
+                  class="card-tag"
+                  type="button"
+                  data-copy-value="lum-frame lum-frame-glass"
+                  data-copy-label="Frame class set copied"
+                >
+                  .lum-frame .lum-frame-glass
+                </button>
+              </div>
+            </div>
+
+            <div class="demo-card">
+              <div class="card-preview">
+                <div
+                  class="lum-frame lum-aspect-standard lum-frame-border-strong"
+                >
+                  <img
+                    class="lum-img lum-fit-cover lum-pos-top"
+                    src="https://images.unsplash.com/photo-1478720568477-152d9b164e26?auto=format&fit=crop&w=500&q=80"
+                    alt="Object positioning"
+                  />
+                  <div class="lum-caption lum-caption-fade">
+                    Object Position: Top
+                  </div>
+                </div>
+              </div>
+              <div class="card-info">
+                <span class="card-title">Object Position Utilities</span>
+                <p class="card-desc">
+                  Anchor focal points without editing source images.
+                </p>
+                <button
+                  class="card-tag"
+                  type="button"
+                  data-copy-value="lum-fit-cover lum-pos-top lum-frame-border-strong"
+                  data-copy-label="Frame class set copied"
+                >
+                  .lum-pos-top .lum-frame-border-strong
+                </button>
+              </div>
+            </div>
+
+            <div class="demo-card">
+              <div class="card-preview">
+                <div class="lum-frame lum-aspect-video lum-frame-soft">
+                  <img
+                    class="lum-img lum-fit-cover lum-hover-zoom"
+                    src="https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=500&q=80"
+                    alt="Overlay variant"
+                  />
+                  <div class="lum-overlay lum-overlay-left lum-overlay-brand">
+                    <p style="font-size: 0.82rem">Gradient Brand Overlay</p>
+                  </div>
+                </div>
+              </div>
+              <div class="card-info">
+                <span class="card-title">Overlay Position + Theme</span>
+                <p class="card-desc">
+                  Place overlay content in controlled zones with themed tint
+                  backgrounds.
+                </p>
+                <button
+                  class="card-tag"
+                  type="button"
+                  data-copy-value="lum-overlay lum-overlay-left lum-overlay-brand"
+                  data-copy-label="Overlay class set copied"
+                >
+                  .lum-overlay-left .lum-overlay-brand
+                </button>
+              </div>
+            </div>
+
+            <div class="demo-card">
+              <div class="card-preview">
+                <div class="lum-frame lum-aspect-video lum-loading">
+                  <img
+                    class="lum-img lum-fit-cover"
+                    src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=500&q=80"
+                    alt="Loading shimmer utility"
+                  />
+                </div>
+              </div>
+              <div class="card-info">
+                <span class="card-title">Skeleton Loading State</span>
+                <p class="card-desc">
+                  Drop-in shimmer placeholder for async image flows.
+                </p>
+                <button
+                  class="card-tag"
+                  type="button"
+                  data-copy-value="lum-frame lum-loading (switch to lum-loaded when image finishes)"
+                  data-copy-label="Loading pattern copied"
+                >
+                  .lum-loading -> .lum-loaded
                 </button>
               </div>
             </div>
