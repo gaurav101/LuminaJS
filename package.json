@@ -45,7 +45,8 @@
       "types": "./dist/react/index.d.ts",
       "import": "./dist/react/index.js",
       "require": "./dist/react/index.js"
-    }
+    },
+    "./lumina-image.css": "./dist/lumina-image.css"
   },
   "scripts": {
     "build": "rollup -c && npm run build:types && npm run generate-docs",

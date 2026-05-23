@@ -1,8 +1,8 @@
 import { useState, useCallback, useMemo } from 'react';
-import { useLumina, LuminaCanvas } from '../../../src/react';
+import { useLumina, LuminaCanvas } from '@gks101/luminajs/react';
 import type { Lumina } from '../../../src/';
 import './App.css';
-import { ImageCropper } from '../../../src/react';
+import { ImageCropper } from '@gks101/luminajs/react';
 import ImageCropperExample from '../../../src/react/ImageCropperExample.tsx';
 
 function App() {
