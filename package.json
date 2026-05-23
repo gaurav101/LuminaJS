@@ -52,7 +52,8 @@
     "./lumina-image.css": "./dist/lumina-image.css"
   },
   "scripts": {
-    "build": "rollup -c && npm run build:types && npm run generate-docs",
+    "build": "rollup -c && npm run build:minify:css && npm run build:types && npm run generate-docs",
+    "build:minify:css": "node scripts/minify-lumina-css.mjs",
     "build:types": "tsc",
     "dev": "rollup -c -w",
     "start:demo": "npm run dev --prefix react-demo",
