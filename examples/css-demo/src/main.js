@@ -6,7 +6,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const previewFrame = document.getElementById('sandboxFrame');
   const codeOutput = document.getElementById('codeOutput');
   const copyBtn = document.getElementById('btnCopy');
+  const copyClassListBtn = document.getElementById('btnCopyClassList');
+  const activeClassList = document.getElementById('activeClassList');
   const toast = document.getElementById('toast');
+  let toastTimer;
 
   // Interactive selectors configuration
   const filterButtons = document.querySelectorAll('[data-category="filter"]');
@@ -23,6 +26,85 @@ document.addEventListener('DOMContentLoaded', () => {
   let activeAspect = null;
   let activeFit = 'lum-fit-cover';
   let activeHover = null;
+
+  let classSnapshot = {
+    imgClasses: [],
+    frameClasses: [],
+    needsFrameWrapper: false,
+  };
+
+  const imageHoverTokens = [
+    'zoom',
+    'shrink',
+    'rotate',
+    'tilt',
+    'flip',
+    'grayscale',
+    'blur',
+    'bright',
+    'sepia',
+    'invert',
+  ];
+
+  const isImageHoverClass = (className) =>
+    imageHoverTokens.some((token) => className.includes(token));
+
+  function showToast(message) {
+    if (!toast) return;
+    toast.textContent = message;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
+  }
+
+  async function copyText(text, successMessage) {
+    if (!text) return;
+    try {
+      await navigator.clipboard.writeText(text);
+      showToast(successMessage);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+      showToast('Copy failed');
+    }
+  }
+
+  function renderActiveClassChips() {
+    if (!activeClassList) return;
+
+    const chips = [];
+
+    classSnapshot.imgClasses.forEach((className) => {
+      chips.push(`
+        <button
+          class="class-chip"
+          type="button"
+          data-copy-value="${className}"
+          data-copy-label="Class copied: ${className}"
+          title="Copy ${className}"
+        >
+          .${className}
+        </button>
+      `);
+    });
+
+    if (classSnapshot.needsFrameWrapper) {
+      classSnapshot.frameClasses.forEach((className) => {
+        chips.push(`
+          <button
+            class="class-chip"
+            type="button"
+            data-copy-value="${className}"
+            data-copy-label="Class copied: ${className}"
+            title="Copy ${className}"
+          >
+            .${className}
+          </button>
+        `);
+      });
+    }
+
+    activeClassList.innerHTML = chips.join('');
+  }
 
   // Initial code rendering
   updateSandboxCode();
@@ -116,18 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.classList.add('active');
 
         // Some hover states apply to frame, some to image
-        if (
-          cls.includes('zoom') ||
-          cls.includes('shrink') ||
-          cls.includes('rotate') ||
-          cls.includes('tilt') ||
-          cls.includes('flip') ||
-          cls.includes('grayscale') ||
-          cls.includes('blur') ||
-          cls.includes('bright') ||
-          cls.includes('sepia') ||
-          cls.includes('invert')
-        ) {
+        if (isImageHoverClass(cls)) {
           previewImg.classList.add(cls);
         } else {
           previewFrame.classList.add(cls);
@@ -164,21 +235,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Update HTML Code Box
   function updateSandboxCode() {
-    const filtersStr = Array.from(activeFilters).join(' ');
-    const transformStr = activeTransform ? ` ${activeTransform}` : '';
-    const aspectStr = activeAspect ? ` ${activeAspect}` : '';
-    const fitStr = activeFit ? ` ${activeFit}` : '';
-    const hoverStr = activeHover ? ` ${activeHover}` : '';
+    const imgClasses = ['lum-img'];
+    const frameClasses = ['lum-frame'];
 
-    const imgClasses = `lum-img${fitStr ? ` ${fitStr}` : ''}${filtersStr ? ` ${filtersStr}` : ''}${transformStr ? `${transformStr}` : ''}${hoverStr && (hoverStr.includes('zoom') || hoverStr.includes('shrink') || hoverStr.includes('rotate') || hoverStr.includes('tilt') || hoverStr.includes('flip') || hoverStr.includes('grayscale') || hoverStr.includes('blur') || hoverStr.includes('bright') || hoverStr.includes('sepia') || hoverStr.includes('invert')) ? `${hoverStr}` : ''}`;
-    const frameClasses = `lum-frame${aspectStr ? `${aspectStr}` : ''}${hoverStr && !(hoverStr.includes('zoom') || hoverStr.includes('shrink') || hoverStr.includes('rotate') || hoverStr.includes('tilt') || hoverStr.includes('flip') || hoverStr.includes('grayscale') || hoverStr.includes('blur') || hoverStr.includes('bright') || hoverStr.includes('sepia') || hoverStr.includes('invert')) ? `${hoverStr}` : ''}`;
+    if (activeFit) imgClasses.push(activeFit);
+    if (activeFilters.size) imgClasses.push(...Array.from(activeFilters));
+    if (activeTransform) imgClasses.push(activeTransform);
+
+    if (activeAspect) frameClasses.push(activeAspect);
+    if (activeHover) {
+      if (isImageHoverClass(activeHover)) {
+        imgClasses.push(activeHover);
+      } else {
+        frameClasses.push(activeHover);
+      }
+    }
+
+    const imgClassString = imgClasses.join(' ');
+    const frameClassString = frameClasses.join(' ');
+    const needsFrameWrapper = frameClasses.length > 1;
+
+    classSnapshot = {
+      imgClasses,
+      frameClasses,
+      needsFrameWrapper,
+    };
 
     let codeText;
-    if (activeAspect || (hoverStr && !imgClasses.includes(activeHover))) {
+    if (needsFrameWrapper) {
       // If frame is active, wrap in lum-frame
-      codeText = `<div class="${frameClasses}">
+      codeText = `<div class="${frameClassString}">
   <img 
-    class="${imgClasses}" 
+    class="${imgClassString}" 
     src="landscape.jpg" 
     alt="Demo Image"
   />
@@ -186,26 +274,53 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       // Just bare image
       codeText = `<img 
-  class="${imgClasses}" 
+  class="${imgClassString}" 
   src="landscape.jpg" 
   alt="Demo Image"
 />`;
     }
 
     codeOutput.textContent = codeText;
+    renderActiveClassChips();
   }
 
   // Handle Copy Snippet Action
   copyBtn.addEventListener('click', () => {
-    navigator.clipboard
-      .writeText(codeOutput.textContent)
-      .then(() => {
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 2000);
-      })
-      .catch((err) => {
-        console.error('Failed to copy: ', err);
-      });
+    copyText(codeOutput.textContent, 'Generated HTML copied');
+  });
+
+  copyClassListBtn.addEventListener('click', () => {
+    const lines = [`img: ${classSnapshot.imgClasses.join(' ')}`];
+    if (classSnapshot.needsFrameWrapper) {
+      lines.push(`frame: ${classSnapshot.frameClasses.join(' ')}`);
+    }
+    copyText(lines.join('\n'), 'Class list copied');
+  });
+
+  activeClassList.addEventListener('click', (event) => {
+    const btn = event.target.closest('[data-copy-value]');
+    if (!btn) return;
+    const className = btn.getAttribute('data-copy-value');
+    const label = btn.getAttribute('data-copy-label') || 'Class copied';
+    copyText(className, label);
+  });
+
+  document.querySelectorAll('[data-copy-target]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const targetId = btn.getAttribute('data-copy-target');
+      const target = targetId ? document.getElementById(targetId) : null;
+      if (!target) return;
+      const label = btn.getAttribute('data-copy-label') || 'Snippet copied';
+      copyText(target.textContent.trim(), label);
+    });
+  });
+
+  document.querySelectorAll('[data-copy-value]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const value = btn.getAttribute('data-copy-value');
+      const label = btn.getAttribute('data-copy-label') || 'Class copied';
+      copyText(value, label);
+    });
   });
 
   // Customizer inputs live update
