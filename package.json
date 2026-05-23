@@ -21,6 +21,7 @@
     "dist",
     "!dist/examples",
     "README.md",
+    "Lumina-IMAGE-CSS.md",
     "IMAGE_CROPPER_GUIDE.md",
     "WhyLumina.md",
     "LuminaCanvas.md",
