@@ -10,6 +10,7 @@ LuminaJS is a modular, chainable,lightweight, zero-dependency JavaScript utility
 - [Code](https://github.com/gaurav101/LuminaJS)
 - [NPM](https://www.npmjs.com/package/@gks101/luminajs)
 - [Documentation](https://gaurav101.github.io/LuminaJS/docs/)
+- [Lumina Image CSS Guide](./Lumina-IMAGE-CSS.md)
 
 ## Features
 
@@ -70,6 +71,14 @@ npm install @gks101/luminajs
 
 ```jsx
 import { useLumina, LuminaCanvas, ImageCropper } from '@gks101/luminajs/react';
+```
+
+### Lumina Image CSS (CSS-Only Mode)
+
+Need polished image styling without rewriting pixels? Use [`lumina-image.css`](./Lumina-IMAGE-CSS.md) to layer filters, hover effects, overlays, and responsive layouts with CSS classes only.
+
+```js
+import '@gks101/luminajs/lumina-image.css';
 ```
 
 ## Building from Source
