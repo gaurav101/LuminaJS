@@ -2,7 +2,10 @@
 
 [![bundle size](https://badgen.net/bundlephobia/minzip/react)](https://bundlephobia.com/package/@gks101/luminajs) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![tree shaking](https://badgen.net/bundlephobia/tree-shaking/react-colorful)](https://bundlephobia.com/package/@gks101/luminajs) [![dependency count](https://badgen.net/bundlephobia/dependency-count/react-colorful)](https://bundlephobia.com/package/@gks101/luminajs)
 
-LuminaJS is a modular, chainable,lightweight, zero-dependency JavaScript utility library for browser-based image processing using the HTML5 Canvas API. It provides a functional approach to image manipulation, focusing on performance and ease of use.
+LuminaJS is a modular, chainable, lightweight, zero-dependency **browser-first** JavaScript utility library for image processing with the HTML5 Canvas and `ImageData` APIs.
+
+> Scope: LuminaJS is for browser/client runtimes. It is not a universal JS image processor and is not designed for Node.js server-side image pipelines.  
+> For server-side image processing, use tools like **Sharp**, **Jimp**, or **ImageMagick**.
 
 - [Demo-react](https://gaurav101.github.io/LuminaJS/examples/react)
 - [Demo-react-storybook](https://gaurav101.github.io/LuminaJS/examples/react/storybook/)
@@ -41,7 +44,7 @@ While libraries like **Jimp** are built for heavy-duty server-side processing, *
 | **Interactive UI**  | **Best.** Real-time filters & previews.                    | Slow; often requires loaders.             |
 | **Edge Cases**      | **Best.** Works in Web Workers.                            | High memory overhead.                     |
 | **Marketing Tools** | **Best.** Dynamic watermarks & social overlays.            | Overkill; increases bounce rates.         |
-| **Server-Side**     | Use a headless fallback/not supported                      | **Best.** Built for Node.js environments. |
+| **Server-Side**     | Out of scope (use Sharp/Jimp/ImageMagick)                  | **Best.** Built for Node.js environments. |
 
 ---
 
@@ -51,7 +54,7 @@ While libraries like **Jimp** are built for heavy-duty server-side processing, *
 | ---------------- | ---------------------------------------------------------- | ----------------- |
 | **Bundle Size**  | **~3.5 KB**                                                | ~Megabytes        |
 | **Speed**        | **Extremely Fast** (Native)                                | Slower (Pure JS)  |
-| **Environment**  | Browser / OffscreenCanvas                                  | Node.js / Browser |
+| **Environment**  | Browser / OffscreenCanvas (client-side)                    | Node.js / Browser |
 | **Dependencies** | **Zero**                                                   | Multiple          |
 | **API Style**    | Chainable & Functional                                     | Chainable         |
 
@@ -64,6 +67,8 @@ npm install @gks101/luminajs
 ### React Support
 
 LuminaJS includes first-class React support via hooks and components. See the [React Integration](#react-integration) section for full examples.
+
+> SSR/Next.js: LuminaJS React components and hooks depend on browser APIs (`window`, `<canvas>`, `ImageData`). Use them only on the client side (`'use client'`, `next/dynamic(..., { ssr: false })`, or equivalent).
 
 ```bash
 npm install @gks101/luminajs
@@ -396,6 +401,8 @@ putPixelData(canvas, imageData);
 ## React Integration
 
 LuminaJS provides a dedicated React entry point with hooks and components.
+
+> Client-only warning: `useLumina`, `LuminaCanvas`, `ImageAreaSelector`, and `ImageCropper` are browser-side features. Do not run them during server rendering.
 
 ### `useLumina` Hook
 

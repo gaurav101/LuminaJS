@@ -2,6 +2,12 @@
 
 This guide covers the LuminaJS React cropping tools.
 
+> Browser-only tools: `ImageCropper`, `ImageAreaSelector`, and `useLumina` are client-side Canvas features.
+> In Next.js/SSR apps, use them only in client components (`'use client'`).
+
+> Server-side scope: LuminaJS does not implement Node.js/server-side image processing pipelines.
+> Use Sharp/Jimp/ImageMagick for backend transformations.
+
 ## Overview
 
 LuminaJS provides three ways to build cropping workflows:
