@@ -134,6 +134,32 @@ CSS effects are presentation-only: they do not crop pixels, mutate source image 
 import '@gks101/luminajs/lumina-image.css';
 ```
 
+#### CSS Distribution Policy
+
+- Stable subpath import is kept: `@gks101/luminajs/lumina-image.css`.
+- Current distribution decision: keep Lumina Image CSS inside `@gks101/luminajs` (single package install).
+- Future package decision: **no standalone package yet**. We may introduce `@gks101/lumina-image-css` later if CSS release cadence diverges or consumer demand justifies split packaging.
+- Tree-shaking behavior: CSS is intentionally marked as a side effect in `package.json` (`"sideEffects": ["./dist/lumina-image.css"]`) so bundlers do not drop it.
+- CSS size target: minified `dist/lumina-image.css` target is **<= 18 KB** (enforced in build).
+
+#### Static HTML Usage (No Bundler)
+
+```html
+<!-- CDN (pin to a version in production) -->
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@gks101/luminajs@2.0.5-beta/dist/lumina-image.css"
+/>
+```
+
+```html
+<!-- Local package path -->
+<link
+  rel="stylesheet"
+  href="node_modules/@gks101/luminajs/dist/lumina-image.css"
+/>
+```
+
 ## Building from Source
 
 If you want to generate the optimized distributable files locally:
