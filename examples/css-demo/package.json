@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.4"
+    "vite": "^8.0.4",
+    "@gks101/luminajs": "^2.1.5-beta"
   }
 }

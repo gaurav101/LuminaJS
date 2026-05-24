@@ -1,5 +1,5 @@
 // Import CSS framework for Vite compilation and hot reloading
-import '../../../src/lumina-image.css';
+import '@gks101/luminajs/lumina-image.css';
 
 document.addEventListener('DOMContentLoaded', () => {
   const previewImg = document.getElementById('sandboxImage');
