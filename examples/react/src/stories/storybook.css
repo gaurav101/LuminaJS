@@ -24,6 +24,32 @@
   gap: 16px;
 }
 
+.lumina-story-filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.lumina-story-filter-card {
+  display: grid;
+  gap: 10px;
+  border: 1px solid #d7dde8;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 12px;
+}
+
+.lumina-story-filter-card h3 {
+  margin: 0 0 4px;
+  font-size: 15px;
+}
+
+.lumina-story-filter-card p {
+  margin: 0;
+  color: #46556f;
+  font-size: 13px;
+}
+
 .lumina-story-row {
   display: flex;
   flex-wrap: wrap;
@@ -42,6 +68,10 @@
   border: 1px solid #d7dde8;
   border-radius: 6px;
   background: #f7f9fc;
+}
+
+.lumina-story-filter-canvas {
+  width: 100%;
 }
 
 .lumina-story-result {
@@ -83,6 +113,18 @@
   color: #24324a;
 }
 
+.lumina-story-link {
+  border: 1px solid #164a9f;
+  border-radius: 6px;
+  background: #1c64d1;
+  color: #fff;
+  display: inline-flex;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 12px;
+  text-decoration: none;
+}
+
 .lumina-story-chip {
   border: 1px solid #c4ccda;
   border-radius: 999px;
@@ -98,10 +140,32 @@
   color: #46556f;
 }
 
+.lumina-story-note {
+  border: 1px solid #c4ccda;
+  border-radius: 6px;
+  background: #f7f9fc;
+  color: #46556f;
+  font-size: 13px;
+  line-height: 1.5;
+  padding: 10px 12px;
+}
+
 .lumina-story-image-preview {
   max-width: 220px;
   border: 1px solid #d7dde8;
   border-radius: 6px;
+}
+
+.lumina-story-image-preview.wide {
+  max-width: min(100%, 360px);
+}
+
+.lumina-story-error {
+  border: 1px solid #f0a0a0;
+  border-radius: 6px;
+  background: #fff4f4;
+  color: #9b1c1c;
+  padding: 12px;
 }
 
 @media (max-width: 640px) {

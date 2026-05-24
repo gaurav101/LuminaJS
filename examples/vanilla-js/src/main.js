@@ -1,11 +1,11 @@
 import {
   lumina,
   loadImage,
-  canvasToBlob,
   ascii,
   getResizedImageData,
   resize,
   crop,
+  isImageFile,
 } from '@gks101/luminajs';
 
 // DOM Elements
@@ -16,6 +16,7 @@ const mainCanvas = document.getElementById('mainCanvas');
 const asciiPreview = document.getElementById('asciiPreview');
 const perfBadge = document.getElementById('perfBadge');
 const processTime = document.getElementById('processTime');
+const exportStatus = document.getElementById('exportStatus');
 
 const brightnessRange = document.getElementById('brightnessRange');
 const contrastRange = document.getElementById('contrastRange');
@@ -50,6 +51,7 @@ const applyWatermarkBtn = document.getElementById('applyWatermark');
 
 // App State
 let originalImage = null;
+let selectedFile = null;
 let transformedCanvas = null;
 let currentFilter = 'original';
 
@@ -178,13 +180,21 @@ const setupEventListeners = () => {
 
   downloadBtn.addEventListener('click', async () => {
     if (!originalImage) return;
-    const blob = await canvasToBlob(mainCanvas, 'image/png');
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `lumina-${Date.now()}.png`;
-    a.click();
-    URL.revokeObjectURL(url);
+
+    try {
+      setStatus('Exporting current canvas...');
+      const blob = await lumina(mainCanvas).toBlob('image/png', 0.92);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `lumina-${Date.now()}.png`;
+      a.click();
+      URL.revokeObjectURL(url);
+      setStatus(`Exported ${Math.round(blob.size / 1024)} KB PNG Blob.`);
+    } catch (err) {
+      console.error(err);
+      setStatus(`Export failed: ${err.message}`);
+    }
   });
 };
 
@@ -192,16 +202,29 @@ const handleSource = async (file) => {
   if (!file) return;
 
   try {
+    if (!isImageFile(file)) {
+      throw new Error('Please choose an image file.');
+    }
+
+    selectedFile = file;
     originalImage = await loadImage(file);
-    transformedCanvas = resize(
-      originalImage,
+
+    const previewSize = getPreviewSize(
       originalImage.naturalWidth,
       originalImage.naturalHeight,
     );
+    const previewCanvas = document.createElement('canvas');
+    await lumina(selectedFile)
+      .resize(previewSize.width, previewSize.height)
+      .toCanvas(previewCanvas);
+    transformedCanvas = previewCanvas;
 
     dropZone.style.display = 'none';
     previewContainer.style.display = 'block';
     perfBadge.style.display = 'block';
+    setStatus(
+      `Loaded ${file.name}. Editing ${previewSize.width} x ${previewSize.height} preview.`,
+    );
 
     updateTransformInputs();
 
@@ -211,6 +234,19 @@ const handleSource = async (file) => {
     console.error(err);
     alert('Failed to load image: ' + err.message);
   }
+};
+
+const setStatus = (message) => {
+  exportStatus.textContent = message;
+};
+
+const getPreviewSize = (width, height, maxSize = 900) => {
+  const ratio = Math.min(maxSize / width, maxSize / height, 1);
+
+  return {
+    width: Math.max(1, Math.round(width * ratio)),
+    height: Math.max(1, Math.round(height * ratio)),
+  };
 };
 
 const updateTransformInputs = () => {
@@ -240,14 +276,15 @@ const applyFilters = async () => {
 
     // Calculate dimensions
     const asciiWidth = 100;
+    const sourceWidth = transformedCanvas?.width || originalImage.naturalWidth;
+    const sourceHeight =
+      transformedCanvas?.height || originalImage.naturalHeight;
     const asciiHeight = Math.round(
-      asciiWidth *
-        (originalImage.naturalHeight / originalImage.naturalWidth) *
-        0.5,
+      asciiWidth * (sourceHeight / sourceWidth) * 0.5,
     );
 
     const resizedData = getResizedImageData(
-      originalImage,
+      transformedCanvas || originalImage,
       asciiWidth,
       asciiHeight,
     );
@@ -311,10 +348,15 @@ const applyFilters = async () => {
   }
 
   // Render to canvas
-  await chain.toCanvas(mainCanvas);
+  try {
+    await chain.toCanvas(mainCanvas);
 
-  const end = performance.now();
-  processTime.textContent = Math.round(end - start);
+    const end = performance.now();
+    processTime.textContent = Math.round(end - start);
+  } catch (err) {
+    console.error(err);
+    setStatus(`Processing failed: ${err.message}`);
+  }
 };
 
 // Start

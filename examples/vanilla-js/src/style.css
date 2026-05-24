@@ -71,6 +71,9 @@ h1 {
 .subtitle {
   color: var(--text-muted);
   font-size: 1.1rem;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Main Layout */
@@ -146,6 +149,22 @@ canvas {
 .drop-zone.active {
   border-color: var(--accent-color);
   background: rgba(56, 189, 248, 0.05);
+}
+
+.workflow-note,
+.export-status {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+.workflow-note {
+  max-width: 440px;
+  margin: 0.75rem auto 0;
+}
+
+.export-status {
+  margin-bottom: 0.75rem;
 }
 
 /* Controls Area */

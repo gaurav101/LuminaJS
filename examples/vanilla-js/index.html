@@ -6,7 +6,7 @@
     <title>LuminaJS | Modular Image Processing</title>
     <meta
       name="description"
-      content="LuminaJS is a lightweight, high-performance image processing library using HTML5 Canvas."
+      content="LuminaJS is a lightweight browser-first image processing library using HTML5 Canvas and ImageData."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -18,7 +18,7 @@
     <script type="importmap">
       {
         "imports": {
-          "@gks101/luminajs": "./dist/lumina.esm.js"
+          "@gks101/luminajs": "../../dist/lumina.esm.js"
         }
       }
     </script>
@@ -28,7 +28,10 @@
     <div class="container">
       <header>
         <h1>LuminaJS</h1>
-        <p class="subtitle">Fast. Modular. Lightweight. Canvas-Powered.</p>
+        <p class="subtitle">
+          Browser-first Canvas and ImageData processing with preview-first
+          export workflows.
+        </p>
         <a
           href="https://github.com/gaurav101/LuminaJS"
           target="_blank"
@@ -84,7 +87,7 @@
           Visit Docs
         </a>
         <a
-          href="https://gks101.github.io/LuminaJS/index.html"
+          href="https://gaurav101.github.io/LuminaJS/css-demo"
           target="_blank"
           rel="noopener noreferrer"
           style="
@@ -108,7 +111,7 @@
             this.style.boxShadow = 'none';
           "
         >
-          Demo
+          CSS-Only Demo
         </a>
       </header>
 
@@ -132,6 +135,10 @@
               <polyline points="21 15 16 10 5 21" />
             </svg>
             <p>Drag an image here or <strong>click to upload</strong></p>
+            <p class="workflow-note">
+              Preview renders a smaller working canvas for responsive editing.
+              Download exports the current processed image as a Blob.
+            </p>
             <input
               type="file"
               id="fileInput"
@@ -345,6 +352,9 @@
             class="control-group"
             style="margin-top: auto; padding-top: 1rem"
           >
+            <p id="exportStatus" class="export-status">
+              Upload an image to enable export.
+            </p>
             <button
               id="downloadBtn"
               class="filter-btn"
@@ -357,7 +367,7 @@
                 font-weight: 600;
               "
             >
-              Download Result
+              Export PNG Blob
             </button>
             <button
               id="resetBtn"
