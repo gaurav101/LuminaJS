@@ -1,3 +1,5 @@
+import { assertBrowserEnvironment } from '../core/runtime.js';
+
 /**
  * @fileoverview LuminaJS Filters - Watermark
  * Overlays text on top of an image.
@@ -23,6 +25,8 @@
  * const watermarked = watermark(imageData, '© LuminaJS', { x: 20, y: 20, color: 'white' });
  */
 export function watermark(imageData, text, options = {}) {
+  assertBrowserEnvironment('apply watermark');
+
   const {
     x = 10,
     y = 10,

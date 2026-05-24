@@ -1,35 +1,65 @@
 # LuminaJS
 
-[![bundle size](https://badgen.net/bundlephobia/minzip/react)](https://bundlephobia.com/package/@gks101/luminajs) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![tree shaking](https://badgen.net/bundlephobia/tree-shaking/react-colorful)](https://bundlephobia.com/package/@gks101/luminajs) [![dependency count](https://badgen.net/bundlephobia/dependency-count/react-colorful)](https://bundlephobia.com/package/@gks101/luminajs)
+[![bundle size](https://badgen.net/bundlephobia/minzip/%40gks101%2Fluminajs)](https://bundlephobia.com/package/@gks101/luminajs) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![tree shaking](https://badgen.net/bundlephobia/tree-shaking/%40gks101%2Fluminajs)](https://bundlephobia.com/package/@gks101/luminajs) [![dependency count](https://badgen.net/bundlephobia/dependency-count/%40gks101%2Fluminajs)](https://bundlephobia.com/package/@gks101/luminajs)
 
-LuminaJS is a modular, chainable,lightweight, zero-dependency JavaScript utility library for browser-based image processing using the HTML5 Canvas API. It provides a functional approach to image manipulation, focusing on performance and ease of use.
+LuminaJS is a modular, chainable, lightweight, zero-dependency **browser-first** JavaScript utility library for image processing with the HTML5 Canvas and `ImageData` APIs.
+
+> Scope: LuminaJS is for browser/client runtimes. It is not a universal JS image processor and is not designed for Node.js server-side image pipelines.  
+> For server-side image processing, use tools like **Sharp**, **Jimp**, or **ImageMagick**.
+
+## What LuminaJS Is / Is Not
+
+- **LuminaJS is:** a browser-first Canvas + `ImageData` library for interactive client-side image workflows.
+- **LuminaJS is:** optimized for modern ESM bundlers with modular imports.
+- **LuminaJS is not:** a Node.js/server-side image processing engine.
+- **LuminaJS is not:** a GPU shader/WebGL pipeline; pixel filters run in JavaScript on `ImageData`.
+
+## Demo, Examples, Code and Docs
 
 - [Demo-react](https://gaurav101.github.io/LuminaJS/examples/react)
 - [Demo-react-storybook](https://gaurav101.github.io/LuminaJS/examples/react/storybook/)
 - [Demo-vanila-js](https://gaurav101.github.io/LuminaJS/)
+- [Demo-Lumina-CSS](https://gaurav101.github.io/LuminaJS/css-demo)
 - [Code](https://github.com/gaurav101/LuminaJS)
 - [NPM](https://www.npmjs.com/package/@gks101/luminajs)
 - [Documentation](https://gaurav101.github.io/LuminaJS/docs/)
-- [Full-Image-Editor-implemented-with-LuminaJS ] (https://luminna-image-editor.vercel.app/)
-- [Lumina-Image-Editor Storybook-implemented-with-LuminaJS ]  (https://luminna-image-editor-story-book.vercel.app)
+- [Lumina Image CSS Guide](./Lumina-IMAGE-CSS.md)
+- [Performance Guide](./PERFORMANCE.md)
+
+## CSS-Only Image Styling
+
+If you do not need JavaScript image processing and only want to style,
+position, animate, or visually transform images with CSS, use Lumina Image CSS.
+It is designed for non-destructive image presentation with utility classes for
+filters, hover effects, overlays, layout, and responsive media frames.
+
+- [Lumina Image CSS Guide](./Lumina-IMAGE-CSS.md)
+- [Lumina Image CSS Demo](https://gaurav101.github.io/LuminaJS/css-demo)
 
 ## Features
 
-- **🚀 High Performance**: Optimized `ImageData` loops for fast pixel processing.
+- **Responsive Browser Workflows**: Canvas rendering can be browser-optimized; pixel filters run in JavaScript on `ImageData`.
 - **🧩 Modular**: Only import the filters and utilities you need.
 - **🖼️ Canvas-Powered**: Leverages the HTML5 Canvas API for seamless browser integration.
 - **📦 Lightweight**: Zero external dependencies (no jQuery, no Lodash).
 
+### Performance Notes
+
+- Heavy filters (`blur`, `gaussianBlur`, `backgroundBlur`, convolution-based filters) can block the main thread on large images.
+- Resize first for previews/interactions, then process full resolution only for final export.
+- Use Web Workers for expensive operations to keep UI interactions responsive.
+- See [Performance Guide](./PERFORMANCE.md) for benchmark harness and worker examples.
+
 ### Why Choose LuminaJS?
 
-While libraries like **Jimp** are built for heavy-duty server-side processing, **[LuminaJS](https://www.npmjs.com/package/@gks101/luminajs)** is a surgical tool optimized for the modern web. It trades massive dependency trees for raw browser performance.
+While libraries like **Jimp** are built for server-side processing, **[LuminaJS](https://www.npmjs.com/package/@gks101/luminajs)** is focused on browser image workflows: previews, crop/resize flows, filters, and export before upload. It trades server-runtime breadth for a small, client-side API.
 
 ---
 
 ### 🚀 Key Advantages
 
-- **Zero Latency:** Uses hardware-accelerated **HTML5 Canvas** for near-instant pixel manipulation, avoiding the slow pure-JS processing.
-- **Ultra-Lightweight:** At just **~3.5 KB**, it preserves your bundle size and [Core Web Vitals](https://web.dev/vitals/), whereas Jimp can add several megabytes to your frontend.
+- **Low-Latency UX:** Canvas rendering/compositing paths can be browser-optimized, while filters run in JavaScript over `ImageData`.
+- **Small Client Footprint:** Zero runtime dependencies, ESM subpath exports, and separately shipped CSS/React entry points help keep app bundles focused on what you import.
 - **Privacy-Centric:** All processing happens on the client’s machine. Sensitive user data never leaves the browser.
 - **Modern DX:** Native **TypeScript** support and a clean, chainable API designed for ESM workflows.
 
@@ -42,36 +72,114 @@ While libraries like **Jimp** are built for heavy-duty server-side processing, *
 | **Interactive UI**  | **Best.** Real-time filters & previews.                    | Slow; often requires loaders.             |
 | **Edge Cases**      | **Best.** Works in Web Workers.                            | High memory overhead.                     |
 | **Marketing Tools** | **Best.** Dynamic watermarks & social overlays.            | Overkill; increases bounce rates.         |
-| **Server-Side**     | Use a headless fallback/not supported                      | **Best.** Built for Node.js environments. |
+| **Server-Side**     | Out of scope (use Sharp/Jimp/ImageMagick)                  | **Best.** Built for Node.js environments. |
 
 ---
 
 ### ⚡ At a Glance
 
-| Feature          | [LuminaJS](https://www.npmjs.com/package/@gks101/luminajs) | Jimp/Other        |
-| ---------------- | ---------------------------------------------------------- | ----------------- |
-| **Bundle Size**  | **~3.5 KB**                                                | ~Megabytes        |
-| **Speed**        | **Extremely Fast** (Native)                                | Slower (Pure JS)  |
-| **Environment**  | Browser / OffscreenCanvas                                  | Node.js / Browser |
-| **Dependencies** | **Zero**                                                   | Multiple          |
-| **API Style**    | Chainable & Functional                                     | Chainable         |
+| Feature          | [LuminaJS](https://www.npmjs.com/package/@gks101/luminajs) | Jimp/Other          |
+| ---------------- | ---------------------------------------------------------- | ------------------- |
+| **Bundle Size**  | Small ESM core; CSS/React shipped separately               | Often much larger   |
+| **Execution**    | JS pixel filters on `ImageData` + Canvas rendering         | Mostly JS pipelines |
+| **Environment**  | Browser / OffscreenCanvas (client-side)                    | Node.js / Browser   |
+| **Dependencies** | **Zero**                                                   | Multiple            |
+| **API Style**    | Chainable & Functional                                     | Chainable           |
 
-**Positioning:** Use **[LuminaJS](https://www.npmjs.com/package/@gks101/luminajs)** when you need high-performance image effects without sacrificing your application's load speed.
+**Positioning:** Use **[LuminaJS](https://www.npmjs.com/package/@gks101/luminajs)** when you need browser-side image preview, crop, resize, filter, and export workflows without bringing a server-oriented image stack into your frontend bundle.
 
 ```bash
+# npm
 npm install @gks101/luminajs
+
+# pnpm
+pnpm add @gks101/luminajs
+
+# yarn
+yarn add @gks101/luminajs
 ```
 
 ### React Support
 
 LuminaJS includes first-class React support via hooks and components. See the [React Integration](#react-integration) section for full examples.
 
+> SSR/Next.js: LuminaJS React components and hooks depend on browser APIs (`window`, `<canvas>`, `ImageData`). Use them only on the client side (`'use client'`, `next/dynamic(..., { ssr: false })`, or equivalent).
+
+#### Browser Compatibility
+
+LuminaJS targets modern browsers with Canvas, `ImageData`, `Blob`, and ES module support. Test your exact image sizes on the devices you support.
+
+| Environment                 | Status / Notes                                                                   |
+| --------------------------- | -------------------------------------------------------------------------------- |
+| Chrome / Edge / Firefox     | Primary targets for Canvas + `ImageData` workflows.                              |
+| Safari / iOS Safari         | Supported for standard workflows; large images can hit memory limits sooner.     |
+| Web Workers                 | Recommended for expensive filters when you can pass `ImageData` to a worker.     |
+| Node.js / SSR render passes | Out of scope for processing; import-safe, but runtime image work is client-only. |
+
+#### React Accessibility Notes
+
+- `ImageCropper` / `ImageAreaSelector` support keyboard movement (arrow keys), larger movement (`Shift + Arrow`), and resize (`Alt + Arrow`) once the crop region exists.
+- Apply/Reset controls expose ARIA labels and can be themed via class/style hooks.
+- Current limitation: drag-selection and resize handles are still pointer-first interactions. Screen-reader narration for geometric crop state (x/y/width/height) is limited.
+- For strict WCAG workflows, pair crop interactions with explicit numeric inputs for crop coordinates and dimensions in your surrounding UI.
+
 ```bash
+# npm
 npm install @gks101/luminajs
+
+# pnpm
+pnpm add @gks101/luminajs
+
+# yarn
+yarn add @gks101/luminajs
 ```
 
 ```jsx
 import { useLumina, LuminaCanvas, ImageCropper } from '@gks101/luminajs/react';
+```
+
+### Lumina Image CSS (CSS-Only Mode)
+
+Need polished image UI without rewriting pixels? Use [`lumina-image.css`](./Lumina-IMAGE-CSS.md) for CSS-only image effects and non-destructive image styling (filters, hover effects, overlays, layout utilities).
+
+CSS effects are presentation-only: they do not crop pixels, mutate source image data, or export transformed pixel output.
+
+| Capability                           | Lumina Image CSS     | LuminaJS (JS API)                            |
+| ------------------------------------ | -------------------- | -------------------------------------------- |
+| Filters / hover effects / transforms | Yes                  | Yes                                          |
+| Overlays / layout utilities          | Yes                  | Limited (handled in your UI/CSS)             |
+| Pixel crop/resize                    | No                   | Yes (`crop`, `resize`)                       |
+| Blob/data URL export                 | No                   | Yes (`toBlob`, `toDataURL`)                  |
+| Permanent pixel changes              | No (non-destructive) | Yes (`ImageData` processing + export/render) |
+
+```js
+import '@gks101/luminajs/lumina-image.css';
+```
+
+#### CSS Distribution Policy
+
+- Stable subpath import is kept: `@gks101/luminajs/lumina-image.css`.
+- Current distribution decision: keep Lumina Image CSS inside `@gks101/luminajs` (single package install).
+- Future package decision: **no standalone package yet**. We may introduce `@gks101/lumina-image-css` later if CSS release cadence diverges or consumer demand justifies split packaging.
+- Tree-shaking behavior: CSS is intentionally marked as a side effect in `package.json` (`"sideEffects": ["./dist/lumina-image.css"]`) so bundlers do not drop it.
+- CSS size target: minified `dist/lumina-image.css` target is **<= 18 KB** (enforced in build).
+
+#### Static HTML Usage (No Bundler)
+
+```html
+<!-- CDN (pin to a version in production) -->
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@gks101/luminajs@2.0.5-beta/dist/lumina-image.css"
+/>
+```
+
+```html
+<!-- Local package path -->
+<link
+  rel="stylesheet"
+  href="node_modules/@gks101/luminajs/dist/lumina-image.css"
+/>
 ```
 
 ## Building from Source
@@ -80,7 +188,14 @@ If you want to generate the optimized distributable files locally:
 
 ```bash
 # 1. Install dependencies
+# npm
 npm install
+
+# pnpm
+pnpm install
+
+# yarn
+yarn install
 
 # 2. Run the build command
 npm run build
@@ -115,6 +230,45 @@ const blob = await lumina(fileInput.files[0])
   .toBlob('image/jpeg', 0.8);
 ```
 
+### Golden Path: Upload Preview to Export
+
+This is the recommended client workflow for upload forms: create a smaller interactive preview first, then generate the final blob when the user saves.
+
+```javascript
+import { lumina } from '@gks101/luminajs';
+
+const input = document.querySelector('#avatar-input');
+const preview = document.querySelector('#avatar-preview');
+const save = document.querySelector('#save-avatar');
+
+let selectedFile;
+
+input.addEventListener('change', async (event) => {
+  selectedFile = event.target.files?.[0];
+  if (!selectedFile) return;
+
+  await lumina(selectedFile)
+    .resize(360, 360)
+    .brightness(8)
+    .contrast(6)
+    .toCanvas(preview);
+});
+
+save.addEventListener('click', async () => {
+  if (!selectedFile) return;
+
+  const blob = await lumina(selectedFile)
+    .resize(800, 800)
+    .crop(0, 0, 800, 800)
+    .sharpen()
+    .toBlob('image/jpeg', 0.86);
+
+  const body = new FormData();
+  body.append('avatar', blob, 'avatar.jpg');
+  await fetch('/api/avatar', { method: 'POST', body });
+});
+```
+
 ### ES Modules (Functional)
 
 ```javascript
@@ -124,14 +278,12 @@ import { loadImage, grayscale } from '@gks101/luminajs';
 ### Script Tag (Browser)
 
 ```html
-<script src="node_modules/@gks101/luminajs/dist/lumina.min.js"></script>
-<script>
-  const { lumina } = Lumina;
+<script type="module">
+  import { lumina } from '/node_modules/@gks101/luminajs/dist/lumina.min.js';
 
-  lumina('photo.jpg')
+  await lumina('photo.jpg')
     .grayscale()
-    .render()
-    .then((imageData) => console.log('Processed!', imageData));
+    .toCanvas(document.getElementById('preview'));
 </script>
 ```
 
@@ -390,6 +542,8 @@ putPixelData(canvas, imageData);
 
 LuminaJS provides a dedicated React entry point with hooks and components.
 
+> Client-only warning: `useLumina`, `LuminaCanvas`, `ImageAreaSelector`, and `ImageCropper` are browser-side features. Do not run them during server rendering.
+
 ### `useLumina` Hook
 
 The `useLumina` hook manages the image processing lifecycle, providing `result`, `loading`, and `error` states. You can pass image editing props directly, or use the `operations` function for advanced chaining. It also returns a `getImage()` function which you can call to generate the image on demand.
@@ -564,6 +718,7 @@ This repository includes the ImageCropper component. New props were added to all
 - applyButtonStyle: CSSProperties (optional) - Inline style object for the Apply button.
 - resetButtonClassName: string (optional) - CSS class for the Reset button.
 - resetButtonStyle: CSSProperties (optional) - Inline style object for the Reset button.
+- showPreview: boolean (optional) - Shows the applied crop result inside the cropper after Apply. Default: true. Set false when the parent owns preview/upload UI.
 - buttonPosition: 'top-left' | 'top-right' | 'top-center' | 'bottom-left' | 'bottom-center' | 'bottom-right' (optional) - Position of the Apply/Reset button container. Default: 'top-left'.
 - zIndex: number (internal) - The button container uses a high z-index (1001) to ensure the buttons render above the image selection overlay.
 - onApply: (crop) => boolean | void | Promise<boolean | void> (optional) - Callback invoked when the Apply button is clicked. Returning `false` (or a Promise resolving to `false`) will abort the component's default apply behavior.

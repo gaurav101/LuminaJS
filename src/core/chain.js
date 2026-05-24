@@ -1,5 +1,6 @@
 import * as filters from '../filters/index.js';
 import { loadImage } from './loader.js';
+import { assertBrowserEnvironment, instanceOfGlobal } from './runtime.js';
 import {
   getPixelData,
   putPixelData,
@@ -117,6 +118,7 @@ export class Lumina {
         /** @type {number} */ w,
         /** @type {number} */ h,
       ) => {
+        assertBrowserEnvironment('resize image in chain');
         const canvas = document.createElement('canvas');
         canvas.width = imageData.width;
         canvas.height = imageData.height;
@@ -151,6 +153,7 @@ export class Lumina {
         /** @type {number} */ cw,
         /** @type {number} */ ch,
       ) => {
+        assertBrowserEnvironment('crop image in chain');
         const canvas = document.createElement('canvas');
         canvas.width = imageData.width;
         canvas.height = imageData.height;
@@ -184,25 +187,31 @@ export class Lumina {
   async _resolveSource() {
     let currentSource = this.source;
 
-    if (typeof currentSource === 'string' || currentSource instanceof File) {
-      currentSource = await loadImage(currentSource);
+    if (
+      typeof currentSource === 'string' ||
+      instanceOfGlobal(currentSource, 'File')
+    ) {
+      const loadableSource = /** @type {string|File} */ (currentSource);
+      currentSource = await loadImage(loadableSource);
     }
 
-    if (currentSource instanceof HTMLImageElement) {
-      return getPixelData(currentSource).imageData;
+    if (instanceOfGlobal(currentSource, 'HTMLImageElement')) {
+      const imageSource = /** @type {HTMLImageElement} */ (currentSource);
+      return getPixelData(imageSource).imageData;
     }
 
-    if (currentSource instanceof HTMLCanvasElement) {
-      const ctx = currentSource.getContext('2d');
+    if (instanceOfGlobal(currentSource, 'HTMLCanvasElement')) {
+      const canvasSource = /** @type {HTMLCanvasElement} */ (currentSource);
+      const ctx = canvasSource.getContext('2d');
       if (!ctx)
         throw new Error(
           'LuminaJS [chain]: Failed to get canvas context from source.',
         );
-      return ctx.getImageData(0, 0, currentSource.width, currentSource.height);
+      return ctx.getImageData(0, 0, canvasSource.width, canvasSource.height);
     }
 
-    if (currentSource instanceof ImageData) {
-      return currentSource;
+    if (instanceOfGlobal(currentSource, 'ImageData')) {
+      return /** @type {ImageData} */ (currentSource);
     }
 
     throw new Error('LuminaJS [chain]: Unsupported source type.');
@@ -243,6 +252,7 @@ export class Lumina {
    */
   async toBlob(mimeType = 'image/png', quality = 0.92) {
     const imageData = await this.render();
+    assertBrowserEnvironment('export image as Blob');
     const canvas = document.createElement('canvas');
     canvas.width = imageData.width;
     canvas.height = imageData.height;
@@ -258,6 +268,7 @@ export class Lumina {
    */
   async toDataURL(mimeType = 'image/png', quality = 0.92) {
     const imageData = await this.render();
+    assertBrowserEnvironment('export image as Data URL');
     const canvas = document.createElement('canvas');
     canvas.width = imageData.width;
     canvas.height = imageData.height;
@@ -272,6 +283,8 @@ export class Lumina {
    * @returns {Promise<HTMLElement>}
    */
   async toHtmlElement(elementOrId) {
+    assertBrowserEnvironment('render image into HTML element');
+
     const el =
       typeof elementOrId === 'string'
         ? document.getElementById(elementOrId)
@@ -282,10 +295,12 @@ export class Lumina {
       );
     }
 
-    if (el instanceof HTMLImageElement) {
-      el.src = await this.toDataURL();
-    } else if (el instanceof HTMLCanvasElement) {
-      await this.toCanvas(el);
+    if (instanceOfGlobal(el, 'HTMLImageElement')) {
+      const imageEl = /** @type {HTMLImageElement} */ (el);
+      imageEl.src = await this.toDataURL();
+    } else if (instanceOfGlobal(el, 'HTMLCanvasElement')) {
+      const canvasEl = /** @type {HTMLCanvasElement} */ (el);
+      await this.toCanvas(canvasEl);
     } else {
       throw new Error(
         'LuminaJS [chain]: toHtmlElement only supports <img> and <canvas> elements.',

@@ -1,5 +1,12 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
-import type { FC, MouseEvent, TouchEvent, ReactNode } from 'react';
+import { useState, useRef, useCallback, useEffect, useId } from 'react';
+import type {
+  FC,
+  MouseEvent,
+  TouchEvent,
+  KeyboardEvent,
+  ReactNode,
+  CSSProperties,
+} from 'react';
 
 export interface CropArea {
   x: number;
@@ -8,7 +15,7 @@ export interface CropArea {
   height: number;
 }
 
-interface ImageAreaSelectorProps {
+export interface ImageAreaSelectorProps {
   src: string;
   onCropChange: (crop: CropArea) => void;
   onCropComplete?: (crop: CropArea) => void;
@@ -27,6 +34,20 @@ interface ImageAreaSelectorProps {
     scaleX: number;
     scaleY: number;
   }) => ReactNode;
+  className?: string;
+  style?: CSSProperties;
+  imageClassName?: string;
+  imageStyle?: CSSProperties;
+  selectionClassName?: string;
+  selectionStyle?: CSSProperties;
+  handleClassName?: string;
+  handleStyle?: CSSProperties;
+  overlayControlsContainerClassName?: string;
+  overlayControlsContainerStyle?: CSSProperties;
+  ariaLabel?: string;
+  ariaDescription?: string;
+  keyboardStep?: number;
+  keyboardStepLarge?: number;
 }
 
 type ResizeHandle = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw';
@@ -34,6 +55,52 @@ type DragMode = 'draw' | 'move' | 'resize';
 
 const HANDLE_SIZE = 12;
 const MIN_CROP_SIZE = 1;
+
+const ROOT_BASE_STYLE: CSSProperties = {
+  position: 'relative',
+  display: 'inline-block',
+  userSelect: 'none',
+  touchAction: 'none',
+};
+
+const IMAGE_BASE_STYLE: CSSProperties = {
+  display: 'block',
+  maxWidth: '100%',
+  userSelect: 'none',
+};
+
+const SELECTION_BASE_STYLE: CSSProperties = {
+  position: 'absolute',
+  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+  zIndex: 10,
+};
+
+const HANDLE_BASE_STYLE: CSSProperties = {
+  position: 'absolute',
+  width: HANDLE_SIZE,
+  height: HANDLE_SIZE,
+  borderRadius: '50%',
+  backgroundColor: '#fff',
+  boxSizing: 'border-box',
+};
+
+const OVERLAY_CONTROLS_BASE_STYLE: CSSProperties = {
+  position: 'absolute',
+  zIndex: 1001,
+  pointerEvents: 'auto',
+};
+
+const SR_ONLY_STYLE: CSSProperties = {
+  position: 'absolute',
+  width: 1,
+  height: 1,
+  padding: 0,
+  margin: -1,
+  overflow: 'hidden',
+  clip: 'rect(0, 0, 0, 0)',
+  whiteSpace: 'nowrap',
+  border: 0,
+};
 
 const resizeHandles: Array<{
   id: ResizeHandle;
@@ -258,6 +325,20 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
   overlayOpacity = 0.5,
   allowResize = true,
   overlayControls,
+  className,
+  style,
+  imageClassName,
+  imageStyle,
+  selectionClassName,
+  selectionStyle,
+  handleClassName,
+  handleStyle,
+  overlayControlsContainerClassName,
+  overlayControlsContainerStyle,
+  ariaLabel = 'Image crop selection area',
+  ariaDescription = 'Use arrow keys to move the crop. Hold Shift for larger steps. Hold Alt with arrows to resize. Press Enter to confirm the current selection. Press Escape to clear the selection.',
+  keyboardStep = 1,
+  keyboardStepLarge = 10,
 }) => {
   const [crop, setCrop] = useState<CropArea>({
     x: 0,
@@ -283,6 +364,7 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
   const resizeStartCropRef = useRef<CropArea | null>(null);
   const initialPinchDistanceRef = useRef<number | null>(null);
   const pinchStartCropRef = useRef<CropArea | null>(null);
+  const descriptionId = useId();
 
   const updateDisplayScale = useCallback(() => {
     const img = imgRef.current;
@@ -588,6 +670,113 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
     }
   }, [onCropComplete]);
 
+  const emitCrop = useCallback(
+    (nextCrop: CropArea, complete = false) => {
+      cropRef.current = nextCrop;
+      setCrop(nextCrop);
+      onCropChange(nextCrop);
+      if (complete && nextCrop.width > 0 && nextCrop.height > 0) {
+        onCropComplete?.(nextCrop);
+      }
+    },
+    [onCropChange, onCropComplete],
+  );
+
+  const handleKeyboardInteraction = useCallback(
+    (event: KeyboardEvent<HTMLDivElement>) => {
+      if (event.target !== event.currentTarget) return;
+
+      const currentCrop = cropRef.current;
+      const hasCrop = currentCrop.width > 0 && currentCrop.height > 0;
+      const image = imgRef.current;
+      if (!image) return;
+
+      const imageWidth = image.naturalWidth || 0;
+      const imageHeight = image.naturalHeight || 0;
+      if (!imageWidth || !imageHeight) return;
+
+      if (event.key === 'Escape' && hasCrop) {
+        event.preventDefault();
+        emitCrop({ x: 0, y: 0, width: 0, height: 0 });
+        return;
+      }
+
+      if ((event.key === 'Enter' || event.key === ' ') && hasCrop) {
+        event.preventDefault();
+        onCropComplete?.(currentCrop);
+        return;
+      }
+
+      if (!hasCrop) return;
+
+      const isArrowKey = [
+        'ArrowUp',
+        'ArrowDown',
+        'ArrowLeft',
+        'ArrowRight',
+      ].includes(event.key);
+
+      if (!isArrowKey) return;
+      event.preventDefault();
+
+      const step = event.shiftKey ? keyboardStepLarge : keyboardStep;
+      const moveX =
+        event.key === 'ArrowLeft'
+          ? -step
+          : event.key === 'ArrowRight'
+            ? step
+            : 0;
+      const moveY =
+        event.key === 'ArrowUp' ? -step : event.key === 'ArrowDown' ? step : 0;
+
+      if (event.altKey) {
+        let nextWidth = currentCrop.width + moveX;
+        let nextHeight = currentCrop.height + moveY;
+
+        if (aspect) {
+          if (moveX !== 0) {
+            nextWidth = currentCrop.width + moveX;
+            nextHeight = nextWidth / aspect;
+          } else {
+            nextHeight = currentCrop.height + moveY;
+            nextWidth = nextHeight * aspect;
+          }
+        }
+
+        nextWidth = clamp(nextWidth, MIN_CROP_SIZE, imageWidth - currentCrop.x);
+        nextHeight = clamp(
+          nextHeight,
+          MIN_CROP_SIZE,
+          imageHeight - currentCrop.y,
+        );
+
+        if (aspect) {
+          const widthByHeight = nextHeight * aspect;
+          const heightByWidth = nextWidth / aspect;
+          if (widthByHeight <= imageWidth - currentCrop.x) {
+            nextWidth = widthByHeight;
+          } else {
+            nextHeight = heightByWidth;
+          }
+        }
+
+        emitCrop({
+          ...currentCrop,
+          width: nextWidth,
+          height: nextHeight,
+        });
+        return;
+      }
+
+      emitCrop({
+        ...currentCrop,
+        x: clamp(currentCrop.x + moveX, 0, imageWidth - currentCrop.width),
+        y: clamp(currentCrop.y + moveY, 0, imageHeight - currentCrop.height),
+      });
+    },
+    [aspect, keyboardStep, keyboardStepLarge, emitCrop, onCropComplete],
+  );
+
   useEffect(() => {
     updateDisplayScale();
     window.addEventListener('resize', updateDisplayScale);
@@ -601,19 +790,20 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
 
   return (
     <div
+      className={className}
       style={{
-        position: 'relative',
-        display: 'inline-block',
+        ...ROOT_BASE_STYLE,
         cursor:
           resizeCursor ??
-          (isDragging && dragMode === 'move'
-            ? 'grabbing'
-            : isDragging
-              ? 'crosshair'
-              : 'crosshair'),
-        userSelect: 'none',
-        touchAction: 'none',
+          (isDragging && dragMode === 'move' ? 'grabbing' : 'crosshair'),
+        ...style,
       }}
+      role="group"
+      tabIndex={0}
+      aria-label={ariaLabel}
+      aria-describedby={ariaDescription ? descriptionId : undefined}
+      aria-keyshortcuts="ArrowUp ArrowDown ArrowLeft ArrowRight Shift+ArrowUp Shift+ArrowDown Shift+ArrowLeft Shift+ArrowRight Alt+ArrowUp Alt+ArrowDown Alt+ArrowLeft Alt+ArrowRight Enter Escape"
+      onKeyDown={handleKeyboardInteraction}
       onMouseDown={handleInteractionStart}
       onMouseMove={handleInteractionMove}
       onMouseUp={stopDragging}
@@ -623,12 +813,18 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
       onTouchEnd={stopDragging}
       onTouchCancel={stopDragging}
     >
+      {ariaDescription ? (
+        <span id={descriptionId} style={SR_ONLY_STYLE}>
+          {ariaDescription}
+        </span>
+      ) : null}
       <img
         ref={imgRef}
         src={src}
         alt="Crop Source"
         onLoad={updateDisplayScale}
-        style={{ display: 'block', maxWidth: '100%', userSelect: 'none' }}
+        className={imageClassName}
+        style={{ ...IMAGE_BASE_STYLE, ...imageStyle }}
         draggable={false}
       />
 
@@ -636,34 +832,33 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
       {crop.width > 0 && crop.height > 0 && (
         <>
           <div
+            className={selectionClassName}
             style={{
-              position: 'absolute',
+              ...SELECTION_BASE_STYLE,
               border: `${lineWidth}px dashed ${lineColor}`,
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
               boxShadow: `0 0 0 9999px rgba(0, 0, 0, ${overlayOpacity})`,
               cursor: isDragging ? 'grabbing' : 'move',
               left: crop.x * displayScale.scaleX,
               top: crop.y * displayScale.scaleY,
               width: crop.width * displayScale.scaleX,
               height: crop.height * displayScale.scaleY,
-              zIndex: 10,
+              ...selectionStyle,
             }}
+            aria-hidden={true}
           >
             {allowResize &&
               resizeHandles.map((handle) => (
                 <span
                   key={handle.id}
+                  className={handleClassName}
                   style={{
-                    position: 'absolute',
-                    width: HANDLE_SIZE,
-                    height: HANDLE_SIZE,
-                    borderRadius: '50%',
+                    ...HANDLE_BASE_STYLE,
                     border: `2px solid ${lineColor}`,
-                    backgroundColor: '#fff',
-                    boxSizing: 'border-box',
                     cursor: handle.cursor,
                     ...handle.style,
+                    ...handleStyle,
                   }}
+                  aria-hidden={true}
                 />
               ))}
           </div>
@@ -683,13 +878,12 @@ export const ImageAreaSelector: FC<ImageAreaSelectorProps> = ({
 
               return (
                 <div
+                  className={overlayControlsContainerClassName}
                   style={{
-                    position: 'absolute',
+                    ...OVERLAY_CONTROLS_BASE_STYLE,
                     left: leftPx,
                     top: controlsTop,
-                    zIndex: 1001,
-                    // Ensure controls receive pointer events and don't let parent start drag
-                    pointerEvents: 'auto',
+                    ...overlayControlsContainerStyle,
                   }}
                   // Prevent parent drag/selection handlers from reacting to clicks on controls
                   onMouseDown={(ev) => ev.stopPropagation()}

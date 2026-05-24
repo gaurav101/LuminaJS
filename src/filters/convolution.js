@@ -1,5 +1,10 @@
 /**
  * Generic Convolution Engine
+ * Performance notes:
+ * - Convolution traverses almost every pixel and applies kernel math per pixel.
+ * - Repeated passes or large images can block the main thread.
+ * - Prefer resizing before convolution when running live previews.
+ *
  * @param {Uint8ClampedArray} data - RGBA pixel data
  * @param {number} width - Image width
  * @param {number} height - Image height

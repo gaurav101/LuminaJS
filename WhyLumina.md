@@ -1,4 +1,4 @@
-# 🚀 Transform Images in the Browser with LuminaJS: Lightweight, Zero-Dependency, and Fast
+# Transform Images in the Browser with LuminaJS: Lightweight, Zero-Dependency, and Practical
 
 Image processing in the browser has traditionally been a choice between two frustrating extremes:
 
@@ -7,16 +7,26 @@ Image processing in the browser has traditionally been a choice between two frus
 
 Most existing libraries are also built for Node.js first, requiring complex polyfills or heavy dependencies just to run in a client's browser. [LuminaJS](https://www.npmjs.com/package/@gks101/luminajs) was built to solve this "complexity vs. weight" trade-off.
 
+LuminaJS is intentionally browser-first (Canvas/ImageData) and does not aim to be a universal runtime image processor.
+For Node.js/server-side image processing, use Sharp/Jimp/ImageMagick.
+
+## What LuminaJS Is / Is Not
+
+- **LuminaJS is:** a browser-first Canvas + `ImageData` library for client-side image workflows.
+- **LuminaJS is:** designed for modular ESM consumption in modern bundlers.
+- **LuminaJS is not:** a server-side Node.js image processing engine.
+- **LuminaJS is not:** a GPU shader/WebGL framework; pixel filters execute in JavaScript on `ImageData`.
+
 ---
 
 ## Why LuminaJS?
 
 [@gks101/luminajs](https://www.npmjs.com/package/@gks101/luminajs) is a modular, functional utility library optimized specifically for the modern browser environment.
 
-- **Tiny Footprint:** A minzipped size of only **2.8 KB**.
+- **Small Footprint:** Zero runtime dependencies with ESM entry points, so apps can import only the browser APIs they need.
 - **Zero Dependencies:** Pure, optimized JavaScript—no jQuery, no Lodash.
 - **Chainable API:** A modern, fluent syntax that makes complex transformations readable.
-- **Performance First:** Optimized `ImageData` loops for fast pixel-level processing.
+- **Performance-Aware:** Canvas rendering can be browser-optimized; pixel filters run in JavaScript over `ImageData`, so large images should be resized or moved to a worker.
 
 ---
 
@@ -33,10 +43,17 @@ Since [LuminaJS](https://www.npmjs.com/package/@gks101/luminajs) leverages the n
 
 ## Getting Started
 
-Install via **npm**:
+Install via **npm / pnpm / yarn**:
 
 ```bash
+# npm
 npm install @gks101/luminajs
+
+# pnpm
+pnpm add @gks101/luminajs
+
+# yarn
+yarn add @gks101/luminajs
 ```
 
 Or use a **script tag** for quick prototyping:

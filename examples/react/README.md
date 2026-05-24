@@ -12,6 +12,8 @@ A comprehensive React + TypeScript example showcasing the LuminaJS image process
 - **Background Blur (Portrait Mode)**: Apply depth-of-field effects
 - **Image Download**: Export processed images as PNG files
 - **Responsive UI**: Modern, interactive control panel with live preview
+- **Cropper Theming API**: Class/style hooks for cropper buttons, overlay, handles, and error states
+- **Keyboard Crop Controls**: Arrow key movement, `Shift + Arrow` large-step movement, `Alt + Arrow` resize
 
 ## Getting Started
 
@@ -81,15 +83,22 @@ const { result: asciiText, loading: asciiLoading } = useLumina<string>({
 - **LuminaJS** - Advanced image processing library
 - **Vite Plugin React** - Fast Refresh support
 
-## ImageCropper - Props
+## ImageCropper Customization Example
 
-This repository includes the ImageCropper component. New props were added to allow customizing the Apply Crop and Reset buttons:
+`examples/react/src/App.tsx` includes a production-style cropper example using:
 
-- applyButtonClassName: string (optional) - CSS class for the Apply button.
-- applyButtonStyle: CSSProperties (optional) - Inline style object for the Apply button.
-- resetButtonClassName: string (optional) - CSS class for the Reset button.
-- resetButtonStyle: CSSProperties (optional) - Inline style object for the Reset button.
-- onApply: (crop) => boolean | void | Promise<boolean | void> (optional) - Callback invoked when the Apply button is clicked. Returning `false` (or a Promise resolving to `false`) will abort the component's default apply behavior.
-- onReset: () => boolean | void | Promise<boolean | void> (optional) - Callback invoked when Reset is clicked. Returning `false` will abort the default reset.
+- `buttonContainerClassName`
+- `applyButtonClassName`, `resetButtonClassName`
+- `processingOverlayClassName`
+- `errorClassName`, `errorTextClassName`
+- `selectorSelectionClassName`, `selectorHandleClassName`
+- `selectorLineColor`, `selectorOverlayOpacity`
+- `selectorAriaLabel`, `selectorAriaDescription`
+- `keyboardStep`, `keyboardStepLarge`
 
-These props are optional and backward-compatible.
+## Accessibility Notes (Current Limits)
+
+- Keyboard controls are supported after a crop region exists.
+- Apply/Reset controls are accessible buttons with ARIA labels.
+- Dragging and handle manipulation remain pointer-first interactions.
+- If your product requires strict non-pointer parity, provide numeric crop inputs in your app shell (x, y, width, height) alongside the visual cropper.
