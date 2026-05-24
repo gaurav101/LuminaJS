@@ -85,6 +85,13 @@ LuminaJS includes first-class React support via hooks and components. See the [R
 
 > SSR/Next.js: LuminaJS React components and hooks depend on browser APIs (`window`, `<canvas>`, `ImageData`). Use them only on the client side (`'use client'`, `next/dynamic(..., { ssr: false })`, or equivalent).
 
+#### React Accessibility Notes
+
+- `ImageCropper` / `ImageAreaSelector` support keyboard movement (arrow keys), larger movement (`Shift + Arrow`), and resize (`Alt + Arrow`) once the crop region exists.
+- Apply/Reset controls expose ARIA labels and can be themed via class/style hooks.
+- Current limitation: drag-selection and resize handles are still pointer-first interactions. Screen-reader narration for geometric crop state (x/y/width/height) is limited.
+- For strict WCAG workflows, pair crop interactions with explicit numeric inputs for crop coordinates and dimensions in your surrounding UI.
+
 ```bash
 npm install @gks101/luminajs
 ```

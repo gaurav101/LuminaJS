@@ -1,9 +1,36 @@
 import { useState, useCallback, useMemo } from 'react';
 import { useLumina, LuminaCanvas } from '@gks101/luminajs/react';
 import type { Lumina } from '../../../src/';
+import CodeMirror from '@uiw/react-codemirror';
+import { javascript } from '@codemirror/lang-javascript';
+import { oneDark } from '@codemirror/theme-one-dark';
 import './App.css';
 import { ImageCropper } from '@gks101/luminajs/react';
-import ImageCropperExample from '../../../src/react/ImageCropperExample.tsx';
+
+const THEMED_CROPPER_CODE = `<ImageCropper
+  src="sample.png"
+  aspectRatio={16 / 9}
+  className="cropper-shell"
+  containerClassName="cropper-stage"
+  buttonContainerClassName="cropper-controls"
+  applyButtonClassName="cropper-btn cropper-btn-primary"
+  resetButtonClassName="cropper-btn cropper-btn-secondary"
+  processingOverlayClassName="cropper-processing"
+  errorClassName="cropper-error"
+  errorTextClassName="cropper-error-text"
+  selectorSelectionClassName="cropper-selection"
+  selectorHandleClassName="cropper-handle"
+  selectorControlsContainerClassName="cropper-controls-anchor"
+  selectorLineColor="#3b82f6"
+  selectorOverlayOpacity={0.5}
+  selectorAriaLabel="Avatar crop area"
+  selectorAriaDescription="Use arrow keys to move the selection, Shift for larger movement, Alt with arrows to resize, Enter to confirm, Escape to clear."
+  applyButtonAriaLabel="Apply avatar crop"
+  resetButtonAriaLabel="Reset avatar crop"
+  keyboardStep={2}
+  keyboardStepLarge={16}
+  processingLabel="Applying crop..."
+/>`;
 
 function App() {
   const [brightness, setBrightness] = useState(0);
@@ -27,6 +54,17 @@ function App() {
   const [cropY, setCropY] = useState(100);
   const [cropW, setCropW] = useState(400);
   const [cropH, setCropH] = useState(400);
+  const [copiedPanel, setCopiedPanel] = useState<string | null>(null);
+  const codeExtensions = useMemo(() => [javascript({ jsx: true })], []);
+  const codeEditorSetup = useMemo(
+    () => ({
+      lineNumbers: true,
+      foldGutter: false,
+      highlightActiveLine: false,
+      highlightActiveLineGutter: false,
+    }),
+    [],
+  );
 
   // Memoize operations to prevent infinite loops
   const asciiOperation = useCallback((chain: Lumina) => chain.ascii(), []);
@@ -80,6 +118,100 @@ function App() {
     [],
   );
 
+  const generatedCanvasCode = useMemo(() => {
+    const lines = ['<LuminaCanvas', '  source="/sample.png"'];
+
+    lines.push(`  brightness={${brightness}}`);
+    lines.push(`  contrast={${contrast}}`);
+
+    if (isResized) {
+      lines.push(`  resize={{ width: ${width}, height: ${height} }}`);
+    }
+
+    if (isCropped) {
+      lines.push(
+        `  crop={{ x: ${cropX}, y: ${cropY}, width: ${cropW}, height: ${cropH} }}`,
+      );
+    }
+
+    if (filterType === 'grayscale') lines.push('  grayscale={true}');
+    if (filterType === 'sepia') lines.push('  sepia={true}');
+    if (filterType === 'blur') lines.push('  gaussianBlur={5}');
+    if (filterType === 'sharpen') lines.push('  sharpen={true}');
+    if (filterType === 'emboss') lines.push('  emboss={true}');
+    if (filterType === 'edge') lines.push('  edgeDetection={true}');
+
+    if (bgBlur) {
+      lines.push(
+        '  backgroundBlur={{ sigma: 6, focusRadius: 150, falloff: 200 }}',
+      );
+    }
+
+    if (watermarkText) {
+      lines.push('  watermark={{');
+      lines.push(`    text: "${watermarkText.replace(/"/g, '\\"')}",`);
+      lines.push('    options: {');
+      lines.push(`      x: ${watermarkX},`);
+      lines.push(`      y: ${watermarkY},`);
+      lines.push(`      fontSize: ${watermarkSize},`);
+      lines.push(`      fontFace: "${watermarkFont.replace(/"/g, '\\"')}",`);
+      lines.push(`      color: "${watermarkColor.replace(/"/g, '\\"')}",`);
+      lines.push('    },');
+      lines.push('  }}');
+    }
+
+    lines.push('  outputType="dataUrl"');
+    lines.push('  getImage={handleGetCanvasImage}');
+    lines.push('/>');
+
+    return lines.join('\n');
+  }, [
+    bgBlur,
+    brightness,
+    contrast,
+    cropH,
+    cropW,
+    cropX,
+    cropY,
+    filterType,
+    isCropped,
+    isResized,
+    height,
+    watermarkColor,
+    watermarkFont,
+    watermarkSize,
+    watermarkText,
+    watermarkX,
+    watermarkY,
+    width,
+  ]);
+
+  const copyCode = useCallback(async (panelId: string, code: string) => {
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(code);
+      } else {
+        const textarea = document.createElement('textarea');
+        textarea.value = code;
+        textarea.style.position = 'fixed';
+        textarea.style.left = '-9999px';
+        textarea.style.top = '0';
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+      }
+
+      setCopiedPanel(panelId);
+      setTimeout(() => {
+        setCopiedPanel((current) => (current === panelId ? null : current));
+      }, 1400);
+    } catch (error) {
+      console.error('Copy failed:', error);
+    }
+  }, []);
+
   return (
     <div className="demo-container">
       <header>
@@ -99,7 +231,7 @@ function App() {
             <div className="card">
               <div className="card-header">
                 <h3>{showAscii ? 'ASCII Output' : 'Live Canvas Output'}</h3>
-                <div style={{ display: 'flex', gap: '8px' }}>
+                <div className="preview-actions">
                   {!showAscii && (
                     <button
                       className="toggle-btn"
@@ -168,6 +300,36 @@ function App() {
                   />
                 )}
               </div>
+
+              <details className="code-panel">
+                <summary className="code-panel-summary">
+                  Show Generated JSX
+                </summary>
+                <div className="code-panel-body">
+                  <div className="code-panel-toolbar">
+                    <button
+                      type="button"
+                      className="code-copy-btn"
+                      onClick={() => copyCode('canvas', generatedCanvasCode)}
+                      aria-label="Copy generated LuminaCanvas JSX"
+                    >
+                      {copiedPanel === 'canvas' ? 'Copied' : 'Copy Code'}
+                    </button>
+                  </div>
+                  <div className="code-block">
+                    <CodeMirror
+                      value={generatedCanvasCode}
+                      height="280px"
+                      theme={oneDark}
+                      editable={false}
+                      extensions={codeExtensions}
+                      basicSetup={codeEditorSetup}
+                      className="code-editor"
+                      aria-label="Generated LuminaCanvas JSX code"
+                    />
+                  </div>
+                </div>
+              </details>
             </div>
 
             <div className="thumbnail-card">
@@ -177,11 +339,7 @@ function App() {
               <button
                 className="toggle-btn"
                 onClick={handleDownloadThumbnail}
-                style={{
-                  marginTop: '10px',
-                  display: 'block',
-                  margin: '0 auto',
-                }}
+                style={{ margin: '10px auto 0' }}
               >
                 Fetch & Download Thumbnail
               </button>
@@ -392,39 +550,78 @@ function App() {
           </div>
         </aside>
         <section id="cropping-tool">
-          <div className={'preview-panel'}>
-            <div className="card" style={{ padding: '20px' }}>
-              <h3>
-                ImageCropper - A complete image cropping interface with explicit
-                apply.
-              </h3>
-              <p>
-                Combines the <b>`ImageAreaSelector`</b> for interactive crop
-                area selection with `LuminaCanvas` for rendering the applied
-                crop in the same component after the user clicks Apply. Drag the
-                handles on the selected area to resize it before applying.
+          <div className="preview-panel">
+            <div className="card cropper-demo-card">
+              <h3>ImageCropper - Default</h3>
+              <p className="cropper-demo-text">
+                Baseline crop workflow with keyboard support and explicit Apply.
               </p>
-              <ImageCropper src={'sample.png'} allowResize={true} />
+              <ImageCropper src="sample.png" allowResize={true} />
             </div>
           </div>
 
-          <div className={'preview-panel'}>
-            <div
-              className="card"
-              style={{ padding: '20px', marginTop: '20px' }}
-            >
-              <h3>ImageCropper - upload image and apply crop</h3>
-              <p>
-                Combines the <b>`ImageAreaSelector`</b> for interactive crop
-                area selection with `LuminaCanvas` on uploaded image for
-                rendering the applied crop in the same component after the user
-                clicks Apply. Drag a handle to resize an existing selection.
-              </p>
-              <p style={{ color: 'red' }}>
-                Note: this does not upload image to server
+          <div className="preview-panel">
+            <div className="card cropper-demo-card mt-20">
+              <h3>ImageCropper - Themed / Production Customization</h3>
+              <p className="cropper-demo-text">
+                Demonstrates class/style hooks for controls, handles, overlay,
+                keyboard behavior, and error display.
               </p>
 
-              <ImageCropperExample />
+              <ImageCropper
+                src="sample.png"
+                aspectRatio={16 / 9}
+                className="cropper-shell"
+                containerClassName="cropper-stage"
+                buttonContainerClassName="cropper-controls"
+                applyButtonClassName="cropper-btn cropper-btn-primary"
+                resetButtonClassName="cropper-btn cropper-btn-secondary"
+                processingOverlayClassName="cropper-processing"
+                errorClassName="cropper-error"
+                errorTextClassName="cropper-error-text"
+                selectorSelectionClassName="cropper-selection"
+                selectorHandleClassName="cropper-handle"
+                selectorControlsContainerClassName="cropper-controls-anchor"
+                selectorLineColor="#3b82f6"
+                selectorOverlayOpacity={0.5}
+                selectorAriaLabel="Avatar crop area"
+                selectorAriaDescription="Use arrow keys to move the selection, Shift for larger movement, Alt with arrows to resize, Enter to confirm, Escape to clear."
+                applyButtonAriaLabel="Apply avatar crop"
+                resetButtonAriaLabel="Reset avatar crop"
+                keyboardStep={2}
+                keyboardStepLarge={16}
+                processingLabel="Applying crop..."
+              />
+
+              <details className="code-panel">
+                <summary className="code-panel-summary">
+                  Show Customization JSX
+                </summary>
+                <div className="code-panel-body">
+                  <div className="code-panel-toolbar">
+                    <button
+                      type="button"
+                      className="code-copy-btn"
+                      onClick={() => copyCode('cropper', THEMED_CROPPER_CODE)}
+                      aria-label="Copy themed ImageCropper JSX"
+                    >
+                      {copiedPanel === 'cropper' ? 'Copied' : 'Copy Code'}
+                    </button>
+                  </div>
+                  <div className="code-block">
+                    <CodeMirror
+                      value={THEMED_CROPPER_CODE}
+                      height="360px"
+                      theme={oneDark}
+                      editable={false}
+                      extensions={codeExtensions}
+                      basicSetup={codeEditorSetup}
+                      className="code-editor"
+                      aria-label="ImageCropper customization JSX code"
+                    />
+                  </div>
+                </div>
+              </details>
             </div>
           </div>
         </section>

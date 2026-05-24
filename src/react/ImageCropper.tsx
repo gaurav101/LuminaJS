@@ -3,6 +3,83 @@ import { lumina } from '../index.js';
 import { LuminaCanvas } from './LuminaCanvas.js';
 import { ImageAreaSelector, type CropArea } from './ImageAreaSelector.js';
 
+const ROOT_STYLE: React.CSSProperties = {
+  padding: '16px',
+  borderRadius: '8px',
+};
+
+const CONTAINER_STYLE: React.CSSProperties = {
+  position: 'relative',
+  borderRadius: '6px',
+  overflow: 'hidden',
+  border: '1px solid #ddd',
+};
+
+const PREVIEW_CANVAS_STYLE: React.CSSProperties = {
+  width: '100%',
+  height: '100%',
+  display: 'block',
+};
+
+const BUTTON_CONTAINER_BASE_STYLE: React.CSSProperties = {
+  position: 'absolute',
+  display: 'flex',
+  gap: '8px',
+  zIndex: 1001,
+  alignItems: 'center',
+};
+
+const APPLY_BUTTON_BASE_STYLE: React.CSSProperties = {
+  padding: '8px 12px',
+  backgroundColor: '#0066cc',
+  color: '#fff',
+  border: 'none',
+  borderRadius: '4px',
+  cursor: 'pointer',
+  fontSize: '13px',
+  fontWeight: 500,
+  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.12)',
+};
+
+const RESET_BUTTON_BASE_STYLE: React.CSSProperties = {
+  padding: '8px 12px',
+  backgroundColor: '#fff',
+  color: '#333',
+  border: '1px solid #ddd',
+  borderRadius: '4px',
+  cursor: 'pointer',
+  fontSize: '13px',
+  fontWeight: 500,
+  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.12)',
+};
+
+const PROCESSING_OVERLAY_BASE_STYLE: React.CSSProperties = {
+  position: 'absolute',
+  inset: 0,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  backgroundColor: 'rgba(255, 255, 255, 0.75)',
+  color: '#333',
+  fontSize: '14px',
+  fontWeight: 500,
+};
+
+const ERROR_CONTAINER_BASE_STYLE: React.CSSProperties = {
+  marginTop: '10px',
+  padding: '10px 12px',
+  borderRadius: '6px',
+  border: '1px solid #fca5a5',
+  background: '#fff1f2',
+};
+
+const ERROR_TEXT_BASE_STYLE: React.CSSProperties = {
+  color: '#b91c1c',
+  margin: 0,
+  fontSize: '13px',
+  lineHeight: 1.4,
+};
+
 export interface ImageCropperProps {
   src: string | File | HTMLImageElement | HTMLCanvasElement | ImageData | null;
   onCropComplete?: (croppedImage: Blob | string) => void;
@@ -16,12 +93,48 @@ export interface ImageCropperProps {
   allowResize?: boolean;
   className?: string;
   style?: React.CSSProperties;
+  containerClassName?: string;
+  containerStyle?: React.CSSProperties;
+  previewCanvasClassName?: string;
+  previewCanvasStyle?: React.CSSProperties;
+  processingOverlayClassName?: string;
+  processingOverlayStyle?: React.CSSProperties;
+  errorClassName?: string;
+  errorStyle?: React.CSSProperties;
+  errorTextClassName?: string;
+  errorTextStyle?: React.CSSProperties;
 
   // Button customization and callbacks
   applyButtonClassName?: string;
   applyButtonStyle?: React.CSSProperties;
+  applyButtonLabel?: string;
+  applyButtonAriaLabel?: string;
   resetButtonClassName?: string;
   resetButtonStyle?: React.CSSProperties;
+  resetButtonLabel?: string;
+  resetButtonAriaLabel?: string;
+  buttonContainerClassName?: string;
+  buttonContainerStyle?: React.CSSProperties;
+  processingLabel?: string;
+
+  // Overlay and handle theming hooks
+  selectorLineWidth?: number;
+  selectorLineColor?: string;
+  selectorOverlayOpacity?: number;
+  selectorClassName?: string;
+  selectorStyle?: React.CSSProperties;
+  selectorImageClassName?: string;
+  selectorImageStyle?: React.CSSProperties;
+  selectorSelectionClassName?: string;
+  selectorSelectionStyle?: React.CSSProperties;
+  selectorHandleClassName?: string;
+  selectorHandleStyle?: React.CSSProperties;
+  selectorControlsContainerClassName?: string;
+  selectorControlsContainerStyle?: React.CSSProperties;
+  selectorAriaLabel?: string;
+  selectorAriaDescription?: string;
+  keyboardStep?: number;
+  keyboardStepLarge?: number;
 
   // Button position options
   buttonPosition?:
@@ -55,7 +168,12 @@ export interface ImageCropperProps {
  * - allowResize: show resize handles on the selected crop area
  * - applyButtonClassName / applyButtonStyle: Customize the Apply button class/style
  * - resetButtonClassName / resetButtonStyle: Customize the Reset button class/style
+ * - selector* and *ClassName/*Style props: Theme overlay, handles, controls, and error states
  * - onApply / onReset: Optional callbacks fired when Apply or Reset are clicked. If the callback returns false (or a Promise that resolves to false), the default behavior is aborted.
+ *
+ * Accessibility notes:
+ * - Keyboard support is available for an existing crop region (arrow move, Shift+arrow larger move, Alt+arrow resize, Enter confirm, Escape clear).
+ * - Pointer interactions (dragging/handles) remain primary for geometric selection.
  *
  * @example
  * ```tsx
@@ -82,11 +200,45 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
   allowResize = true,
   className,
   style,
+  containerClassName,
+  containerStyle,
+  previewCanvasClassName,
+  previewCanvasStyle,
+  processingOverlayClassName,
+  processingOverlayStyle,
+  errorClassName,
+  errorStyle,
+  errorTextClassName,
+  errorTextStyle,
   // button customization
   applyButtonClassName,
   applyButtonStyle,
+  applyButtonLabel = 'Apply Crop',
+  applyButtonAriaLabel = 'Apply selected crop',
   resetButtonClassName,
   resetButtonStyle,
+  resetButtonLabel = 'Reset',
+  resetButtonAriaLabel = 'Reset crop selection',
+  buttonContainerClassName,
+  buttonContainerStyle,
+  processingLabel = 'Processing...',
+  selectorLineWidth = 2,
+  selectorLineColor = '#0066cc',
+  selectorOverlayOpacity = 0.6,
+  selectorClassName,
+  selectorStyle,
+  selectorImageClassName,
+  selectorImageStyle,
+  selectorSelectionClassName,
+  selectorSelectionStyle,
+  selectorHandleClassName,
+  selectorHandleStyle,
+  selectorControlsContainerClassName,
+  selectorControlsContainerStyle,
+  selectorAriaLabel = 'Image crop selection area',
+  selectorAriaDescription = 'Use arrow keys to move the crop. Hold Shift for larger steps. Hold Alt with arrows to resize. Press Enter to confirm the current selection. Press Escape to clear the selection.',
+  keyboardStep = 1,
+  keyboardStepLarge = 10,
   // button position (default top-left)
   buttonPosition = 'top-left',
   // optional callbacks
@@ -103,6 +255,7 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
     crop: CropArea;
   } | null>(null);
   const [selectorVersion, setSelectorVersion] = useState(0);
+  const [localError, setLocalError] = useState<string | null>(null);
   const appliedPreviewSrc =
     appliedPreview?.source === src ? appliedPreview.src : null;
   const selectedCrop =
@@ -135,6 +288,7 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
     (crop: CropArea) => {
       setSelectedCropState({ source: src, crop });
       setAppliedPreview(null);
+      setLocalError(null);
     },
     [src],
   );
@@ -142,22 +296,29 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
   const handleCropSelectionComplete = useCallback(
     (crop: CropArea) => {
       setSelectedCropState({ source: src, crop });
+      setLocalError(null);
     },
     [src],
   );
 
   const handleApplyCrop = useCallback(async () => {
+    setLocalError(null);
+
     if (
       !selectedCrop ||
       selectedCrop.width === 0 ||
       selectedCrop.height === 0
     ) {
-      onError?.(new Error('Please select a crop area'));
+      const error = new Error('Please select a crop area');
+      setLocalError(error.message);
+      onError?.(error);
       return;
     }
 
     if (!src) {
-      onError?.(new Error('No source image provided'));
+      const error = new Error('No source image provided');
+      setLocalError(error.message);
+      onError?.(error);
       return;
     }
 
@@ -168,6 +329,7 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
         if (proceed === false) return;
       } catch (err) {
         const error = err instanceof Error ? err : new Error(String(err));
+        setLocalError(error.message);
         onError?.(error);
         return;
       }
@@ -198,6 +360,7 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
       }
     } catch (err) {
       const error = err instanceof Error ? err : new Error(String(err));
+      setLocalError(error.message);
       onError?.(error);
     } finally {
       setIsCropping(false);
@@ -211,6 +374,7 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
         if (proceed === false) return;
       } catch (err) {
         const error = err instanceof Error ? err : new Error(String(err));
+        setLocalError(error.message);
         onError?.(error);
         return;
       }
@@ -218,22 +382,18 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
 
     setAppliedPreview(null);
     setSelectedCropState(null);
+    setLocalError(null);
     setSelectorVersion((version) => version + 1);
   }, [onReset, onError]);
 
   const handleProcessError = (error: Error) => {
+    setLocalError(error.message);
     onError?.(error);
   };
 
   // Compute button container style based on buttonPosition prop
-  const buttonContainerStyle = useMemo(() => {
-    const base: React.CSSProperties = {
-      position: 'absolute',
-      display: 'flex',
-      gap: '8px',
-      zIndex: 1001,
-      alignItems: 'center',
-    };
+  const positionedButtonContainerStyle = useMemo(() => {
+    const base: React.CSSProperties = { ...BUTTON_CONTAINER_BASE_STYLE };
     switch (buttonPosition) {
       case 'top-left':
         return { ...base, top: '12px', left: '12px' };
@@ -266,29 +426,24 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
     <div
       className={className}
       style={{
-        padding: '16px',
-        borderRadius: '8px',
+        ...ROOT_STYLE,
         ...style,
       }}
     >
       <div
+        className={containerClassName}
         style={{
-          position: 'relative',
+          ...CONTAINER_STYLE,
           maxWidth: maxWidth,
           maxHeight: maxHeight,
-          borderRadius: '6px',
-          overflow: 'hidden',
-          border: '1px solid #ddd',
+          ...containerStyle,
         }}
       >
         {appliedPreviewSrc ? (
           <LuminaCanvas
             source={appliedPreviewSrc}
-            style={{
-              width: '100%',
-              height: '100%',
-              display: 'block',
-            }}
+            className={previewCanvasClassName}
+            style={{ ...PREVIEW_CANVAS_STYLE, ...previewCanvasStyle }}
             onProcessError={handleProcessError}
           />
         ) : (
@@ -299,30 +454,47 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
               aspect={aspectRatio}
               onCropChange={handleCropChange}
               onCropComplete={handleCropSelectionComplete}
-              lineColor="#0066cc"
-              overlayOpacity={0.6}
+              lineWidth={selectorLineWidth}
+              lineColor={selectorLineColor}
+              overlayOpacity={selectorOverlayOpacity}
               allowResize={allowResize}
+              className={selectorClassName}
+              style={selectorStyle}
+              imageClassName={selectorImageClassName}
+              imageStyle={selectorImageStyle}
+              selectionClassName={selectorSelectionClassName}
+              selectionStyle={selectorSelectionStyle}
+              handleClassName={selectorHandleClassName}
+              handleStyle={selectorHandleStyle}
+              overlayControlsContainerClassName={
+                selectorControlsContainerClassName
+              }
+              overlayControlsContainerStyle={selectorControlsContainerStyle}
+              ariaLabel={selectorAriaLabel}
+              ariaDescription={selectorAriaDescription}
+              keyboardStep={keyboardStep}
+              keyboardStepLarge={keyboardStepLarge}
               overlayControls={() => (
-                <div style={{ display: 'flex', gap: 8 }}>
+                <div
+                  className={buttonContainerClassName}
+                  style={{
+                    ...positionedButtonContainerStyle,
+                    ...buttonContainerStyle,
+                  }}
+                >
                   <button
                     type="button"
                     onClick={handleApplyCrop}
                     disabled={isCropping}
                     className={applyButtonClassName}
+                    aria-label={applyButtonAriaLabel}
                     style={{
-                      padding: '8px 12px',
-                      backgroundColor: '#0066cc',
-                      color: '#fff',
-                      border: 'none',
-                      borderRadius: '4px',
+                      ...APPLY_BUTTON_BASE_STYLE,
                       cursor: isCropping ? 'not-allowed' : 'pointer',
-                      fontSize: '13px',
-                      fontWeight: 500,
-                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.12)',
                       ...applyButtonStyle,
                     }}
                   >
-                    {isCropping ? 'Processing...' : 'Apply Crop'}
+                    {isCropping ? processingLabel : applyButtonLabel}
                   </button>
 
                   {allowReset && (
@@ -331,20 +503,14 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
                       onClick={handleReset}
                       disabled={isCropping}
                       className={resetButtonClassName}
+                      aria-label={resetButtonAriaLabel}
                       style={{
-                        padding: '8px 12px',
-                        backgroundColor: '#fff',
-                        color: '#333',
-                        border: '1px solid #ddd',
-                        borderRadius: '4px',
+                        ...RESET_BUTTON_BASE_STYLE,
                         cursor: isCropping ? 'not-allowed' : 'pointer',
-                        fontSize: '13px',
-                        fontWeight: 500,
-                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.12)',
                         ...resetButtonStyle,
                       }}
                     >
-                      Reset
+                      {resetButtonLabel}
                     </button>
                   )}
                 </div>
@@ -355,46 +521,56 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
 
         {isCropping && (
           <div
+            className={processingOverlayClassName}
+            role="status"
+            aria-live="polite"
             style={{
-              position: 'absolute',
-              inset: 0,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: 'rgba(255, 255, 255, 0.75)',
-              color: '#333',
-              fontSize: '14px',
-              fontWeight: 500,
+              ...PROCESSING_OVERLAY_BASE_STYLE,
+              ...processingOverlayStyle,
             }}
           >
-            Processing...
+            {processingLabel}
           </div>
         )}
 
         {allowReset && appliedPreviewSrc && !isCropping && (
-          <div style={buttonContainerStyle}>
+          <div
+            className={buttonContainerClassName}
+            style={{
+              ...positionedButtonContainerStyle,
+              ...buttonContainerStyle,
+            }}
+          >
             <button
               type="button"
               onClick={handleReset}
               className={resetButtonClassName}
+              aria-label={resetButtonAriaLabel}
               style={{
-                padding: '8px 12px',
-                backgroundColor: '#fff',
-                color: '#333',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '13px',
-                fontWeight: 500,
-                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.12)',
+                ...RESET_BUTTON_BASE_STYLE,
                 ...resetButtonStyle,
               }}
             >
-              Reset
+              {resetButtonLabel}
             </button>
           </div>
         )}
       </div>
+
+      {localError ? (
+        <div
+          className={errorClassName}
+          style={{ ...ERROR_CONTAINER_BASE_STYLE, ...errorStyle }}
+        >
+          <p
+            className={errorTextClassName}
+            style={{ ...ERROR_TEXT_BASE_STYLE, ...errorTextStyle }}
+            role="alert"
+          >
+            {localError}
+          </p>
+        </div>
+      ) : null}
     </div>
   );
 };
