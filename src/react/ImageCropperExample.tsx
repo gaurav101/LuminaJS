@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { ImageCropper } from './index';
+import { ImageCropper } from './index.js';
 
 /**
  * Complete image cropper example demonstrating:

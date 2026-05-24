@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { lumina } from '../index.js';
-import { LuminaCanvas } from './LuminaCanvas';
-import { ImageAreaSelector, type CropArea } from './ImageAreaSelector';
+import { LuminaCanvas } from './LuminaCanvas.js';
+import { ImageAreaSelector, type CropArea } from './ImageAreaSelector.js';
 
 export interface ImageCropperProps {
   src: string | File | HTMLImageElement | HTMLCanvasElement | ImageData | null;

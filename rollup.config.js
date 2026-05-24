@@ -6,7 +6,7 @@ import copy from 'rollup-plugin-copy';
 const peerDeps = ['react', 'react-dom'];
 
 export default [
-  // Development builds (ESM and UMD)
+  // ESM bundle
   {
     input: 'src/index.js',
     external: peerDeps,
@@ -29,19 +29,9 @@ export default [
         format: 'es',
         sourcemap: false,
       },
-      {
-        file: 'dist/lumina.umd.js',
-        format: 'umd',
-        name: 'Lumina',
-        globals: {
-          react: 'React',
-          'react-dom': 'ReactDOM',
-        },
-        sourcemap: false,
-      },
     ],
   },
-  // Production minified UMD bundle
+  // Minified ESM bundle
   {
     input: 'src/index.js',
     external: peerDeps,
@@ -52,12 +42,7 @@ export default [
     output: [
       {
         file: 'dist/lumina.min.js',
-        format: 'umd',
-        name: 'Lumina',
-        globals: {
-          react: 'React',
-          'react-dom': 'ReactDOM',
-        },
+        format: 'es',
         sourcemap: false,
       },
     ],

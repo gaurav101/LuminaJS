@@ -15,9 +15,9 @@
     "./dist/lumina-image.css"
   ],
   "types": "./dist/index.d.ts",
-  "main": "./dist/lumina.umd.js",
+  "main": "./dist/lumina.esm.js",
   "module": "./dist/lumina.esm.js",
-  "browser": "./dist/lumina.umd.js",
+  "browser": "./dist/lumina.esm.js",
   "unpkg": "./dist/lumina.min.js",
   "files": [
     "dist",
@@ -33,8 +33,8 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/lumina.esm.js",
-      "require": "./dist/lumina.umd.js"
+      "browser": "./dist/lumina.esm.js",
+      "import": "./dist/lumina.esm.js"
     },
     "./filters": {
       "types": "./dist/filters/index.d.ts",
@@ -46,18 +46,19 @@
     },
     "./react": {
       "types": "./dist/react/index.d.ts",
-      "import": "./dist/react/index.js",
-      "require": "./dist/react/index.js"
+      "import": "./dist/react/index.js"
     },
     "./lumina-image.css": "./dist/lumina-image.css"
   },
   "scripts": {
-    "build": "rollup -c && npm run build:minify:css && npm run build:types && npm run generate-docs",
+    "build": "npm run clean && rollup -c && npm run build:minify:css && npm run build:types && npm run generate-docs",
+    "clean": "rm -rf dist",
     "build:minify:css": "node scripts/minify-lumina-css.mjs",
     "build:types": "tsc",
     "dev": "rollup -c -w",
     "start:demo": "npm run dev --prefix react-demo",
     "test": "vitest run",
+    "test:exports": "node scripts/test-exports.mjs",
     "test:watch": "vitest",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
