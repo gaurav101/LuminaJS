@@ -5,6 +5,13 @@
 > Runtime scope: LuminaJS is browser-first and client-side. Node.js/server-side image processing is out of scope for this package.  
 > For server-side transformations, use Sharp/Jimp/ImageMagick.
 
+## Live Demo
+
+If you only want CSS-based image styling or want a hybrid approach or do not need JavaScript pixel
+processing, start with the live Lumina-css (see demo link below):
+
+- [Lumina Image CSS Demo](https://gaurav101.github.io/LuminaJS/css-demo)
+
 ## When To Use It
 
 Use Lumina Image CSS for:

@@ -19,11 +19,22 @@ LuminaJS is a modular, chainable, lightweight, zero-dependency **browser-first**
 - [Demo-react](https://gaurav101.github.io/LuminaJS/examples/react)
 - [Demo-react-storybook](https://gaurav101.github.io/LuminaJS/examples/react/storybook/)
 - [Demo-vanila-js](https://gaurav101.github.io/LuminaJS/)
+- [Demo-Lumina-CSS](https://gaurav101.github.io/LuminaJS/css-demo)
 - [Code](https://github.com/gaurav101/LuminaJS)
 - [NPM](https://www.npmjs.com/package/@gks101/luminajs)
 - [Documentation](https://gaurav101.github.io/LuminaJS/docs/)
 - [Lumina Image CSS Guide](./Lumina-IMAGE-CSS.md)
 - [Performance Guide](./PERFORMANCE.md)
+
+## CSS-Only Image Styling
+
+If you do not need JavaScript image processing and only want to style,
+position, animate, or visually transform images with CSS, use Lumina Image CSS.
+It is designed for non-destructive image presentation with utility classes for
+filters, hover effects, overlays, layout, and responsive media frames.
+
+- [Lumina Image CSS Guide](./Lumina-IMAGE-CSS.md)
+- [Lumina Image CSS Demo](https://gaurav101.github.io/LuminaJS/css-demo)
 
 ## Features
 
