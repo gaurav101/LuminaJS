@@ -47,20 +47,20 @@ export function AvatarCropper() {
 
 ### Props
 
-| Prop             | Type                                                                           | Default  | Description                                                                    |
-| ---------------- | ------------------------------------------------------------------------------ | -------- | ------------------------------------------------------------------------------ |
-| `src`            | `string \| File \| HTMLImageElement \| HTMLCanvasElement \| ImageData \| null` | —        | Image source.                                                                  |
-| `onCropComplete` | `(result: Blob \| string) => void`                                             | —        | Called automatically after the user finishes selecting a crop area.            |
-| `onError`        | `(error: Error) => void`                                                       | —        | Called when source loading or crop processing fails.                           |
-| `aspectRatio`    | `number`                                                                       | —        | Optional fixed crop aspect ratio, expressed as `width / height`.               |
-| `outputFormat`   | `'blob' \| 'dataUrl'`                                                          | `'blob'` | Output format passed to `onCropComplete`.                                      |
-| `maxWidth`       | `number`                                                                       | `600`    | Maximum width of the cropper frame.                                            |
-| `maxHeight`      | `number`                                                                       | `400`    | Maximum height of the cropper frame.                                           |
-| `allowReset`     | `boolean`                                                                      | `true`   | Shows a Reset button after a crop is applied. Set `false` to hide it.          |
-| `allowResize`    | `boolean`                                                                      | `true`   | Shows handles for resizing an existing crop selection before applying.         |
-| `showPreview`    | `boolean`                                                                      | —        | Deprecated. The same image area is used for both selection and cropped result. |
-| `className`      | `string`                                                                       | —        | CSS class name for the wrapper.                                                |
-| `style`          | `React.CSSProperties`                                                          | —        | Inline styles for the wrapper.                                                 |
+| Prop             | Type                                                                           | Default  | Description                                                                                                                 |
+| ---------------- | ------------------------------------------------------------------------------ | -------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `src`            | `string \| File \| HTMLImageElement \| HTMLCanvasElement \| ImageData \| null` | —        | Image source.                                                                                                               |
+| `onCropComplete` | `(result: Blob \| string) => void`                                             | —        | Called automatically after the user finishes selecting a crop area.                                                         |
+| `onError`        | `(error: Error) => void`                                                       | —        | Called when source loading or crop processing fails.                                                                        |
+| `aspectRatio`    | `number`                                                                       | —        | Optional fixed crop aspect ratio, expressed as `width / height`.                                                            |
+| `outputFormat`   | `'blob' \| 'dataUrl'`                                                          | `'blob'` | Output format passed to `onCropComplete`.                                                                                   |
+| `maxWidth`       | `number`                                                                       | `600`    | Maximum width of the cropper frame.                                                                                         |
+| `maxHeight`      | `number`                                                                       | `400`    | Maximum height of the cropper frame.                                                                                        |
+| `allowReset`     | `boolean`                                                                      | `true`   | Shows a Reset button after a crop is applied. Set `false` to hide it.                                                       |
+| `allowResize`    | `boolean`                                                                      | `true`   | Shows handles for resizing an existing crop selection before applying.                                                      |
+| `showPreview`    | `boolean`                                                                      | `true`   | Shows the applied crop result inside the cropper after Apply. Set `false` for parent-managed previews or upload-only flows. |
+| `className`      | `string`                                                                       | —        | CSS class name for the wrapper.                                                                                             |
+| `style`          | `React.CSSProperties`                                                          | —        | Inline styles for the wrapper.                                                                                              |
 
 ### Common Aspect Ratios
 
