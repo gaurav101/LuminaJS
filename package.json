@@ -1,6 +1,6 @@
 {
   "name": "@gks101/luminajs",
-  "version": "2.0.5-beta",
+  "version": "3.0.0-beta",
   "description": "A lightweight browser-first JavaScript and React image-processing library built on HTML5 Canvas and ImageData.",
   "homepage": "https://gaurav101.github.io/LuminaJS/",
   "repository": {
