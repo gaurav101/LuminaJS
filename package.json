@@ -23,6 +23,7 @@
     "dist",
     "!dist/examples",
     "README.md",
+    "PERFORMANCE.md",
     "Lumina-IMAGE-CSS.md",
     "IMAGE_CROPPER_GUIDE.md",
     "WhyLumina.md",

@@ -7,6 +7,11 @@
  * Applies a Gaussian blur filter to a copy of the provided `ImageData`.
  * This implementation uses a two-pass separable convolution for better performance.
  *
+ * Performance notes:
+ * - Runtime increases with image size and sigma.
+ * - Sigma also increases kernel radius (`ceil(sigma * 3)`), which raises compute cost.
+ * - On large images this can block the main thread; prefer preview resizing and/or Web Worker offload.
+ *
  * @param {ImageData} imageData - The source pixel data.
  * @param {number} sigma - The standard deviation of the Gaussian distribution.
  *   Larger values result in more blurring. Default is 2.
