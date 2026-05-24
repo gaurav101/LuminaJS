@@ -2,6 +2,11 @@
 
 `useLumina` is the React hook for processing images with LuminaJS while keeping loading, result, and error state in React.
 
+> Browser-only hook: `useLumina` uses Canvas/ImageData APIs and must run on the client side.
+> In Next.js/SSR apps, use it only inside client components (`'use client'`).
+
+> Server-side scope: LuminaJS does not target Node.js image pipelines. For backend image processing, use Sharp/Jimp/ImageMagick.
+
 ```tsx
 import { useLumina } from '@gks101/luminajs/react';
 ```

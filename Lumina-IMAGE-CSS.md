@@ -2,6 +2,9 @@
 
 `lumina-image.css` is the CSS-only layer in LuminaJS. Use it when you want rich image UI behavior without pixel mutation.
 
+> Runtime scope: LuminaJS is browser-first and client-side. Node.js/server-side image processing is out of scope for this package.  
+> For server-side transformations, use Sharp/Jimp/ImageMagick.
+
 ## When To Use It
 
 Use Lumina Image CSS for:

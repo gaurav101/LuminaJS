@@ -2,6 +2,11 @@
 
 `LuminaCanvas` is the declarative React canvas component for LuminaJS. Pass it an image `source`, optional editing props, and it renders the processed result into an HTML `<canvas>`.
 
+> Browser-only component: `LuminaCanvas` depends on DOM/canvas APIs and must run on the client side.
+> In Next.js/SSR apps, render it only from client components (`'use client'`).
+
+> Server-side scope: LuminaJS is not a Node.js/server-side processor. Use Sharp/Jimp/ImageMagick for backend image workflows.
+
 ```tsx
 import { LuminaCanvas } from '@gks101/luminajs/react';
 ```

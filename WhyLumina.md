@@ -7,6 +7,9 @@ Image processing in the browser has traditionally been a choice between two frus
 
 Most existing libraries are also built for Node.js first, requiring complex polyfills or heavy dependencies just to run in a client's browser. [LuminaJS](https://www.npmjs.com/package/@gks101/luminajs) was built to solve this "complexity vs. weight" trade-off.
 
+LuminaJS is intentionally browser-first (Canvas/ImageData) and does not aim to be a universal runtime image processor.
+For Node.js/server-side image processing, use Sharp/Jimp/ImageMagick.
+
 ---
 
 ## Why LuminaJS?
