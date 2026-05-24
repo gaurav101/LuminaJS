@@ -8,6 +8,11 @@
  * This implementation uses a two-pass box blur algorithm (horizontal then vertical)
  * for better performance.
  *
+ * Performance notes:
+ * - Runtime cost grows with image dimensions and blur radius.
+ * - Large images can block the main thread during interactive use.
+ * - For responsive UIs, resize first (preview), then run full-resolution blur only on final export.
+ *
  * @param {ImageData} imageData - The source pixel data.
  * @param {number} radius - The blur radius (integer). Default is 1.
  * @returns {ImageData} A new `ImageData` object with blur applied.

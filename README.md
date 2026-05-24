@@ -21,6 +21,7 @@ LuminaJS is a modular, chainable, lightweight, zero-dependency **browser-first**
 - [NPM](https://www.npmjs.com/package/@gks101/luminajs)
 - [Documentation](https://gaurav101.github.io/LuminaJS/docs/)
 - [Lumina Image CSS Guide](./Lumina-IMAGE-CSS.md)
+- [Performance Guide](./PERFORMANCE.md)
 
 ## Features
 
@@ -28,6 +29,13 @@ LuminaJS is a modular, chainable, lightweight, zero-dependency **browser-first**
 - **🧩 Modular**: Only import the filters and utilities you need.
 - **🖼️ Canvas-Powered**: Leverages the HTML5 Canvas API for seamless browser integration.
 - **📦 Lightweight**: Zero external dependencies (no jQuery, no Lodash).
+
+### Performance Notes
+
+- Heavy filters (`blur`, `gaussianBlur`, `backgroundBlur`, convolution-based filters) can block the main thread on large images.
+- Resize first for previews/interactions, then process full resolution only for final export.
+- Use Web Workers for expensive operations to keep UI interactions responsive.
+- See [Performance Guide](./PERFORMANCE.md) for benchmark harness and worker examples.
 
 ### Why Choose LuminaJS?
 

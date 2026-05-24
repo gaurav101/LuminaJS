@@ -9,6 +9,13 @@ import { gaussianBlur } from './gaussianBlur.js';
 /**
  * Applies a background blur effect to a copy of the provided `ImageData`.
  *
+ * Performance notes:
+ * - This filter is heavier than plain blur because it computes a full blur pass
+ *   and then composites per pixel with distance-based weighting.
+ * - Large source images can noticeably block the main thread.
+ * - For interactive focus controls, use a smaller preview resolution first,
+ *   then apply full-resolution processing only for final output.
+ *
  * @param {ImageData} imageData - The source pixel data.
  * @param {Object} [options={}] - Customization options.
  * @param {number} [options.sigma=5] - Blur intensity for the background.
