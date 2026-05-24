@@ -6,6 +6,7 @@ import {
   useCallback,
   forwardRef,
   type CanvasHTMLAttributes,
+  type CSSProperties,
   type MutableRefObject,
   type Ref,
 } from 'react';
@@ -28,6 +29,9 @@ export interface LuminaCanvasProps
   onLoad?: () => void;
   getImage?: (data: string | Blob | ImageData | HTMLCanvasElement) => void;
   outputType?: 'imageData' | 'dataUrl' | 'blob' | 'canvas';
+  errorClassName?: string;
+  errorStyle?: CSSProperties;
+  errorRole?: 'alert' | 'status';
 }
 
 /**
@@ -79,6 +83,9 @@ export const LuminaCanvas = forwardRef<HTMLCanvasElement, LuminaCanvasProps>(
       onLoad,
       getImage,
       outputType = 'canvas',
+      errorClassName,
+      errorStyle,
+      errorRole = 'alert',
       grayscale,
       brightness,
       contrast,
@@ -217,7 +224,15 @@ export const LuminaCanvas = forwardRef<HTMLCanvasElement, LuminaCanvasProps>(
     ]);
 
     if (error) {
-      return <div className="lumina-error">{error.message}</div>;
+      return (
+        <div
+          className={errorClassName ?? 'lumina-error'}
+          style={errorStyle}
+          role={errorRole}
+        >
+          {error.message}
+        </div>
+      );
     }
 
     return <canvas ref={setCanvasRef} {...props} />;
