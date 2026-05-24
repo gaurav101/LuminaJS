@@ -1,11 +1,18 @@
 # LuminaJS
 
-[![bundle size](https://badgen.net/bundlephobia/minzip/react)](https://bundlephobia.com/package/@gks101/luminajs) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![tree shaking](https://badgen.net/bundlephobia/tree-shaking/react-colorful)](https://bundlephobia.com/package/@gks101/luminajs) [![dependency count](https://badgen.net/bundlephobia/dependency-count/react-colorful)](https://bundlephobia.com/package/@gks101/luminajs)
+[![bundle size](https://badgen.net/bundlephobia/minzip/%40gks101%2Fluminajs)](https://bundlephobia.com/package/@gks101/luminajs) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![tree shaking](https://badgen.net/bundlephobia/tree-shaking/%40gks101%2Fluminajs)](https://bundlephobia.com/package/@gks101/luminajs) [![dependency count](https://badgen.net/bundlephobia/dependency-count/%40gks101%2Fluminajs)](https://bundlephobia.com/package/@gks101/luminajs)
 
 LuminaJS is a modular, chainable, lightweight, zero-dependency **browser-first** JavaScript utility library for image processing with the HTML5 Canvas and `ImageData` APIs.
 
 > Scope: LuminaJS is for browser/client runtimes. It is not a universal JS image processor and is not designed for Node.js server-side image pipelines.  
 > For server-side image processing, use tools like **Sharp**, **Jimp**, or **ImageMagick**.
+
+## What LuminaJS Is / Is Not
+
+- **LuminaJS is:** a browser-first Canvas + `ImageData` library for interactive client-side image workflows.
+- **LuminaJS is:** optimized for modern ESM bundlers with modular imports.
+- **LuminaJS is not:** a Node.js/server-side image processing engine.
+- **LuminaJS is not:** a GPU shader/WebGL pipeline; pixel filters run in JavaScript on `ImageData`.
 
 - [Demo-react](https://gaurav101.github.io/LuminaJS/examples/react)
 - [Demo-react-storybook](https://gaurav101.github.io/LuminaJS/examples/react/storybook/)
@@ -30,7 +37,7 @@ While libraries like **Jimp** are built for heavy-duty server-side processing, *
 
 ### 🚀 Key Advantages
 
-- **Zero Latency:** Uses hardware-accelerated **HTML5 Canvas** for near-instant pixel manipulation, avoiding the slow pure-JS processing.
+- **Low-Latency UX:** Canvas rendering/compositing paths can be browser-optimized, while filters run in JavaScript over `ImageData`.
 - **Ultra-Lightweight:** At just **~3.5 KB**, it preserves your bundle size and [Core Web Vitals](https://web.dev/vitals/), whereas Jimp can add several megabytes to your frontend.
 - **Privacy-Centric:** All processing happens on the client’s machine. Sensitive user data never leaves the browser.
 - **Modern DX:** Native **TypeScript** support and a clean, chainable API designed for ESM workflows.
@@ -50,13 +57,13 @@ While libraries like **Jimp** are built for heavy-duty server-side processing, *
 
 ### ⚡ At a Glance
 
-| Feature          | [LuminaJS](https://www.npmjs.com/package/@gks101/luminajs) | Jimp/Other        |
-| ---------------- | ---------------------------------------------------------- | ----------------- |
-| **Bundle Size**  | **~3.5 KB**                                                | ~Megabytes        |
-| **Speed**        | **Extremely Fast** (Native)                                | Slower (Pure JS)  |
-| **Environment**  | Browser / OffscreenCanvas (client-side)                    | Node.js / Browser |
-| **Dependencies** | **Zero**                                                   | Multiple          |
-| **API Style**    | Chainable & Functional                                     | Chainable         |
+| Feature          | [LuminaJS](https://www.npmjs.com/package/@gks101/luminajs) | Jimp/Other          |
+| ---------------- | ---------------------------------------------------------- | ------------------- |
+| **Bundle Size**  | **~3.5 KB**                                                | ~Megabytes          |
+| **Execution**    | JS pixel filters on `ImageData` + Canvas rendering         | Mostly JS pipelines |
+| **Environment**  | Browser / OffscreenCanvas (client-side)                    | Node.js / Browser   |
+| **Dependencies** | **Zero**                                                   | Multiple            |
+| **API Style**    | Chainable & Functional                                     | Chainable           |
 
 **Positioning:** Use **[LuminaJS](https://www.npmjs.com/package/@gks101/luminajs)** when you need high-performance image effects without sacrificing your application's load speed.
 
@@ -136,14 +143,12 @@ import { loadImage, grayscale } from '@gks101/luminajs';
 ### Script Tag (Browser)
 
 ```html
-<script src="node_modules/@gks101/luminajs/dist/lumina.min.js"></script>
-<script>
-  const { lumina } = Lumina;
+<script type="module">
+  import { lumina } from '/node_modules/@gks101/luminajs/dist/lumina.min.js';
 
-  lumina('photo.jpg')
+  await lumina('photo.jpg')
     .grayscale()
-    .render()
-    .then((imageData) => console.log('Processed!', imageData));
+    .toCanvas(document.getElementById('preview'));
 </script>
 ```
 
