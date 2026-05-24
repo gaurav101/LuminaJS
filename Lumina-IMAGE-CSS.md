@@ -1,6 +1,6 @@
 # Lumina Image CSS
 
-`lumina-image.css` is the CSS-only layer in LuminaJS. Use it when you want rich image UI behavior without pixel mutation.
+`lumina-image.css` is the CSS-only image effects layer in LuminaJS. Use it for non-destructive image styling and interactive UI presentation without mutating underlying pixels.
 
 > Runtime scope: LuminaJS is browser-first and client-side. Node.js/server-side image processing is out of scope for this package.  
 > For server-side transformations, use Sharp/Jimp/ImageMagick.
@@ -14,12 +14,33 @@ Use Lumina Image CSS for:
 - responsive image grids and framed media cards
 - loading skeletons and interaction states with minimal custom CSS
 
+CSS-only image effects do not mutate image pixel data. CSS cannot crop pixel data, export blobs/data URLs, or permanently apply filter results to an image file.
+
 Use the JavaScript API when you need pixel-level processing (`ImageData`, crop pipelines, blur kernels, blob export, etc.).
+
+## Lumina Image CSS vs LuminaJS
+
+| Capability                             | Lumina Image CSS                        | LuminaJS (JS API)                   |
+| -------------------------------------- | --------------------------------------- | ----------------------------------- |
+| Filters/effects for display            | Yes (`filter`, hover, motion classes)   | Yes (`ImageData` filters)           |
+| Hover effects / transforms             | Yes                                     | Yes                                 |
+| Overlays / captions / layout utilities | Yes                                     | Limited (you build these in UI/CSS) |
+| Crop pixels                            | No                                      | Yes (`crop`)                        |
+| Resize pixel output                    | No                                      | Yes (`resize`)                      |
+| Blob/data URL export                   | No                                      | Yes (`toBlob`, `toDataURL`)         |
+| Permanent pixel changes                | No (non-destructive, presentation-only) | Yes (render/export mutated pixels)  |
 
 ## Install and Import
 
 ```bash
+# npm
 npm install @gks101/luminajs
+
+# pnpm
+pnpm add @gks101/luminajs
+
+# yarn
+yarn add @gks101/luminajs
 ```
 
 ```js

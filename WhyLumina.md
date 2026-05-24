@@ -43,10 +43,17 @@ Since [LuminaJS](https://www.npmjs.com/package/@gks101/luminajs) leverages the n
 
 ## Getting Started
 
-Install via **npm**:
+Install via **npm / pnpm / yarn**:
 
 ```bash
+# npm
 npm install @gks101/luminajs
+
+# pnpm
+pnpm add @gks101/luminajs
+
+# yarn
+yarn add @gks101/luminajs
 ```
 
 Or use a **script tag** for quick prototyping:
