@@ -1,4 +1,4 @@
-# 🚀 Transform Images in the Browser with LuminaJS: Lightweight, Zero-Dependency, and Fast
+# Transform Images in the Browser with LuminaJS: Lightweight, Zero-Dependency, and Practical
 
 Image processing in the browser has traditionally been a choice between two frustrating extremes:
 
@@ -23,10 +23,10 @@ For Node.js/server-side image processing, use Sharp/Jimp/ImageMagick.
 
 [@gks101/luminajs](https://www.npmjs.com/package/@gks101/luminajs) is a modular, functional utility library optimized specifically for the modern browser environment.
 
-- **Tiny Footprint:** A minzipped size of only **2.8 KB**.
+- **Small Footprint:** Zero runtime dependencies with ESM entry points, so apps can import only the browser APIs they need.
 - **Zero Dependencies:** Pure, optimized JavaScript—no jQuery, no Lodash.
 - **Chainable API:** A modern, fluent syntax that makes complex transformations readable.
-- **Performance First:** Optimized `ImageData` loops for fast pixel-level processing.
+- **Performance-Aware:** Canvas rendering can be browser-optimized; pixel filters run in JavaScript over `ImageData`, so large images should be resized or moved to a worker.
 
 ---
 

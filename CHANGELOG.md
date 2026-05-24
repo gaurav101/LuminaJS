@@ -13,6 +13,7 @@ All notable changes to this project are documented in this file.
 ### Packaging and Exports
 
 - Finalized strict ESM-first package exports and removed CommonJS `require` export paths.
+- Updated the React example to consume the local package directory instead of a generated tarball, so fresh clones can build the example without a release artifact.
 - Kept stable public subpath exports:
   - `@gks101/luminajs`
   - `@gks101/luminajs/core`
@@ -20,7 +21,19 @@ All notable changes to this project are documented in this file.
   - `@gks101/luminajs/react`
   - `@gks101/luminajs/lumina-image.css`
 - Added/validated package export smoke tests (`npm run test:exports`).
+- Added a React example build check script (`npm run test:examples:react`) for release verification.
 - Verified release footprint with `npm pack --dry-run`.
+
+### React API Polish
+
+- Made `ImageCropper`'s `showPreview` prop explicit and functional. It now controls whether the applied crop result is rendered inside the cropper after Apply.
+- Hardened `ImageCropper` file/object URL handling so server render evaluation does not reference browser-only globals directly.
+
+### Documentation Accuracy
+
+- Replaced loose performance and bundle-size claims with scoped language around Canvas rendering, JavaScript `ImageData` filters, ESM entry points, and zero runtime dependencies.
+- Added a golden-path upload workflow example: select image, render preview, export final blob, and upload.
+- Added browser compatibility notes, including Safari/iOS memory cautions for large images.
 
 ### Lumina Image CSS Positioning
 

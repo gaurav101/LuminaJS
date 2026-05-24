@@ -88,6 +88,10 @@ export interface ImageCropperProps {
   outputFormat?: 'blob' | 'dataUrl';
   maxWidth?: number;
   maxHeight?: number;
+  /**
+   * Shows the applied crop result inside the cropper after Apply.
+   * Set false when the parent renders its own preview or upload state.
+   */
   showPreview?: boolean;
   allowReset?: boolean;
   allowResize?: boolean;
@@ -164,6 +168,7 @@ export interface ImageCropperProps {
  * - onError: Callback for processing errors
  * - aspectRatio: Optional aspect ratio to enforce (width / height)
  * - outputFormat: 'blob' | 'dataUrl'
+ * - showPreview: show the applied crop result in place after Apply. Set false for parent-managed previews.
  * - allowReset: show reset button
  * - allowResize: show resize handles on the selected crop area
  * - applyButtonClassName / applyButtonStyle: Customize the Apply button class/style
@@ -196,6 +201,7 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
   outputFormat = 'blob',
   maxWidth = 600,
   maxHeight = 400,
+  showPreview = true,
   allowReset = true,
   allowResize = true,
   className,
@@ -260,29 +266,34 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
     appliedPreview?.source === src ? appliedPreview.src : null;
   const selectedCrop =
     selectedCropState?.source === src ? selectedCropState.crop : null;
+  const isFileSource = typeof File !== 'undefined' && src instanceof File;
+  const canCreateObjectUrl =
+    typeof URL !== 'undefined' &&
+    typeof URL.createObjectURL === 'function' &&
+    typeof URL.revokeObjectURL === 'function';
 
   // Convert File to URL for ImageAreaSelector
   const imageSrc = useMemo(() => {
     if (typeof src === 'string') return src;
-    if (src instanceof File) return URL.createObjectURL(src);
+    if (isFileSource && canCreateObjectUrl) return URL.createObjectURL(src);
     return undefined;
-  }, [src]);
+  }, [canCreateObjectUrl, isFileSource, src]);
 
   useEffect(() => {
     return () => {
-      if (imageSrc && src instanceof File) {
+      if (imageSrc && isFileSource && canCreateObjectUrl) {
         URL.revokeObjectURL(imageSrc);
       }
     };
-  }, [imageSrc, src]);
+  }, [canCreateObjectUrl, imageSrc, isFileSource]);
 
   useEffect(() => {
     return () => {
-      if (appliedPreview?.src.startsWith('blob:')) {
+      if (canCreateObjectUrl && appliedPreview?.src.startsWith('blob:')) {
         URL.revokeObjectURL(appliedPreview.src);
       }
     };
-  }, [appliedPreview]);
+  }, [appliedPreview, canCreateObjectUrl]);
 
   const handleCropChange = useCallback(
     (crop: CropArea) => {
@@ -348,14 +359,22 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
       if (outputFormat === 'blob') {
         const blob = await chain.toBlob();
         if (blob) {
-          setAppliedPreview({ source: src, src: URL.createObjectURL(blob) });
+          if (showPreview) {
+            if (!canCreateObjectUrl) {
+              throw new Error('Blob preview requires URL.createObjectURL.');
+            }
+
+            setAppliedPreview({ source: src, src: URL.createObjectURL(blob) });
+          }
           onCropComplete?.(blob);
         } else {
           throw new Error('Failed to generate cropped blob.');
         }
       } else {
         const dataUrl = await chain.toDataURL();
-        setAppliedPreview({ source: src, src: dataUrl });
+        if (showPreview) {
+          setAppliedPreview({ source: src, src: dataUrl });
+        }
         onCropComplete?.(dataUrl);
       }
     } catch (err) {
@@ -365,7 +384,16 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
     } finally {
       setIsCropping(false);
     }
-  }, [onError, onCropComplete, outputFormat, selectedCrop, src, onApply]);
+  }, [
+    canCreateObjectUrl,
+    onApply,
+    onCropComplete,
+    onError,
+    outputFormat,
+    selectedCrop,
+    showPreview,
+    src,
+  ]);
 
   const handleReset = useCallback(async () => {
     if (onReset) {

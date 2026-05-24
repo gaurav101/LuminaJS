@@ -1,7 +1,7 @@
 {
   "name": "@gks101/luminajs",
   "version": "2.0.5-beta",
-  "description": "A lightweight JavaScript and React image-processing library optimized for mobile devices and touch gestures using the HTML5 Canvas API.",
+  "description": "A lightweight browser-first JavaScript and React image-processing library built on HTML5 Canvas and ImageData.",
   "homepage": "https://gaurav101.github.io/LuminaJS/",
   "repository": {
     "type": "git",
@@ -61,6 +61,7 @@
     "start:demo": "npm run dev --prefix react-demo",
     "test": "vitest run",
     "test:exports": "node scripts/test-exports.mjs",
+    "test:examples:react": "npm run build --prefix examples/react",
     "test:watch": "vitest",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
