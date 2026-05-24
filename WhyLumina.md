@@ -10,6 +10,13 @@ Most existing libraries are also built for Node.js first, requiring complex poly
 LuminaJS is intentionally browser-first (Canvas/ImageData) and does not aim to be a universal runtime image processor.
 For Node.js/server-side image processing, use Sharp/Jimp/ImageMagick.
 
+## What LuminaJS Is / Is Not
+
+- **LuminaJS is:** a browser-first Canvas + `ImageData` library for client-side image workflows.
+- **LuminaJS is:** designed for modular ESM consumption in modern bundlers.
+- **LuminaJS is not:** a server-side Node.js image processing engine.
+- **LuminaJS is not:** a GPU shader/WebGL framework; pixel filters execute in JavaScript on `ImageData`.
+
 ---
 
 ## Why LuminaJS?
