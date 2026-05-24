@@ -14,6 +14,8 @@ LuminaJS is a modular, chainable, lightweight, zero-dependency **browser-first**
 - **LuminaJS is not:** a Node.js/server-side image processing engine.
 - **LuminaJS is not:** a GPU shader/WebGL pipeline; pixel filters run in JavaScript on `ImageData`.
 
+## Demo, Examples, Code and Docs
+
 - [Demo-react](https://gaurav101.github.io/LuminaJS/examples/react)
 - [Demo-react-storybook](https://gaurav101.github.io/LuminaJS/examples/react/storybook/)
 - [Demo-vanila-js](https://gaurav101.github.io/LuminaJS/)
@@ -76,7 +78,14 @@ While libraries like **Jimp** are built for heavy-duty server-side processing, *
 **Positioning:** Use **[LuminaJS](https://www.npmjs.com/package/@gks101/luminajs)** when you need high-performance image effects without sacrificing your application's load speed.
 
 ```bash
+# npm
 npm install @gks101/luminajs
+
+# pnpm
+pnpm add @gks101/luminajs
+
+# yarn
+yarn add @gks101/luminajs
 ```
 
 ### React Support
@@ -93,7 +102,14 @@ LuminaJS includes first-class React support via hooks and components. See the [R
 - For strict WCAG workflows, pair crop interactions with explicit numeric inputs for crop coordinates and dimensions in your surrounding UI.
 
 ```bash
+# npm
 npm install @gks101/luminajs
+
+# pnpm
+pnpm add @gks101/luminajs
+
+# yarn
+yarn add @gks101/luminajs
 ```
 
 ```jsx
@@ -102,7 +118,17 @@ import { useLumina, LuminaCanvas, ImageCropper } from '@gks101/luminajs/react';
 
 ### Lumina Image CSS (CSS-Only Mode)
 
-Need polished image styling without rewriting pixels? Use [`lumina-image.css`](./Lumina-IMAGE-CSS.md) to layer filters, hover effects, overlays, and responsive layouts with CSS classes only.
+Need polished image UI without rewriting pixels? Use [`lumina-image.css`](./Lumina-IMAGE-CSS.md) for CSS-only image effects and non-destructive image styling (filters, hover effects, overlays, layout utilities).
+
+CSS effects are presentation-only: they do not crop pixels, mutate source image data, or export transformed pixel output.
+
+| Capability                           | Lumina Image CSS     | LuminaJS (JS API)                            |
+| ------------------------------------ | -------------------- | -------------------------------------------- |
+| Filters / hover effects / transforms | Yes                  | Yes                                          |
+| Overlays / layout utilities          | Yes                  | Limited (handled in your UI/CSS)             |
+| Pixel crop/resize                    | No                   | Yes (`crop`, `resize`)                       |
+| Blob/data URL export                 | No                   | Yes (`toBlob`, `toDataURL`)                  |
+| Permanent pixel changes              | No (non-destructive) | Yes (`ImageData` processing + export/render) |
 
 ```js
 import '@gks101/luminajs/lumina-image.css';
@@ -114,7 +140,14 @@ If you want to generate the optimized distributable files locally:
 
 ```bash
 # 1. Install dependencies
+# npm
 npm install
+
+# pnpm
+pnpm install
+
+# yarn
+yarn install
 
 # 2. Run the build command
 npm run build
