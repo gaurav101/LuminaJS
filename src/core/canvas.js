@@ -1,3 +1,5 @@
+import { assertBrowserEnvironment } from './runtime.js';
+
 /**
  * @fileoverview LuminaJS Core - Canvas Bridge
  * Provides the bridge between HTMLImageElement instances and raw pixel data
@@ -19,6 +21,8 @@
  * @returns {CanvasContext} An object containing the canvas and its 2D context.
  */
 function createOffscreenCanvas(width, height) {
+  assertBrowserEnvironment('create offscreen canvas');
+
   const canvas = document.createElement('canvas');
   canvas.width = width;
   canvas.height = height;

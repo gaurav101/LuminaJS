@@ -33,5 +33,10 @@ export function clamp(value, min, max) {
  * isImageFile(event.target.files[0]); // → true / false
  */
 export function isImageFile(value) {
-  return value instanceof File && value.type.startsWith('image/');
+  const FileCtor = globalThis.File;
+  return (
+    typeof FileCtor === 'function' &&
+    value instanceof FileCtor &&
+    value.type.startsWith('image/')
+  );
 }

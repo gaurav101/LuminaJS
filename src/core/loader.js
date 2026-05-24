@@ -1,3 +1,5 @@
+import { instanceOfGlobal } from './runtime.js';
+
 /**
  * @fileoverview LuminaJS Core - Image Loader
  * Handles ingestion of image sources (URL strings or File objects)
@@ -12,6 +14,13 @@
  * @throws {Error} Rejects if the image fails to load (e.g. 404, CORS block).
  */
 function loadFromURL(url) {
+  if (typeof globalThis.Image !== 'function') {
+    throw new Error(
+      'LuminaJS [runtime]: "load image from URL" is browser-only. ' +
+        'Run this on the client side (window/document/Image available).',
+    );
+  }
+
   return new Promise((resolve, reject) => {
     const img = new Image();
 
@@ -47,6 +56,23 @@ function loadFromFile(file) {
       new TypeError(
         `LuminaJS [loader]: Expected an image File, but received MIME type "${file.type}".`,
       ),
+    );
+  }
+
+  if (typeof globalThis.Image !== 'function') {
+    throw new Error(
+      'LuminaJS [runtime]: "load image from File" is browser-only. ' +
+        'Run this on the client side (window/document/Image available).',
+    );
+  }
+
+  if (
+    typeof globalThis.URL === 'undefined' ||
+    typeof globalThis.URL.createObjectURL !== 'function' ||
+    typeof globalThis.URL.revokeObjectURL !== 'function'
+  ) {
+    throw new Error(
+      'LuminaJS [runtime]: "load image from File" requires URL.createObjectURL support in the browser.',
     );
   }
 
@@ -100,7 +126,7 @@ export async function loadImage(source) {
     return loadFromURL(source);
   }
 
-  if (source instanceof File) {
+  if (instanceOfGlobal(source, 'File')) {
     return loadFromFile(source);
   }
 
