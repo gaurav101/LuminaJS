@@ -62,6 +62,7 @@
     "test": "vitest run",
     "test:exports": "node scripts/test-exports.mjs",
     "test:examples:react": "npm run build --prefix examples/react",
+    "build:examples-docs": "node scripts/build-examples-docs.mjs",
     "test:watch": "vitest",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
