@@ -54,6 +54,12 @@ const artifacts = [
   { name: 'docs', from: 'docs', to: 'docs' },
 ];
 
+const rootIndexFile = {
+  name: 'examples index.html',
+  from: 'examples/index.html',
+  to: 'index.html',
+};
+
 function runStep(step) {
   const cwd = path.resolve(rootDir, step.cwd);
 
@@ -114,6 +120,20 @@ async function copyArtifact(artifact) {
   await cp(source, destination, { recursive: true });
 }
 
+async function copyFileArtifact(artifact) {
+  const source = path.resolve(rootDir, artifact.from);
+  const destination = path.resolve(outputDir, artifact.to);
+
+  if (!existsSync(source)) {
+    throw new Error(
+      `Missing ${artifact.name} at ${path.relative(rootDir, source)}`,
+    );
+  }
+
+  await mkdir(path.dirname(destination), { recursive: true });
+  await cp(source, destination);
+}
+
 async function main() {
   validateOutputDir();
 
@@ -128,9 +148,15 @@ async function main() {
     await copyArtifact(artifact);
   }
 
+  await copyFileArtifact(rootIndexFile);
+
   const manifest = {
     generatedAt: new Date().toISOString(),
     artifacts: artifacts.map(({ name, to }) => ({ name, path: to })),
+    rootIndexFile: {
+      name: rootIndexFile.name,
+      path: rootIndexFile.to,
+    },
   };
 
   await writeFile(

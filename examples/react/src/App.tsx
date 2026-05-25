@@ -215,11 +215,14 @@ function App() {
   return (
     <div className="demo-container">
       <header>
+        <a className="back-link" href="../index.html">
+          Back to Main Page
+        </a>
         <h1>LuminaJS React Demo</h1>
         <p>
           A full showcase of the LuminaJS Image Processing Component Library
         </p>
-        <div>
+        <div className="header-actions">
           <a href={'./storybook'}>View Story book demo</a>
           <a href={'./docs'}>Documentation</a>
         </div>

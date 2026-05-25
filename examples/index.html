@@ -3,215 +3,934 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LuminaJS Demo</title>
+    <title>LuminaJS | Browser Image Processing Library</title>
+    <meta
+      name="description"
+      content="LuminaJS is a lightweight JavaScript and React image processing library powered by Canvas, ImageData, hooks, components, and CSS image utilities."
+    />
     <style>
       :root {
         color-scheme: light;
         font-family:
           Inter,
+          ui-sans-serif,
           system-ui,
           -apple-system,
           BlinkMacSystemFont,
           'Segoe UI',
           sans-serif;
-        background: radial-gradient(
-          circle at top left,
-          #3f7dff 0%,
-          #0b0f1f 45%,
-          #090b12 100%
-        );
-        color: #f8fbff;
+        --ink: #111827;
+        --muted: #526071;
+        --soft: #f7f9fc;
+        --panel: #ffffff;
+        --line: #d9e2ec;
+        --teal: #0f9f8f;
+        --blue: #2563eb;
+        --violet: #7c3aed;
+        --amber: #c77700;
+        --rose: #d43f5e;
+        --green: #15803d;
+        --code: #101828;
       }
 
       * {
         box-sizing: border-box;
       }
 
+      html {
+        scroll-behavior: smooth;
+      }
+
       body {
         margin: 0;
-        padding: 0;
-        min-height: 100vh;
+        background:
+          linear-gradient(90deg, rgba(17, 24, 39, 0.05) 1px, transparent 1px),
+          linear-gradient(rgba(17, 24, 39, 0.05) 1px, transparent 1px),
+          linear-gradient(180deg, #fbfdff 0%, #edf5f2 50%, #fff8ea 100%);
+        background-size:
+          48px 48px,
+          48px 48px,
+          auto;
+        color: var(--ink);
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .site-shell {
+        width: min(1180px, calc(100vw - 32px));
+        margin: 0 auto;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
         display: flex;
         align-items: center;
-        justify-content: center;
-      }
-
-      .page-wrap {
-        width: min(1100px, calc(100vw - 32px));
-        padding: 48px;
-        border-radius: 32px;
-        background: rgba(12, 22, 52, 0.92);
-        box-shadow: 0 32px 80px rgba(0, 0, 0, 0.32);
+        justify-content: space-between;
+        gap: 24px;
+        padding: 14px 0;
         backdrop-filter: blur(18px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
       }
 
-      header {
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 800;
+        text-decoration: none;
+      }
+
+      .brand-mark {
         display: grid;
-        gap: 18px;
-        margin-bottom: 36px;
+        place-items: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, var(--teal), var(--blue));
+        color: white;
+        font-weight: 900;
       }
 
-      h1 {
-        margin: 0;
-        font-size: clamp(2.6rem, 4vw, 4.4rem);
-        line-height: 1.03;
-        letter-spacing: -0.04em;
-      }
-
-      p.lead {
-        margin: 0;
-        max-width: 760px;
-        font-size: 1.12rem;
-        color: #d9e1ff;
-        line-height: 1.9;
-      }
-
-      .row {
-        display: grid;
-        gap: 20px;
-        grid-template-columns: minmax(0, 1fr);
-      }
-
-      .card {
-        padding: 24px;
-        border-radius: 24px;
-        background: rgba(255, 255, 255, 0.06);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
-      }
-
-      .card h2 {
-        margin-top: 0;
-        margin-bottom: 12px;
-        font-size: 1.18rem;
-      }
-
-      .card p,
-      .card li {
-        margin: 0;
-        color: #c8d1ff;
-        line-height: 1.8;
-        font-size: 0.98rem;
-      }
-
-      .card ul {
-        padding-left: 1.2rem;
-        margin: 0;
-      }
-
-      .links {
+      .nav-links {
         display: flex;
+        align-items: center;
+        gap: 8px;
         flex-wrap: wrap;
-        gap: 12px;
-        margin-top: 16px;
+        justify-content: flex-end;
       }
 
+      .nav-links a,
       .button {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        padding: 14px 22px;
-        border-radius: 999px;
+        min-height: 40px;
+        padding: 0 14px;
+        border-radius: 8px;
+        border: 1px solid transparent;
         text-decoration: none;
-        color: #fff;
-        background: linear-gradient(135deg, #7c95ff 0%, #30d0ff 100%);
-        font-weight: 600;
-        transition:
-          transform 0.18s ease,
-          filter 0.18s ease;
+        font-size: 0.92rem;
+        font-weight: 700;
       }
 
-      .button:hover {
-        transform: translateY(-1px);
-        filter: saturate(1.08);
+      .nav-links a {
+        color: var(--muted);
+      }
+
+      .nav-links a:hover {
+        color: var(--ink);
+        background: rgba(255, 255, 255, 0.72);
+        border-color: var(--line);
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: 1.02fr 0.98fr;
+        gap: 42px;
+        align-items: center;
+        padding: 72px 0 48px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        width: fit-content;
+        min-height: 32px;
+        padding: 0 10px;
+        border-radius: 8px;
+        background: #e8f7f4;
+        color: #08756a;
+        border: 1px solid #b9e7df;
+        font-size: 0.82rem;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        margin-top: 18px;
+        max-width: 760px;
+        font-size: 4.25rem;
+        line-height: 1.02;
+      }
+
+      .lead {
+        margin-top: 20px;
+        max-width: 680px;
+        color: var(--muted);
+        font-size: 1.16rem;
+        line-height: 1.8;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 28px;
+      }
+
+      .button.primary {
+        background: var(--ink);
+        color: white;
+        border-color: var(--ink);
+      }
+
+      .button.primary:hover {
+        background: #273244;
       }
 
       .button.secondary {
-        background: rgba(255, 255, 255, 0.08);
-        color: #f2f6ff;
-        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: var(--panel);
+        color: var(--ink);
+        border-color: var(--line);
+      }
+
+      .button.secondary:hover {
+        border-color: #b8c5d5;
+      }
+
+      .button.accent {
+        background: #fff3d7;
+        color: #7a4a00;
+        border-color: #f2cd82;
+      }
+
+      .hero-meta {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-top: 30px;
+      }
+
+      .metric {
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.78);
+        border-radius: 8px;
+        padding: 14px;
+      }
+
+      .metric strong {
+        display: block;
+        font-size: 1.2rem;
+      }
+
+      .metric span {
+        display: block;
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 0.85rem;
+        line-height: 1.4;
+      }
+
+      .product-preview {
+        border: 1px solid #cbd7e5;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #111827;
+        box-shadow: 0 24px 60px rgba(31, 41, 55, 0.22);
+      }
+
+      .preview-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 14px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        color: #dbeafe;
+        font-size: 0.82rem;
+        font-weight: 700;
+      }
+
+      .toolbar-dots {
+        display: inline-flex;
+        gap: 6px;
+      }
+
+      .toolbar-dots span {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #fb7185;
+      }
+
+      .toolbar-dots span:nth-child(2) {
+        background: #fbbf24;
+      }
+
+      .toolbar-dots span:nth-child(3) {
+        background: #34d399;
+      }
+
+      .preview-body {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        min-height: 360px;
+      }
+
+      .image-stage {
+        position: relative;
+        min-height: 360px;
+        background: #0f172a;
+      }
+
+      .image-stage img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: contrast(1.12) saturate(1.25);
+        display: block;
+      }
+
+      .filter-stack {
+        position: absolute;
+        left: 16px;
+        right: 16px;
+        bottom: 16px;
+        display: grid;
+        gap: 8px;
+      }
+
+      .filter-pill {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 9px 10px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.88);
+        color: var(--ink);
+        font-size: 0.82rem;
+        font-weight: 800;
+      }
+
+      .code-card {
+        min-width: 0;
+        padding: 18px;
+        color: #d1e7ff;
+        background: var(--code);
+      }
+
+      .code-card pre {
+        margin: 0;
+        overflow-x: auto;
+        white-space: pre;
+        font-size: 0.82rem;
+        line-height: 1.8;
+      }
+
+      .token {
+        color: #6ee7b7;
+      }
+
+      .string {
+        color: #f9a8d4;
+      }
+
+      .section {
+        padding: 58px 0;
+      }
+
+      .section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 24px;
+        margin-bottom: 22px;
+      }
+
+      h2 {
+        font-size: 2.2rem;
+        line-height: 1.15;
+      }
+
+      .section-head p {
+        max-width: 560px;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .grid-3,
+      .grid-4,
+      .demo-grid {
+        display: grid;
+        gap: 14px;
+      }
+
+      .grid-3 {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .grid-4 {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .demo-grid {
+        grid-template-columns: repeat(5, 1fr);
+      }
+
+      .card,
+      .demo-card,
+      .install-panel,
+      .workflow {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.86);
+      }
+
+      .card {
+        padding: 22px;
+      }
+
+      .card h3 {
+        font-size: 1.05rem;
+      }
+
+      .card p {
+        margin-top: 10px;
+        color: var(--muted);
+        line-height: 1.7;
+        font-size: 0.96rem;
+      }
+
+      .color-bar {
+        width: 42px;
+        height: 4px;
+        border-radius: 4px;
+        margin-bottom: 16px;
+        background: var(--teal);
+      }
+
+      .card:nth-child(2) .color-bar {
+        background: var(--blue);
+      }
+
+      .card:nth-child(3) .color-bar {
+        background: var(--amber);
+      }
+
+      .card:nth-child(4) .color-bar {
+        background: var(--rose);
+      }
+
+      .card:nth-child(5) .color-bar {
+        background: var(--green);
+      }
+
+      .card:nth-child(6) .color-bar {
+        background: var(--violet);
+      }
+
+      .demo-card {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        min-height: 178px;
+        padding: 18px;
+        text-decoration: none;
+        transition:
+          transform 0.18s ease,
+          box-shadow 0.18s ease,
+          border-color 0.18s ease;
+      }
+
+      .demo-card:hover {
+        transform: translateY(-3px);
+        border-color: #aebccc;
+        box-shadow: 0 18px 38px rgba(31, 41, 55, 0.12);
+      }
+
+      .demo-card strong {
+        font-size: 1rem;
+      }
+
+      .demo-card span {
+        color: var(--muted);
+        line-height: 1.55;
+        font-size: 0.92rem;
+      }
+
+      .demo-label {
+        width: fit-content;
+        border-radius: 8px;
+        padding: 5px 8px;
+        font-size: 0.72rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        background: #eef6ff;
+        color: var(--blue);
+      }
+
+      .install-panel {
+        display: grid;
+        grid-template-columns: 0.95fr 1.05fr;
+        gap: 0;
+        overflow: hidden;
+      }
+
+      .install-copy {
+        padding: 28px;
+        background: #fffdfa;
+      }
+
+      .install-copy p {
+        margin-top: 12px;
+        color: var(--muted);
+        line-height: 1.75;
+      }
+
+      .code-block {
+        min-width: 0;
+        padding: 24px;
+        background: var(--code);
+        color: #e5e7eb;
+      }
+
+      .code-block pre {
+        margin: 0;
+        overflow-x: auto;
+        font-size: 0.88rem;
+        line-height: 1.8;
+      }
+
+      .workflow {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        overflow: hidden;
+      }
+
+      .step {
+        padding: 22px;
+        border-right: 1px solid var(--line);
+      }
+
+      .step:last-child {
+        border-right: 0;
+      }
+
+      .step b {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        background: #e8f7f4;
+        color: #08756a;
+      }
+
+      .step h3 {
+        margin-top: 14px;
+      }
+
+      .step p {
+        margin-top: 8px;
+        color: var(--muted);
+        line-height: 1.65;
+        font-size: 0.94rem;
+      }
+
+      .footer {
+        padding: 44px 0 56px;
+        color: var(--muted);
+        text-align: center;
+      }
+
+      @media (max-width: 980px) {
+        .hero,
+        .install-panel {
+          grid-template-columns: 1fr;
+        }
+
+        .grid-3,
+        .grid-4,
+        .demo-grid,
+        .workflow {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .step {
+          border-right: 0;
+          border-bottom: 1px solid var(--line);
+        }
+
+        .step:nth-last-child(-n + 2) {
+          border-bottom: 0;
+        }
       }
 
       @media (max-width: 720px) {
-        .page-wrap {
-          padding: 32px 20px;
+        .topbar,
+        .section-head {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .hero {
+          padding-top: 42px;
+        }
+
+        h1 {
+          font-size: 3rem;
+        }
+
+        h2 {
+          font-size: 1.8rem;
+        }
+
+        .lead {
+          font-size: 1.04rem;
+        }
+
+        .hero-meta,
+        .grid-3,
+        .grid-4,
+        .demo-grid,
+        .workflow,
+        .preview-body {
+          grid-template-columns: 1fr;
+        }
+
+        .step,
+        .step:nth-last-child(-n + 2) {
+          border-bottom: 1px solid var(--line);
+        }
+
+        .step:last-child {
+          border-bottom: 0;
+        }
+      }
+
+      @media (max-width: 460px) {
+        .site-shell {
+          width: min(100% - 20px, 1180px);
+        }
+
+        h1 {
+          font-size: 2.35rem;
+        }
+
+        .nav-links,
+        .hero-actions {
+          width: 100%;
+        }
+
+        .nav-links a,
+        .button {
+          width: 100%;
         }
       }
     </style>
   </head>
   <body>
-    <main class="page-wrap">
-      <header>
-        <h1>LuminaJS</h1>
-        <p class="lead">
-          LuminaJS is a modular, chainable, lightweight, zero-dependency
-          JavaScript utility library for browser-based image processing using
-          the HTML5 Canvas API. It provides a functional approach to image
-          manipulation, focusing on performance and ease of use.
-        </p>
-        <div class="links">
-          <a class="button" href="./react">React Demo</a>
-          <a class="button secondary" href="./vanilla-js">Vanilla JS Demo</a>
-          <a class="button secondary" href="./css-demo"
-            >Lumina CSS (CSS only image)</a
-          >
-          <a class="button secondary" href="./docs">Docs</a>
-          <a class="button" href="./storybook">React Storybook</a>
+    <div class="site-shell">
+      <nav class="topbar" aria-label="Primary navigation">
+        <a class="brand" href="./index.html" aria-label="LuminaJS home">
+          <span class="brand-mark">L</span>
+          <span>LuminaJS</span>
+        </a>
+        <div class="nav-links">
+          <a href="#features">Features</a>
+          <a href="#demos">Demos</a>
+          <a href="#install">Install</a>
+          <a href="./docs">Docs</a>
+          <a href="./storybook">Storybook</a>
         </div>
-      </header>
+      </nav>
 
-      <div class="row">
-        <div class="card">
-          <h2>Why LuminaJS?</h2>
-          <p>
-            Fast, small, and easy to integrate. LuminaJS works with HTML5 Canvas
-            and supports chainable filters, React hooks, and direct script tag
-            usage without any external dependencies.
-          </p>
-          <ul>
-            <li>Responsive browser workflows with Canvas and ImageData</li>
-            <li>🧩 Modular: import only the features you need</li>
-            <li>📦 Lightweight: zero external dependencies</li>
-            <li>🖼️ Canvas-powered: seamless browser integration</li>
-          </ul>
-        </div>
-        <div class="card">
-          <h2>Quick Start</h2>
-          <p>
-            Install from npm and start processing images with a clean fluent
-            API.
-          </p>
-          <pre
-            style="
-              margin: 0;
-              padding: 16px;
-              border-radius: 16px;
-              background: rgba(255, 255, 255, 0.05);
-              overflow-x: auto;
-              color: #edf2ff;
-              font-size: 0.95rem;
-            "
-          >
-npm install @gks101/luminajs</pre
-          >
-          <p style="margin-top: 12px">
-            Use the `lumina()` chain to load images, apply filters, and render
-            results directly to a canvas or HTML element.
-          </p>
-        </div>
-        <div class="card">
-          <h2>CSS-Only Image Styling</h2>
-          <p>
-            If you do not need JavaScript processing, use Lumina Image CSS for
-            visual filters, hover effects, overlays, responsive frames, and
-            image positioning with CSS utility classes.
-          </p>
-          <div class="links">
-            <a class="button secondary" href="./css-demo">Open CSS Demo</a>
+      <main>
+        <section class="hero">
+          <div>
+            <span class="eyebrow">Canvas image processing for developers</span>
+            <h1>Build fast browser image workflows without backend jobs.</h1>
+            <p class="lead">
+              LuminaJS gives JavaScript and React teams a practical toolkit for
+              loading, filtering, transforming, cropping, watermarking, and
+              exporting images directly in the browser with a small, modular
+              API.
+            </p>
+            <div class="hero-actions">
+              <a class="button primary" href="./react">Open React Demo</a>
+              <a class="button secondary" href="./vanilla-js">Try Vanilla JS</a>
+              <a class="button accent" href="./css-demo">Explore CSS Tools</a>
+            </div>
+            <div class="hero-meta" aria-label="Library highlights">
+              <div class="metric">
+                <strong>0 deps</strong>
+                <span>Browser-first core with no runtime dependencies.</span>
+              </div>
+              <div class="metric">
+                <strong>React ready</strong>
+                <span>Hooks and components for production UI workflows.</span>
+              </div>
+              <div class="metric">
+                <strong>Canvas API</strong>
+                <span
+                  >Built around ImageData, Canvas, Blob, and data URLs.</span
+                >
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    </main>
+
+          <aside class="product-preview" aria-label="LuminaJS preview">
+            <div class="preview-toolbar">
+              <span class="toolbar-dots" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+              </span>
+              <span>lumina-preview.js</span>
+            </div>
+            <div class="preview-body">
+              <div class="image-stage">
+                <img
+                  src="./react/public/sample.png"
+                  data-fallback-src="./react/sample.png"
+                  alt="Image preview processed with contrast and saturation"
+                />
+                <div class="filter-stack" aria-hidden="true">
+                  <span class="filter-pill">
+                    <span>contrast</span>
+                    <span>+28</span>
+                  </span>
+                  <span class="filter-pill">
+                    <span>watermark</span>
+                    <span>on</span>
+                  </span>
+                  <span class="filter-pill">
+                    <span>export</span>
+                    <span>Blob</span>
+                  </span>
+                </div>
+              </div>
+              <div class="code-card">
+                <pre><code><span class="token">import</span> { lumina } <span class="token">from</span> <span class="string">'@gks101/luminajs'</span>;
+
+<span class="token">await</span> lumina(file)
+  .resize(1200, 800)
+  .contrast(28)
+  .watermark(<span class="string">'LuminaJS'</span>)
+  .toCanvas(canvas);
+
+<span class="token">const</span> blob = <span class="token">await</span> lumina(canvas)
+  .sharpen()
+  .toBlob(<span class="string">'image/png'</span>);</code></pre>
+              </div>
+            </div>
+          </aside>
+        </section>
+
+        <section class="section" id="features">
+          <div class="section-head">
+            <h2>Everything needed for browser image tooling.</h2>
+            <p>
+              Compose low-level filters, use React abstractions when the UI gets
+              complex, or reach for CSS utilities when the job is presentation
+              only.
+            </p>
+          </div>
+          <div class="grid-3">
+            <article class="card">
+              <div class="color-bar"></div>
+              <h3>Chainable image pipeline</h3>
+              <p>
+                Load a File, URL, image element, canvas, or ImageData, then
+                chain transformations and export the result.
+              </p>
+            </article>
+            <article class="card">
+              <div class="color-bar"></div>
+              <h3>Filters and transforms</h3>
+              <p>
+                Brightness, contrast, grayscale, sepia, blur, sharpen, emboss,
+                edge detection, resize, crop, ASCII, and watermark support.
+              </p>
+            </article>
+            <article class="card">
+              <div class="color-bar"></div>
+              <h3>React hooks and components</h3>
+              <p>
+                Use `useLumina`, `LuminaCanvas`, and `ImageCropper` to build
+                responsive editors with less state glue.
+              </p>
+            </article>
+            <article class="card">
+              <div class="color-bar"></div>
+              <h3>Export-ready outputs</h3>
+              <p>
+                Render to canvas, download Blob output, create data URLs, or
+                keep ImageData available for custom processing.
+              </p>
+            </article>
+            <article class="card">
+              <div class="color-bar"></div>
+              <h3>CSS image utilities</h3>
+              <p>
+                Style images with utility classes for filters, hover effects,
+                object-fit, aspect ratios, animations, frames, and overlays.
+              </p>
+            </article>
+            <article class="card">
+              <div class="color-bar"></div>
+              <h3>Browser-first ergonomics</h3>
+              <p>
+                Designed for upload previews, profile-image editors, CMS tools,
+                creative apps, and client-side asset preparation.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="demos">
+          <div class="section-head">
+            <h2>Explore the working demos.</h2>
+            <p>
+              Each demo is built from the example projects and can be opened
+              directly from this generated artifact folder.
+            </p>
+          </div>
+          <div class="demo-grid">
+            <a class="demo-card" href="./react">
+              <span class="demo-label">React</span>
+              <strong>Image editor demo</strong>
+              <span
+                >Live filters, resize, crop, watermark, ASCII, hooks, and
+                components.</span
+              >
+            </a>
+            <a class="demo-card" href="./vanilla-js">
+              <span class="demo-label">JavaScript</span>
+              <strong>Vanilla browser demo</strong>
+              <span
+                >Drag-and-drop processing with Canvas exports and transform
+                controls.</span
+              >
+            </a>
+            <a class="demo-card" href="./css-demo">
+              <span class="demo-label">CSS</span>
+              <strong>Lumina Image CSS</strong>
+              <span
+                >Utility classes for responsive image styling and hover
+                effects.</span
+              >
+            </a>
+            <a class="demo-card" href="./docs">
+              <span class="demo-label">Reference</span>
+              <strong>Generated docs</strong>
+              <span>API reference generated from the source comments.</span>
+            </a>
+            <a class="demo-card" href="./storybook">
+              <span class="demo-label">Storybook</span>
+              <strong>React stories</strong>
+              <span
+                >Component examples for React integration and
+                documentation.</span
+              >
+            </a>
+          </div>
+        </section>
+
+        <section class="section" id="install">
+          <div class="install-panel">
+            <div class="install-copy">
+              <span class="eyebrow">Developer quick start</span>
+              <h2 style="margin-top: 16px">
+                Install once. Use only what you need.
+              </h2>
+              <p>
+                LuminaJS exposes core modules, filter helpers, React exports,
+                and CSS utilities so applications can stay focused and avoid
+                pulling in a full image editor stack.
+              </p>
+              <div class="hero-actions">
+                <a class="button primary" href="./docs">Read API Docs</a>
+                <a class="button secondary" href="./react">See React Usage</a>
+              </div>
+            </div>
+            <div class="code-block">
+              <pre><code>npm install @gks101/luminajs
+
+import { lumina } from '@gks101/luminajs';
+import { LuminaCanvas, useLumina } from '@gks101/luminajs/react';
+import '@gks101/luminajs/lumina-image.css';
+
+await lumina(file)
+  .resize(800, 600)
+  .brightness(12)
+  .contrast(18)
+  .toCanvas(canvas);</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-head">
+            <h2>A practical image workflow model.</h2>
+            <p>
+              The API follows the way browser image tools are usually built:
+              load, preview, compose, and export.
+            </p>
+          </div>
+          <div class="workflow">
+            <div class="step">
+              <b>1</b>
+              <h3>Load</h3>
+              <p>Accept files, URLs, canvases, image elements, or ImageData.</p>
+            </div>
+            <div class="step">
+              <b>2</b>
+              <h3>Transform</h3>
+              <p>
+                Resize, crop, filter, sharpen, blur, watermark, or create ASCII.
+              </p>
+            </div>
+            <div class="step">
+              <b>3</b>
+              <h3>Preview</h3>
+              <p>
+                Render quickly to a canvas or React component while users edit.
+              </p>
+            </div>
+            <div class="step">
+              <b>4</b>
+              <h3>Export</h3>
+              <p>
+                Return a Blob, data URL, ImageData, or final canvas for
+                download.
+              </p>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <p>
+          LuminaJS is built for browser-first image processing, React image UI,
+          and CSS-only visual image effects.
+        </p>
+      </footer>
+    </div>
+    <script>
+      document.querySelectorAll('img[data-fallback-src]').forEach((image) => {
+        image.addEventListener(
+          'error',
+          () => {
+            const fallback = image.getAttribute('data-fallback-src');
+            if (fallback && image.getAttribute('src') !== fallback) {
+              image.setAttribute('src', fallback);
+            }
+          },
+          { once: true },
+        );
+      });
+    </script>
   </body>
 </html>
