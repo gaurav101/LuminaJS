@@ -56,7 +56,7 @@ export const hero = {
       icon: 'download',
     },
     {
-      value: '3 ways to ship',
+      value: '3 ways to use',
       label: 'Core JavaScript, React components, and CSS utilities.',
       icon: 'layers',
     },
@@ -703,10 +703,9 @@ export const workflow = [
 
 export const finalCta = {
   title: 'Start with the demo, ship with the API.',
-  body: 'Open the working examples, inspect the generated docs, and lift the pieces that match your product workflow.',
+  body: 'Inspect the generated docs/code and lift the pieces that match your product workflow.',
   actions: [
-    { label: 'Open React Demo', href: './react', variant: 'primary' },
-    { label: 'Read Documentation', href: './docs', variant: 'secondary' },
+    { label: 'Read Documentation', href: './docs', variant: 'primary' },
     {
       label: 'Code',
       href: 'https://github.com/gaurav101/LuminaJS/',

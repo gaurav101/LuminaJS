@@ -220,12 +220,15 @@ export function renderInstall() {
           <dl class="mt-6 grid gap-3 text-sm text-slate-700 sm:grid-cols-2">
             <div class="rounded-xl border border-slate-200 bg-white/75 p-3">
               <dt class="font-black text-slate-950">Package</dt>
-              <dd class="mt-1">@gks101/luminajs</dd>
+              <dd class="mt-1">
+               <a class="inline-flex items-center gap-2 rounded-lg hover:bg-teal-50" href="https://www.npmjs.com/package/@gks101/luminajs" target="_blank">
+             @gks101/luminajs</a>
+              </dd>
             </div>
             <div class="rounded-xl border border-slate-200 bg-white/75 p-3">
               <dt class="font-black text-slate-950">Code</dt>
               <dd class="mt-2">
-                <a class="inline-flex items-center gap-2 rounded-lg bg-slate-950 px-3 py-2 font-bold text-white hover:bg-slate-800" href="${projectLinks.github}">
+                <a class="inline-flex items-center gap-2 rounded-lg hover:bg-amber-50" href="${projectLinks.github}" target="_blank">
                   ${icon('github', 'size-4')}
                   GitHub repository
                 </a>

@@ -70,12 +70,12 @@ function renderAnnouncement() {
 
 function renderHeroInstall() {
   return `
-    <div class="mx-auto mt-9 max-w-5xl rounded-2xl border border-slate-800 bg-slate-950 p-4 shadow-2xl shadow-slate-900/20">
-      <div class="grid min-w-0 gap-3 xl:grid-cols-3">
+    <div class="mx-auto mt-9 max-w-5xl rounded-2xl border border-teal-300/30  p-4 shadow-2xl shadow-slate-900/20">
+      <div class="grid min-w-0 gap-3 xl:grid-cols-3 ">
         ${installCommandOptions
           .map(
             (option) => `
-              <div class="overflow-hidden rounded-xl border border-teal-300/30 bg-white/[0.07] shadow-lg shadow-slate-950/20">
+              <div class="overflow-hidden rounded-xl border border-teal-300/30 bg-slate-950 shadow-lg shadow-slate-950/20">
                 <div class="flex items-center justify-between border-b border-white/10 px-3 py-2">
                   <span class="text-xs font-black uppercase tracking-wide text-teal-200">${option.label}</span>
                   <button class="inline-flex size-8 items-center justify-center rounded-lg border border-white/10 bg-white/10 text-teal-100 transition hover:border-teal-300 hover:bg-teal-300/15" type="button" data-copy-command="${option.command}" aria-label="Copy ${option.label} install command">
