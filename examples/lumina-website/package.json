@@ -12,5 +12,8 @@
     "@tailwindcss/vite": "^4.0.0",
     "tailwindcss": "^4.0.0",
     "vite": "^8.0.4"
+  },
+  "dependencies": {
+    "@gks101/luminajs": "^2.1.5-beta"
   }
 }

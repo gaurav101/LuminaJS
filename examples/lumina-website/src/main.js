@@ -1,6 +1,6 @@
 import './styles.css';
 import { renderPage } from './components/sections.js';
-import { lumina } from '../../../src/index.js';
+import { lumina } from '@gks101/luminajs';
 
 document.querySelector('#app').innerHTML = renderPage();
 
