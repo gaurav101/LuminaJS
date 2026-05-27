@@ -75,15 +75,35 @@
   }
 
   .demo-grid {
-    @apply grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px];
+    @apply grid gap-6 xl:grid-cols-[280px_minmax(0,1fr)_320px];
   }
 
   .preview-panel {
     @apply min-w-0;
   }
 
+  .demo-center {
+    @apply min-w-0;
+  }
+
   .sidebar {
-    @apply lg:sticky lg:top-6;
+    @apply min-w-0 xl:sticky xl:top-6;
+  }
+
+  .sidebar-left {
+    @apply order-2 xl:order-1;
+  }
+
+  .demo-center {
+    @apply order-1 xl:order-2;
+  }
+
+  .sidebar-right {
+    @apply order-3;
+  }
+
+  #cropping-tool {
+    @apply order-4 xl:col-span-3;
   }
 
   .card,

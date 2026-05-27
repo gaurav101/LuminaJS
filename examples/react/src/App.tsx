@@ -308,7 +308,62 @@ function App() {
       </header>
 
       <main className="demo-grid">
-        <section id="full-demo">
+        <aside className="sidebar sidebar-left">
+          <div className="controls-card">
+            <h3>Image Adjustments</h3>
+            <div className="control-group">
+              <div className="label-row">
+                <label>Brightness</label>
+                <span>{brightness}</span>
+              </div>
+              <input
+                type="range"
+                min="-100"
+                max="100"
+                value={brightness}
+                onChange={(e) => setBrightness(Number(e.target.value))}
+              />
+            </div>
+            <div className="control-group">
+              <div className="label-row">
+                <label>Contrast</label>
+                <span>{contrast}</span>
+              </div>
+              <input
+                type="range"
+                min="-100"
+                max="100"
+                value={contrast}
+                onChange={(e) => setContrast(Number(e.target.value))}
+              />
+            </div>
+
+            <hr />
+
+            <h3>Filters</h3>
+            <div className="filter-grid">
+              {[
+                'none',
+                'grayscale',
+                'sepia',
+                'blur',
+                'sharpen',
+                'emboss',
+                'edge',
+              ].map((f) => (
+                <button
+                  key={f}
+                  className={filterType === f ? 'active' : ''}
+                  onClick={() => setFilterType(f)}
+                >
+                  {f.charAt(0).toUpperCase() + f.slice(1)}
+                </button>
+              ))}
+            </div>
+          </div>
+        </aside>
+
+        <section id="full-demo" className="demo-center">
           <section className="preview-panel">
             <div className="card">
               <div className="card-header">
@@ -428,61 +483,8 @@ function App() {
             </div>
           </section>
         </section>
-        <aside className="sidebar">
+        <aside className="sidebar sidebar-right">
           <div className="controls-card">
-            <h3>Adjustments</h3>
-            <div className="control-group">
-              <div className="label-row">
-                <label>Brightness</label>
-                <span>{brightness}</span>
-              </div>
-              <input
-                type="range"
-                min="-100"
-                max="100"
-                value={brightness}
-                onChange={(e) => setBrightness(Number(e.target.value))}
-              />
-            </div>
-            <div className="control-group">
-              <div className="label-row">
-                <label>Contrast</label>
-                <span>{contrast}</span>
-              </div>
-              <input
-                type="range"
-                min="-100"
-                max="100"
-                value={contrast}
-                onChange={(e) => setContrast(Number(e.target.value))}
-              />
-            </div>
-
-            <hr />
-
-            <h3>Filters</h3>
-            <div className="filter-grid">
-              {[
-                'none',
-                'grayscale',
-                'sepia',
-                'blur',
-                'sharpen',
-                'emboss',
-                'edge',
-              ].map((f) => (
-                <button
-                  key={f}
-                  className={filterType === f ? 'active' : ''}
-                  onClick={() => setFilterType(f)}
-                >
-                  {f.charAt(0).toUpperCase() + f.slice(1)}
-                </button>
-              ))}
-            </div>
-
-            <hr />
-
             <h3>Transformations</h3>
             <div className="checkbox-row">
               <input
