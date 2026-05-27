@@ -8,7 +8,7 @@ import './App.css';
 import { ImageCropper } from '@gks101/luminajs/react';
 
 const THEMED_CROPPER_CODE = `<ImageCropper
-  src="sample.png"
+  src="./sample.png"
   aspectRatio={16 / 9}
   className="cropper-shell"
   containerClassName="cropper-stage"
@@ -76,7 +76,7 @@ function App() {
 
   // ASCII logic
   const { result: asciiText, loading: asciiLoading } = useLumina<string>({
-    source: '/sample.png',
+    source: './sample.png',
     resize: asciiResizeConfig,
     operations: asciiOperation,
     outputType: undefined,
@@ -119,7 +119,7 @@ function App() {
   );
 
   const generatedCanvasCode = useMemo(() => {
-    const lines = ['<LuminaCanvas', '  source="/sample.png"'];
+    const lines = ['<LuminaCanvas', '  source="./sample.png"'];
 
     lines.push(`  brightness={${brightness}}`);
     lines.push(`  contrast={${contrast}}`);
@@ -215,16 +215,26 @@ function App() {
   return (
     <div className="demo-container">
       <header>
-        <a className="back-link" href="../index.html">
-          Back to Main Page
+        <a
+          className="back-link"
+          href="https://gaurav101.github.io/LuminaJS/index.html"
+        >
+          Back to Home
         </a>
         <h1>LuminaJS React Demo</h1>
         <p>
           A full showcase of the LuminaJS Image Processing Component Library
         </p>
         <div className="header-actions">
-          <a href={'./storybook'}>View Story book demo</a>
-          <a href={'./docs'}>Documentation</a>
+          <a href={'./storybook'} target={'_blank'}>
+            View Story book demo
+          </a>
+          <a
+            href={'https://gaurav101.github.io/LuminaJS/docs'}
+            target={'_blank'}
+          >
+            Documentation
+          </a>
         </div>
       </header>
 
