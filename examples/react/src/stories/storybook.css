@@ -160,6 +160,28 @@
   max-width: min(100%, 360px);
 }
 
+.lumina-story-crop-shell {
+  max-width: 100%;
+}
+
+.lumina-story-crop-source {
+  max-width: 100%;
+  max-height: 520px;
+}
+
+.lumina-story-crop-controls {
+  gap: 10px;
+}
+
+.lumina-story-crop-selection {
+  background: rgba(28, 100, 209, 0.08);
+}
+
+.lumina-story-crop-handle {
+  border-color: #1c64d1 !important;
+  background: #f7f9fc !important;
+}
+
 .lumina-story-error {
   border: 1px solid #f0a0a0;
   border-radius: 6px;

@@ -1,11 +1,15 @@
 import { useState, useCallback, useMemo } from 'react';
-import { useLumina, LuminaCanvas } from '@gks101/luminajs/react';
+import {
+  ImageCropper,
+  LuminaCanvas,
+  useLumina,
+  type CropArea,
+} from '@gks101/luminajs/react';
 import type { Lumina } from '../../../src/';
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 import { oneDark } from '@codemirror/theme-one-dark';
 import './App.css';
-import { ImageCropper } from '@gks101/luminajs/react';
 
 const THEMED_CROPPER_CODE = `<ImageCropper
   src="./sample.png"
@@ -32,6 +36,29 @@ const THEMED_CROPPER_CODE = `<ImageCropper
   processingLabel="Applying crop..."
 />`;
 
+const INTERACTIVE_CANVAS_CROP_CODE = `<LuminaCanvas
+  source="./sample.png"
+  interactiveCrop
+  cropAspectRatio={1}
+  outputType="dataUrl"
+  getImage={handleInteractiveCropImage}
+  onCropChange={handleInteractiveCropChange}
+  onCropApply={handleInteractiveCropApply}
+  onCropReset={handleInteractiveCropReset}
+  cropContainerClassName="canvas-crop-shell"
+  cropSelectorImageClassName="canvas-crop-source"
+  cropButtonContainerClassName="cropper-controls"
+  cropApplyButtonClassName="cropper-btn cropper-btn-primary"
+  cropResetButtonClassName="cropper-btn cropper-btn-secondary"
+  cropSelectionClassName="cropper-selection"
+  cropHandleClassName="cropper-handle"
+  cropLineColor="#38bdf8"
+  cropOverlayOpacity={0.54}
+  cropAriaLabel="LuminaCanvas interactive crop area"
+  cropKeyboardStep={2}
+  cropKeyboardStepLarge={18}
+/>`;
+
 function App() {
   const [brightness, setBrightness] = useState(0);
   const [contrast, setContrast] = useState(0);
@@ -55,6 +82,12 @@ function App() {
   const [cropW, setCropW] = useState(400);
   const [cropH, setCropH] = useState(400);
   const [copiedPanel, setCopiedPanel] = useState<string | null>(null);
+  const [interactiveCropStatus, setInteractiveCropStatus] = useState(
+    'Select an area, then apply the crop.',
+  );
+  const [interactiveCropSelection, setInteractiveCropSelection] =
+    useState<CropArea | null>(null);
+  const [interactiveCropDataUrl, setInteractiveCropDataUrl] = useState('');
   const codeExtensions = useMemo(() => [javascript({ jsx: true })], []);
   const codeEditorSetup = useMemo(
     () => ({
@@ -113,6 +146,42 @@ function App() {
     (data: string | Blob | ImageData | HTMLCanvasElement) => {
       if (typeof data === 'string') {
         setCanvasDataUrl(data);
+      }
+    },
+    [],
+  );
+
+  const handleInteractiveCropChange = useCallback((crop: CropArea) => {
+    setInteractiveCropSelection(crop);
+    setInteractiveCropStatus(
+      `Selection ${Math.round(crop.width)} x ${Math.round(
+        crop.height,
+      )} at ${Math.round(crop.x)}, ${Math.round(crop.y)}`,
+    );
+  }, []);
+
+  const handleInteractiveCropApply = useCallback((crop: CropArea) => {
+    if (crop.width < 32 || crop.height < 32) {
+      setInteractiveCropStatus('Select at least 32 x 32 pixels.');
+      return false;
+    }
+
+    setInteractiveCropStatus('Applying crop through LuminaCanvas...');
+  }, []);
+
+  const handleInteractiveCropReset = useCallback(() => {
+    setInteractiveCropSelection(null);
+    setInteractiveCropDataUrl('');
+    setInteractiveCropStatus('Crop selection reset.');
+  }, []);
+
+  const handleInteractiveCropImage = useCallback(
+    (data: string | Blob | ImageData | HTMLCanvasElement) => {
+      if (typeof data === 'string') {
+        setInteractiveCropDataUrl(data);
+        setInteractiveCropStatus(
+          `Applied crop exported as ${Math.round(data.length / 1024)} KB data URL.`,
+        );
       }
     },
     [],
@@ -565,6 +634,113 @@ function App() {
         <section id="cropping-tool">
           <div className="preview-panel">
             <div className="card cropper-demo-card">
+              <h3>LuminaCanvas - Interactive Crop</h3>
+              <p className="cropper-demo-text">
+                Select, reposition, resize, apply, and reset a crop directly
+                from LuminaCanvas.
+              </p>
+
+              <div className="interactive-crop-layout">
+                <div className="interactive-crop-stage">
+                  <LuminaCanvas
+                    source="sample.png"
+                    interactiveCrop
+                    cropAspectRatio={1}
+                    outputType="dataUrl"
+                    getImage={handleInteractiveCropImage}
+                    onCropChange={handleInteractiveCropChange}
+                    onCropApply={handleInteractiveCropApply}
+                    onCropReset={handleInteractiveCropReset}
+                    cropContainerClassName="canvas-crop-shell"
+                    cropSelectorImageClassName="canvas-crop-source"
+                    cropButtonContainerClassName="cropper-controls"
+                    cropApplyButtonClassName="cropper-btn cropper-btn-primary"
+                    cropResetButtonClassName="cropper-btn cropper-btn-secondary"
+                    cropSelectionClassName="cropper-selection"
+                    cropHandleClassName="cropper-handle"
+                    cropLineColor="#38bdf8"
+                    cropOverlayOpacity={0.54}
+                    cropAriaLabel="LuminaCanvas interactive crop area"
+                    cropAriaDescription="Use arrow keys to move the crop. Hold Shift for larger steps. Hold Alt with arrows to resize. Press Enter to confirm and Escape to clear."
+                    cropKeyboardStep={2}
+                    cropKeyboardStepLarge={18}
+                    className="interactive-canvas-output"
+                  />
+                </div>
+
+                <div className="interactive-crop-result">
+                  <h4>Crop State</h4>
+                  <p>{interactiveCropStatus}</p>
+                  {interactiveCropSelection && (
+                    <dl className="crop-metrics">
+                      <div>
+                        <dt>X</dt>
+                        <dd>{Math.round(interactiveCropSelection.x)}</dd>
+                      </div>
+                      <div>
+                        <dt>Y</dt>
+                        <dd>{Math.round(interactiveCropSelection.y)}</dd>
+                      </div>
+                      <div>
+                        <dt>W</dt>
+                        <dd>{Math.round(interactiveCropSelection.width)}</dd>
+                      </div>
+                      <div>
+                        <dt>H</dt>
+                        <dd>{Math.round(interactiveCropSelection.height)}</dd>
+                      </div>
+                    </dl>
+                  )}
+                  {interactiveCropDataUrl && (
+                    <img
+                      src={interactiveCropDataUrl}
+                      alt="Applied LuminaCanvas crop preview"
+                    />
+                  )}
+                </div>
+              </div>
+
+              <details className="code-panel">
+                <summary className="code-panel-summary">
+                  Show Interactive Crop JSX
+                </summary>
+                <div className="code-panel-body">
+                  <div className="code-panel-toolbar">
+                    <button
+                      type="button"
+                      className="code-copy-btn"
+                      onClick={() =>
+                        copyCode(
+                          'interactive-crop',
+                          INTERACTIVE_CANVAS_CROP_CODE,
+                        )
+                      }
+                      aria-label="Copy LuminaCanvas interactive crop JSX"
+                    >
+                      {copiedPanel === 'interactive-crop'
+                        ? 'Copied'
+                        : 'Copy Code'}
+                    </button>
+                  </div>
+                  <div className="code-block">
+                    <CodeMirror
+                      value={INTERACTIVE_CANVAS_CROP_CODE}
+                      height="420px"
+                      theme={oneDark}
+                      editable={false}
+                      extensions={codeExtensions}
+                      basicSetup={codeEditorSetup}
+                      className="code-editor"
+                      aria-label="LuminaCanvas interactive crop JSX code"
+                    />
+                  </div>
+                </div>
+              </details>
+            </div>
+          </div>
+
+          <div className="preview-panel">
+            <div className="card cropper-demo-card mt-20">
               <h3>ImageCropper - Default</h3>
               <p className="cropper-demo-text">
                 Baseline crop workflow with keyboard support and explicit Apply.

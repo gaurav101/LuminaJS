@@ -7,6 +7,7 @@ A comprehensive React + TypeScript example showcasing the LuminaJS image process
 - **Live Image Processing**: Apply filters in real-time with the `LuminaCanvas` component
 - **Multiple Filter Effects**: Grayscale, sepia, blur, sharpen, emboss, edge detection, and more
 - **Advanced Transformations**: Resize, crop, brightness, contrast adjustments
+- **Interactive LuminaCanvas Crop**: Select, reposition, resize, reset, and apply a crop inside `LuminaCanvas`
 - **Watermarking**: Add custom text watermarks with configurable position, size, and color
 - **ASCII Art Generation**: Convert images to ASCII art using the `useLumina` hook
 - **Background Blur (Portrait Mode)**: Apply depth-of-field effects
@@ -75,6 +76,8 @@ const { result: asciiText, loading: asciiLoading } = useLumina<string>({
 - `npm run build` - Build for production
 - `npm run preview` - Preview the production build
 - `npm run lint` - Run ESLint
+- `npm run storybook` - Start Storybook
+- `npm run build-storybook` - Build Storybook
 
 ## Technologies Used
 
@@ -84,6 +87,16 @@ const { result: asciiText, loading: asciiLoading } = useLumina<string>({
 - **Vite Plugin React** - Fast Refresh support
 
 ## ImageCropper Customization Example
+
+`examples/react/src/App.tsx` includes a `LuminaCanvas` interactive crop example using:
+
+- `interactiveCrop`
+- `cropAspectRatio`
+- `onCropChange`, `onCropApply`, `onCropReset`
+- `cropButtonContainerClassName`
+- `cropApplyButtonClassName`, `cropResetButtonClassName`
+- `cropSelectionClassName`, `cropHandleClassName`
+- `cropKeyboardStep`, `cropKeyboardStepLarge`
 
 `examples/react/src/App.tsx` includes a production-style cropper example using:
 

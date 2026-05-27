@@ -11,7 +11,7 @@
 import { LuminaCanvas } from '@gks101/luminajs/react';
 ```
 
-Use `LuminaCanvas` when you want a processed canvas in your UI. Use `ImageCropper` when you want a complete drag-to-crop interface, and use `useLumina` when you need hook state without rendering a canvas.
+Use `LuminaCanvas` when you want a processed canvas in your UI. Enable `interactiveCrop` when the same component should let users select, move, resize, reset, and apply a crop before rendering the processed canvas. Use `ImageCropper` when you want a standalone cropper workflow, and use `useLumina` when you need hook state without rendering a canvas.
 
 ## Basic Usage
 
@@ -41,6 +41,39 @@ export function BasicCanvas() {
 | `onProcessError` | `(error: Error) => void`                                                       | Called when processing fails.                                                     |
 | `getImage`       | `(data: string \| Blob \| ImageData \| HTMLCanvasElement) => void`             | Receives the processed output after rendering.                                    |
 | `outputType`     | `'canvas' \| 'dataUrl' \| 'blob' \| 'imageData'`                               | Format sent to `getImage`. Defaults to `'canvas'`.                                |
+
+## Interactive Cropping
+
+Set `interactiveCrop` to render an accessible crop selection UI before the canvas output is generated. Users can drag to select an area, drag the selected area to reposition it, use resize handles to change its size, then Apply or Reset the crop.
+
+Keyboard support is included on the crop selector:
+
+- Arrow keys move the selected crop.
+- Shift + Arrow keys move by the larger step.
+- Alt + Arrow keys resize the crop.
+- Enter or Space confirms the current selection.
+- Escape clears the selection.
+
+| Prop                                                                                                   | Type                                                                                              | Description                                                                        |
+| ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `interactiveCrop`                                                                                      | `boolean`                                                                                         | Enables crop selection before rendering the processed canvas. Defaults to `false`. |
+| `cropAspectRatio`                                                                                      | `number`                                                                                          | Optional width / height ratio for the selected area.                               |
+| `allowCropResize`                                                                                      | `boolean`                                                                                         | Shows resize handles on the crop area. Defaults to `true`.                         |
+| `allowCropReset`                                                                                       | `boolean`                                                                                         | Shows the Reset button. Defaults to `true`.                                        |
+| `onCropChange`                                                                                         | `(crop) => void`                                                                                  | Called whenever the selection changes.                                             |
+| `onCropApply`                                                                                          | `(crop) => boolean \| void \| Promise<boolean \| void>`                                           | Called before applying. Return `false` to cancel the default apply behavior.       |
+| `onCropReset`                                                                                          | `() => boolean \| void \| Promise<boolean \| void>`                                               | Called before reset. Return `false` to cancel the default reset behavior.          |
+| `cropKeyboardStep`                                                                                     | `number`                                                                                          | Arrow-key movement/resizing step. Defaults to `1`.                                 |
+| `cropKeyboardStepLarge`                                                                                | `number`                                                                                          | Shift + Arrow movement/resizing step. Defaults to `10`.                            |
+| `cropApplyButtonLabel`                                                                                 | `string`                                                                                          | Apply button text. Defaults to `Apply Crop`.                                       |
+| `cropResetButtonLabel`                                                                                 | `string`                                                                                          | Reset button text. Defaults to `Reset`.                                            |
+| `cropButtonPosition`                                                                                   | `'top-left' \| 'top-right' \| 'top-center' \| 'bottom-left' \| 'bottom-center' \| 'bottom-right'` | Position for the Apply/Reset controls. Defaults to `top-left`.                     |
+| `cropAriaLabel`                                                                                        | `string`                                                                                          | Accessible label for the crop selector.                                            |
+| `cropAriaDescription`                                                                                  | `string`                                                                                          | Accessible instructions for keyboard crop controls.                                |
+| `cropContainerClassName`                                                                               | `string`                                                                                          | Class for the interactive crop wrapper.                                            |
+| `cropContainerStyle`                                                                                   | `CSSProperties`                                                                                   | Inline style for the interactive crop wrapper.                                     |
+| `cropButtonContainerClassName`, `cropApplyButtonClassName`, `cropResetButtonClassName`                 | `string`                                                                                          | Class hooks for controls.                                                          |
+| `cropSelectorClassName`, `cropSelectorImageClassName`, `cropSelectionClassName`, `cropHandleClassName` | `string`                                                                                          | Class hooks for the selector, image, selected area, and resize handles.            |
 
 ## Editing Options
 
@@ -171,6 +204,37 @@ export function CropThenFilter() {
 }
 ```
 
+### Crop Directly In LuminaCanvas
+
+```tsx
+import { LuminaCanvas } from '@gks101/luminajs/react';
+
+export function InteractiveCanvasCrop() {
+  return (
+    <LuminaCanvas
+      source="/portrait.jpg"
+      interactiveCrop
+      cropAspectRatio={1}
+      outputType="blob"
+      getImage={(data) => {
+        if (data instanceof Blob) {
+          console.log('Cropped image ready:', data);
+        }
+      }}
+      onCropApply={(crop) => {
+        console.log('Applying crop:', crop);
+      }}
+      onCropReset={() => {
+        console.log('Crop reset');
+      }}
+      cropButtonPosition="top-right"
+      width={400}
+      height={400}
+    />
+  );
+}
+```
+
 ### Live Filter Controls
 
 ```tsx
@@ -288,7 +352,7 @@ When processing fails, the component renders a `<div className="lumina-error">` 
 
 - Memoize `filter`, `getImage`, `onLoad`, and `onProcessError` with `useCallback` when they depend on React state.
 - Keep `resize`, `crop`, `watermark`, and `backgroundBlur` objects stable with `useMemo` in highly interactive screens.
-- Use `ImageCropper` for user-driven crop selection; use `LuminaCanvas` for rendering a known source or crop.
+- Use `interactiveCrop` on `LuminaCanvas` when crop selection should live next to the rendered canvas; use `ImageCropper` for a standalone cropper workflow.
 - Prefer `outputType="blob"` for uploads and `outputType="dataUrl"` for previews or downloads.
 - Set explicit `width` and `height` attributes when you know the intended output size.
 - Use `source={null}` while waiting for a user upload or async image selection.

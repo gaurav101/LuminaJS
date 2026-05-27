@@ -70,6 +70,19 @@ type CanvasOutputType = 'canvas' | 'dataUrl' | 'blob' | 'imageData';
 type CanvasOutputArgs = {
   outputType: CanvasOutputType;
 };
+type CanvasInteractiveCropArgs = {
+  cropAspectRatio?: number;
+  allowCropResize: boolean;
+  cropButtonPosition:
+    | 'top-left'
+    | 'top-right'
+    | 'top-center'
+    | 'bottom-left'
+    | 'bottom-center'
+    | 'bottom-right';
+  cropKeyboardStep: number;
+  cropKeyboardStepLarge: number;
+};
 
 function StoryShell({
   children,
@@ -242,6 +255,118 @@ function LuminaCanvasOutputDemo({ outputType }: CanvasOutputArgs) {
           getImage={handleImage}
         />
         <ResultLabel>{result}</ResultLabel>
+      </div>
+    </StoryShell>
+  );
+}
+
+function LuminaCanvasInteractiveCropDemo({
+  cropAspectRatio,
+  allowCropResize,
+  cropButtonPosition,
+  cropKeyboardStep,
+  cropKeyboardStepLarge,
+}: CanvasInteractiveCropArgs) {
+  const [result, setResult] = useState<string>('No crop applied yet');
+  const [selectedCrop, setSelectedCrop] = useState<CropArea | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string>('');
+
+  const handleImage = useCallback(
+    (data: string | Blob | ImageData | HTMLCanvasElement) => {
+      if (typeof data === 'string') {
+        setPreviewUrl(data);
+        setResult(`Data URL length: ${data.length}`);
+        return;
+      }
+
+      if (data instanceof Blob) {
+        setResult(`Blob size: ${data.size} bytes`);
+        return;
+      }
+
+      if (data instanceof ImageData) {
+        setResult(`ImageData: ${data.width} x ${data.height}`);
+        return;
+      }
+
+      setResult(`Canvas: ${data.width} x ${data.height}`);
+    },
+    [],
+  );
+
+  const handleCropChange = useCallback((crop: CropArea) => {
+    setSelectedCrop(crop);
+    setResult(
+      `Selected ${Math.round(crop.width)} x ${Math.round(crop.height)}`,
+    );
+  }, []);
+
+  const handleCropApply = useCallback((crop: CropArea) => {
+    if (crop.width < 32 || crop.height < 32) {
+      setResult('Select at least 32 x 32 pixels.');
+      return false;
+    }
+
+    setResult('Applying crop...');
+  }, []);
+
+  const handleCropReset = useCallback(() => {
+    setSelectedCrop(null);
+    setPreviewUrl('');
+    setResult('No crop applied yet');
+  }, []);
+
+  return (
+    <StoryShell
+      title="LuminaCanvas Interactive Crop"
+      description="LuminaCanvas can now collect a user-selected crop before rendering the processed canvas output."
+    >
+      <div className="lumina-story-grid">
+        <div className="lumina-story-panel">
+          <LuminaCanvas
+            source={SAMPLE_IMAGE}
+            interactiveCrop
+            cropAspectRatio={cropAspectRatio}
+            allowCropResize={allowCropResize}
+            cropButtonPosition={cropButtonPosition}
+            cropKeyboardStep={cropKeyboardStep}
+            cropKeyboardStepLarge={cropKeyboardStepLarge}
+            outputType="dataUrl"
+            getImage={handleImage}
+            onCropChange={handleCropChange}
+            onCropApply={handleCropApply}
+            onCropReset={handleCropReset}
+            cropContainerClassName="lumina-story-crop-shell"
+            cropSelectorImageClassName="lumina-story-crop-source"
+            cropButtonContainerClassName="lumina-story-crop-controls"
+            cropApplyButtonClassName="lumina-story-button"
+            cropResetButtonClassName="lumina-story-button secondary"
+            cropSelectionClassName="lumina-story-crop-selection"
+            cropHandleClassName="lumina-story-crop-handle"
+            cropLineColor="#1c64d1"
+            cropOverlayOpacity={0.55}
+            cropAriaLabel="Storybook LuminaCanvas crop area"
+            cropAriaDescription="Use arrow keys to move the crop. Hold Shift for larger steps. Hold Alt with arrows to resize. Press Enter to confirm and Escape to clear."
+            className="lumina-story-canvas"
+          />
+        </div>
+        <div className="lumina-story-panel lumina-story-stack">
+          <ResultLabel>{result}</ResultLabel>
+          {selectedCrop && (
+            <div className="lumina-story-note">
+              x {Math.round(selectedCrop.x)}, y {Math.round(selectedCrop.y)}, w{' '}
+              {Math.round(selectedCrop.width)}, h{' '}
+              {Math.round(selectedCrop.height)}
+            </div>
+          )}
+          {previewUrl && (
+            <img
+              className="lumina-story-image-preview"
+              src={previewUrl}
+              alt="LuminaCanvas interactive crop output"
+            />
+          )}
+        </div>
       </div>
     </StoryShell>
   );
@@ -487,6 +612,10 @@ export const ReactExports: Story = {
             <li>Accepts a custom chain callback through filter.</li>
             <li>
               Returns canvas, dataUrl, blob, or ImageData through getImage.
+            </li>
+            <li>
+              Can collect an interactive crop with apply/reset controls before
+              rendering.
             </li>
             <li>Runs only in browser/client render paths.</li>
           </ul>
@@ -800,6 +929,52 @@ export const LuminaCanvasTransformations: Story = {
     },
   },
 };
+
+export const LuminaCanvasInteractiveCrop: StoryObj<CanvasInteractiveCropArgs> =
+  {
+    name: 'LuminaCanvas/interactive crop apply reset',
+    args: {
+      cropAspectRatio: 1,
+      allowCropResize: true,
+      cropButtonPosition: 'top-right',
+      cropKeyboardStep: 2,
+      cropKeyboardStepLarge: 18,
+    },
+    argTypes: {
+      cropButtonPosition: {
+        control: 'select',
+        options: [
+          'top-left',
+          'top-right',
+          'top-center',
+          'bottom-left',
+          'bottom-center',
+          'bottom-right',
+        ],
+      },
+    },
+    render: (args) => <LuminaCanvasInteractiveCropDemo {...args} />,
+    parameters: {
+      docs: {
+        source: {
+          code: `<LuminaCanvas
+  source="/sample.png"
+  interactiveCrop
+  cropAspectRatio={1}
+  allowCropResize
+  cropButtonPosition="top-right"
+  outputType="dataUrl"
+  getImage={(data) => console.log(data)}
+  onCropChange={(crop) => setCrop(crop)}
+  onCropApply={(crop) => crop.width >= 32}
+  onCropReset={() => clearCropState()}
+  cropKeyboardStep={2}
+  cropKeyboardStepLarge={18}
+/>`,
+        },
+      },
+    },
+  };
 
 export const LuminaCanvasCustomChain: Story = {
   name: 'LuminaCanvas/custom filter chain',
