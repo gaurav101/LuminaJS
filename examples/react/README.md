@@ -5,6 +5,7 @@ A comprehensive React + TypeScript example showcasing the LuminaJS image process
 ## Features
 
 - **Live Image Processing**: Apply filters in real-time with the `LuminaCanvas` component
+- **Lumina Website Design Language**: Tailwind v4 styling aligned with `examples/lumina-website`
 - **Multiple Filter Effects**: Grayscale, sepia, blur, sharpen, emboss, edge detection, and more
 - **Advanced Transformations**: Resize, crop, brightness, contrast adjustments
 - **Interactive LuminaCanvas Crop**: Select, reposition, resize, reset, and apply a crop inside `LuminaCanvas`
@@ -83,6 +84,7 @@ const { result: asciiText, loading: asciiLoading } = useLumina<string>({
 
 - **React** 18+ with TypeScript
 - **Vite** - Next generation frontend tooling
+- **Tailwind CSS v4** - Same styling system used by `examples/lumina-website`
 - **LuminaJS** - Advanced image processing library
 - **Vite Plugin React** - Fast Refresh support
 

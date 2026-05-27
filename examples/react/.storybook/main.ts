@@ -1,4 +1,5 @@
 import type { StorybookConfig } from '@storybook/react-vite';
+import tailwindcss from '@tailwindcss/vite';
 import { fileURLToPath, URL } from 'node:url';
 
 const localLuminaReactPath = fileURLToPath(
@@ -41,6 +42,7 @@ const config: StorybookConfig = {
 
     return {
       ...config,
+      plugins: [...(config.plugins ?? []), tailwindcss()],
       resolve: {
         ...config.resolve,
         alias: Array.isArray(existingAlias)
