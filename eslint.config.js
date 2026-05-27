@@ -13,6 +13,7 @@ export default tseslint.config(
       '**/docs/**',
       '**/*.min.js',
       '**/examples/**',
+      '**/build-artifacts/**',
     ],
   },
   js.configs.recommended,

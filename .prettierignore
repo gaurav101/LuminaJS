@@ -4,4 +4,5 @@ docs
 examples/react/storybook-static
 *.min.js
 package-lock.json
+build-artifacts/
 .DS_Store

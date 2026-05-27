@@ -1,0 +1,143 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply m-0 bg-[linear-gradient(90deg,rgba(17,24,39,0.045)_1px,transparent_1px),linear-gradient(rgba(17,24,39,0.045)_1px,transparent_1px),linear-gradient(135deg,#fbfdff_0%,#edf7f3_38%,#fff7df_72%,#fff_100%)] bg-[length:48px_48px,48px_48px,auto] text-slate-950 antialiased;
+  }
+}
+
+@layer components {
+  .site-shell {
+    @apply mx-auto w-[min(1220px,calc(100vw-32px))];
+  }
+
+  .section {
+    @apply py-16;
+  }
+
+  .card {
+    @apply rounded-2xl border border-slate-200 bg-white/90 p-5 shadow-sm shadow-slate-900/5;
+  }
+
+  .hover-card {
+    @apply transition duration-200 hover:-translate-y-1 hover:border-slate-300 hover:shadow-xl hover:shadow-slate-900/10;
+  }
+
+  .btn {
+    @apply inline-flex min-h-11 w-full shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-xl border px-4 text-sm font-extrabold no-underline transition duration-200 sm:w-auto;
+  }
+
+  .cta-row {
+    @apply flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center;
+  }
+
+  .playground-demo-actions {
+    @apply grid gap-3 sm:grid-cols-2;
+  }
+
+  .playground-demo-actions .btn {
+    @apply w-full sm:w-full;
+  }
+
+  .eyebrow {
+    @apply inline-flex min-h-8 w-fit items-center rounded-full border border-teal-200 bg-teal-50 px-3 text-xs font-extrabold uppercase tracking-wide text-teal-700;
+  }
+
+  .code-block {
+    @apply overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950 p-6 text-sm leading-7 text-slate-100;
+  }
+
+  .code-tab-button {
+    @apply inline-flex min-h-11 w-full items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-left text-sm font-extrabold text-slate-700 transition duration-200 hover:border-teal-200 hover:bg-teal-50 hover:text-teal-800;
+  }
+
+  .code-tab-button.is-active {
+    @apply border-teal-600 bg-teal-600 text-white shadow-lg shadow-teal-700/20;
+  }
+
+  .code-tab-panel .code-block {
+    @apply h-full;
+  }
+
+  .crop-handle {
+    @apply absolute size-3 rounded-full border-2 border-slate-950 bg-teal-300 shadow-lg shadow-slate-950/30;
+  }
+
+  .crop-handle-nw {
+    @apply -left-1.5 -top-1.5 cursor-nwse-resize;
+  }
+
+  .crop-handle-n {
+    @apply -top-1.5 left-1/2 -translate-x-1/2 cursor-ns-resize;
+  }
+
+  .crop-handle-ne {
+    @apply -right-1.5 -top-1.5 cursor-nesw-resize;
+  }
+
+  .crop-handle-e {
+    @apply -right-1.5 top-1/2 -translate-y-1/2 cursor-ew-resize;
+  }
+
+  .crop-handle-se {
+    @apply -bottom-1.5 -right-1.5 cursor-nwse-resize;
+  }
+
+  .crop-handle-s {
+    @apply -bottom-1.5 left-1/2 -translate-x-1/2 cursor-ns-resize;
+  }
+
+  .crop-handle-sw {
+    @apply -bottom-1.5 -left-1.5 cursor-nesw-resize;
+  }
+
+  .crop-handle-w {
+    @apply -left-1.5 top-1/2 -translate-y-1/2 cursor-ew-resize;
+  }
+
+  .filter-preset {
+    @apply grid gap-2 rounded-xl border border-white/10 bg-slate-900/80 p-2 text-left text-xs font-black text-slate-300 transition duration-200 hover:border-teal-300 hover:text-white;
+  }
+
+  .filter-preset.is-active {
+    @apply border-teal-300 bg-teal-300/15 text-white shadow-lg shadow-teal-950/20;
+  }
+
+  .playground-code-tab {
+    @apply inline-flex min-h-9 items-center gap-2 rounded-lg border border-white/10 bg-white/[0.06] px-3 text-sm font-extrabold text-slate-300 transition duration-200 hover:border-teal-300 hover:text-white;
+  }
+
+  .playground-code-tab.is-active {
+    @apply border-teal-300 bg-teal-300/15 text-white;
+  }
+
+  .copy-button {
+    @apply inline-flex min-h-9 shrink-0 items-center justify-center gap-2 rounded-lg border border-white/10 bg-white px-3 text-sm font-extrabold text-slate-950 transition duration-200 hover:bg-teal-50;
+  }
+
+  .code-keyword {
+    @apply font-bold text-teal-300;
+  }
+
+  .code-string {
+    @apply text-rose-300;
+  }
+
+  .code-number {
+    @apply text-amber-200;
+  }
+
+  .code-method {
+    @apply text-sky-300;
+  }
+}

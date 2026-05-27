@@ -1,17 +1,19 @@
 {
-  "name": "vanila-js",
+  "name": "lumina-website",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
   },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.0",
+    "tailwindcss": "^4.0.0",
+    "vite": "^8.0.4"
+  },
   "dependencies": {
     "@gks101/luminajs": "^2.1.5-beta"
-  },
-  "devDependencies": {
-    "vite": "^8.0.4"
   }
 }

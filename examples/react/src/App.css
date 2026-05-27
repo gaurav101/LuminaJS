@@ -26,6 +26,38 @@ header {
   margin-bottom: 4rem;
 }
 
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  margin: 0 auto 1.25rem;
+  padding: 0.7rem 1rem;
+  border: 1px solid rgba(129, 140, 248, 0.35);
+  border-radius: 0.75rem;
+  background: rgba(30, 41, 59, 0.55);
+  color: #c7d2fe;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.back-link::before {
+  content: '<';
+  margin-right: 0.5rem;
+  font-weight: 700;
+}
+
+.back-link:hover {
+  transform: translateY(-2px);
+  border-color: rgba(196, 181, 253, 0.55);
+  background: rgba(51, 65, 85, 0.85);
+}
+
 header h1 {
   font-size: 3.5rem;
   margin: 0;
@@ -34,7 +66,7 @@ header h1 {
   -webkit-text-fill-color: transparent;
   letter-spacing: -1px;
 }
-header div {
+.header-actions {
   padding: 10px;
   display: flex;
   justify-items: anchor-center;
@@ -42,7 +74,7 @@ header div {
   justify-content: center;
   gap: 10px;
 }
-header div a {
+.header-actions a {
   text-decoration: none;
   padding: 0.75rem 1rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -60,7 +92,7 @@ header div a {
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
   background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
 }
-header div a:hover {
+.header-actions a:hover {
   background: rgba(51, 65, 85, 0.8);
   transform: translateY(-2px);
   border-color: rgba(255, 255, 255, 0.2);

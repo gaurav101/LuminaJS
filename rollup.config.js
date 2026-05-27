@@ -14,10 +14,7 @@ export default [
       nodeResolve(),
       bundleSize(),
       copy({
-        targets: [
-          { src: 'src/index.html', dest: 'dist' },
-          { src: 'src/lumina-image.css', dest: 'dist' },
-        ],
+        targets: [{ src: 'src/lumina-image.css', dest: 'dist' }],
       }),
     ],
     treeshake: {
