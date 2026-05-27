@@ -6,7 +6,7 @@ export const navigation = [
   { label: 'Demos', href: '#demos' },
   { label: 'Install', href: '#install' },
   { label: 'Docs', href: './docs' },
-  { label: 'Storybook', href: './storybook' },
+  { label: 'Storybook', href: './examples/react/storybook' },
   { label: 'GitHub', href: 'https://github.com/gaurav101/LuminaJS/' },
 ];
 
@@ -17,7 +17,7 @@ export const projectLinks = {
 export const announcement = {
   label: 'LuminaJS 2.1',
   text: 'Canvas filters, React components, crop workflows, and CSS image utilities in one browser-first package.',
-  href: './docs',
+  href: 'https://gaurav101.github.io/LuminaJS/docs',
 };
 
 export const hero = {
@@ -25,15 +25,28 @@ export const hero = {
   title: 'Edit, transform, and export images where your users already are.',
   body: 'LuminaJS is a developer-friendly image processing toolkit for product teams building upload flows, profile editors, creative tools, CMS dashboards, and media-heavy web apps without sending every pixel through a backend job.',
   actions: [
-    { label: 'Launch React Demo', href: './react', variant: 'primary' },
+    {
+      label: 'Launch React Demo',
+      href: './examples/react',
+      variant: 'primary',
+    },
     {
       label: 'JS Demo',
-      href: './vanilla-js',
+      href: 'https://gaurav101.github.io/LuminaJS/vanilla-js',
       variant: 'secondary',
       icon: 'code',
     },
-    { label: 'CSS Demo', href: './css-demo', variant: 'accent', icon: 'brush' },
-    { label: 'Explore API Docs', href: './docs', variant: 'secondary' },
+    {
+      label: 'CSS Demo',
+      href: 'https://gaurav101.github.io/LuminaJS/css-demo',
+      variant: 'accent',
+      icon: 'brush',
+    },
+    {
+      label: 'Explore API Docs',
+      href: 'https://gaurav101.github.io/LuminaJS/docs',
+      variant: 'secondary',
+    },
     {
       label: 'View GitHub',
       href: 'https://github.com/gaurav101/LuminaJS/',
@@ -212,7 +225,7 @@ export const mediaShowcase = [
 export const playgroundDemos = [
   {
     label: 'Full React Demo',
-    href: './react',
+    href: './examples/react',
     variant: 'primary',
     icon: 'react',
   },
@@ -230,7 +243,7 @@ export const playgroundDemos = [
   },
   {
     label: 'React Storybook',
-    href: './storybook',
+    href: './examples/react/storybook',
     variant: 'secondary',
     icon: 'boxes',
   },
@@ -534,35 +547,35 @@ export const demos = [
     label: 'React',
     title: 'Image editor demo',
     body: 'Live filters, resize, crop, watermark, ASCII, hooks, and components.',
-    href: './react',
+    href: 'https://gaurav101.github.io/LuminaJS/examples/react',
     icon: 'react',
   },
   {
     label: 'JavaScript',
     title: 'Vanilla browser demo',
     body: 'Drag-and-drop processing with Canvas exports and transform controls.',
-    href: './vanilla-js',
+    href: 'https://gaurav101.github.io/LuminaJS/vanilla-js',
     icon: 'code',
   },
   {
     label: 'CSS',
     title: 'Lumina Image CSS',
     body: 'Utility classes for responsive image styling and hover effects.',
-    href: './css-demo',
+    href: 'https://gaurav101.github.io/LuminaJS/css-demo',
     icon: 'brush',
   },
   {
     label: 'Reference',
     title: 'Generated docs',
     body: 'API reference generated from source comments.',
-    href: './docs',
+    href: 'https://gaurav101.github.io/LuminaJS/docs',
     icon: 'book',
   },
   {
     label: 'Storybook',
     title: 'React stories',
     body: 'Component examples for React integration and documentation.',
-    href: './storybook',
+    href: 'https://gaurav101.github.io/LuminaJS/examples/react/storybook',
     icon: 'boxes',
   },
 ];
@@ -572,7 +585,7 @@ export const reactDemoSpotlight = {
   title: 'See LuminaJS running inside the React image editor.',
   body: 'The React demo shows the library in a real application flow: upload an image, tune visual filters, resize and crop, preview the result, and export from the browser without a backend processing step.',
   video: './react-demo.mp4',
-  href: './react',
+  href: 'https://gaurav101.github.io/LuminaJS/examples/react',
 };
 
 export const apiExamples = [
@@ -705,7 +718,11 @@ export const finalCta = {
   title: 'Start with the demo, ship with the API.',
   body: 'Inspect the generated docs/code and lift the pieces that match your product workflow.',
   actions: [
-    { label: 'Read Documentation', href: './docs', variant: 'primary' },
+    {
+      label: 'Read Documentation',
+      href: 'https://gaurav101.github.io/LuminaJS/docs',
+      variant: 'primary',
+    },
     {
       label: 'Code',
       href: 'https://github.com/gaurav101/LuminaJS/',
