@@ -78,12 +78,215 @@
     @apply grid gap-6 xl:grid-cols-[280px_minmax(0,1fr)_320px];
   }
 
+  .profile-editor {
+    @apply mb-8 rounded-2xl border border-slate-200 bg-white/90 p-5 shadow-sm shadow-slate-900/5 backdrop-blur md:p-6;
+  }
+
+  .profile-editor-header {
+    @apply mb-5 flex flex-col gap-4 border-b border-slate-200 pb-5 lg:flex-row lg:items-center lg:justify-between;
+  }
+
+  .profile-editor-header h2 {
+    @apply m-0 text-2xl font-black tracking-tight text-slate-950;
+  }
+
+  .profile-editor-header p {
+    @apply m-0 mt-1 text-sm leading-6 text-slate-600;
+  }
+
+  .profile-editor-actions,
+  .profile-segmented-actions {
+    @apply flex flex-wrap gap-2;
+  }
+
+  .profile-editor-actions button,
+  .profile-segmented-actions button,
+  .profile-filter-strip button,
+  .profile-reset-edits {
+    @apply inline-flex min-h-10 items-center justify-center rounded-xl border px-4 text-sm font-extrabold transition duration-200;
+  }
+
+  .profile-editor-actions button,
+  .profile-segmented-actions button:first-child {
+    @apply border-teal-600 bg-teal-600 text-white shadow-lg shadow-teal-700/20 hover:bg-teal-700;
+  }
+
+  .profile-editor-actions button:last-child,
+  .profile-segmented-actions button:last-child,
+  .profile-reset-edits {
+    @apply border-slate-200 bg-white text-slate-950 shadow-sm hover:border-slate-300 hover:bg-slate-50;
+  }
+
+  .profile-editor-actions button:disabled,
+  .profile-segmented-actions button:disabled,
+  .profile-filter-strip button:disabled,
+  .profile-reset-edits:disabled {
+    @apply cursor-not-allowed border-slate-200 bg-slate-100 text-slate-400 shadow-none hover:bg-slate-100;
+  }
+
+  .profile-file-input {
+    @apply hidden;
+  }
+
+  .profile-editor-layout {
+    @apply grid gap-5 lg:grid-cols-[minmax(0,1fr)_320px];
+  }
+
+  .profile-preview-column {
+    @apply min-w-0;
+  }
+
+  .profile-stage {
+    @apply relative flex min-h-[360px] items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-[linear-gradient(45deg,#f8fafc_25%,transparent_25%),linear-gradient(-45deg,#f8fafc_25%,transparent_25%),linear-gradient(45deg,transparent_75%,#f8fafc_75%),linear-gradient(-45deg,transparent_75%,#f8fafc_75%)] bg-[length:28px_28px] bg-[position:0_0,0_14px,14px_-14px,-14px_0] p-4;
+  }
+
+  .profile-output-canvas {
+    @apply block aspect-square w-[min(520px,100%)] rounded-xl border border-white shadow-xl shadow-slate-900/10;
+  }
+
+  .profile-transform-frame {
+    @apply relative my-8 w-[min(520px,100%)] touch-none select-none;
+  }
+
+  .profile-transform-frame .profile-output-canvas {
+    @apply w-full;
+  }
+
+  .profile-transform-selector {
+    @apply absolute inset-0 rounded-xl border-2 border-dashed border-teal-400 bg-teal-300/5;
+    cursor: grab;
+  }
+
+  .profile-transform-selector:active {
+    cursor: grabbing;
+  }
+
+  .profile-transform-center-knob {
+    @apply absolute left-1/2 top-1/2 size-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-teal-700 bg-white shadow-md shadow-slate-950/20;
+  }
+
+  .profile-transform-rotate-arm {
+    @apply absolute left-1/2 top-0 h-10 w-px -translate-x-1/2 -translate-y-full bg-teal-500;
+  }
+
+  .profile-transform-rotate-knob {
+    @apply absolute left-1/2 top-0 size-8 -translate-x-1/2 -translate-y-[calc(100%+2.5rem)] rounded-full border-2 border-teal-700 bg-white p-0 shadow-md shadow-slate-950/20 transition hover:bg-teal-50;
+    cursor: grab;
+  }
+
+  .profile-transform-rotate-knob:active {
+    cursor: grabbing;
+  }
+
+  .profile-transform-rotate-knob::before {
+    content: '';
+    @apply absolute left-1/2 top-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-teal-600;
+  }
+
+  .profile-crop-frame {
+    @apply relative inline-block max-w-full touch-none select-none;
+  }
+
+  .profile-crop-frame img {
+    @apply block max-h-[560px] max-w-full rounded-xl;
+  }
+
+  .profile-crop-overlay {
+    @apply absolute border-2 border-dashed border-teal-300 bg-teal-300/10 shadow-[0_0_0_9999px_rgba(15,23,42,0.58)];
+    cursor: move;
+  }
+
+  .profile-crop-handle {
+    @apply absolute size-4 rounded-full border-2 border-teal-700 bg-white shadow-md shadow-slate-950/20;
+  }
+
+  .profile-crop-handle.handle-nw {
+    @apply left-0 top-0 -translate-x-1/2 -translate-y-1/2 cursor-nwse-resize;
+  }
+
+  .profile-crop-handle.handle-n {
+    @apply left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 cursor-ns-resize;
+  }
+
+  .profile-crop-handle.handle-ne {
+    @apply right-0 top-0 -translate-y-1/2 translate-x-1/2 cursor-nesw-resize;
+  }
+
+  .profile-crop-handle.handle-e {
+    @apply right-0 top-1/2 -translate-y-1/2 translate-x-1/2 cursor-ew-resize;
+  }
+
+  .profile-crop-handle.handle-se {
+    @apply bottom-0 right-0 translate-x-1/2 translate-y-1/2 cursor-nwse-resize;
+  }
+
+  .profile-crop-handle.handle-s {
+    @apply bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 cursor-ns-resize;
+  }
+
+  .profile-crop-handle.handle-sw {
+    @apply bottom-0 left-0 -translate-x-1/2 translate-y-1/2 cursor-nesw-resize;
+  }
+
+  .profile-crop-handle.handle-w {
+    @apply left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 cursor-ew-resize;
+  }
+
+  .profile-rendering-label {
+    @apply absolute right-4 top-4 rounded-full bg-slate-950/80 px-3 py-1 text-xs font-black uppercase tracking-wide text-white;
+  }
+
+  .profile-error {
+    @apply mt-3 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-bold text-rose-700;
+  }
+
+  .profile-filter-strip {
+    @apply mt-4 grid grid-cols-2 gap-3 sm:grid-cols-5;
+  }
+
+  .profile-filter-strip button {
+    @apply grid min-h-0 gap-2 border-slate-200 bg-white p-2 text-slate-700 shadow-sm hover:border-teal-200 hover:bg-teal-50 hover:text-teal-800;
+  }
+
+  .profile-filter-strip button.active {
+    @apply border-teal-600 bg-teal-600 text-white shadow-lg shadow-teal-700/20;
+  }
+
+  .profile-filter-strip img {
+    @apply aspect-square w-full rounded-lg object-cover;
+  }
+
+  .profile-filter-strip span {
+    @apply text-xs;
+  }
+
+  .profile-controls {
+    @apply grid content-start gap-5 rounded-xl border border-slate-200 bg-slate-50 p-4;
+  }
+
+  .profile-control-row,
+  .profile-slider span {
+    @apply flex items-center justify-between gap-3 text-sm font-extrabold text-slate-700;
+  }
+
+  .profile-slider {
+    @apply grid gap-3;
+  }
+
+  .profile-slider strong {
+    @apply text-slate-950;
+  }
+
+  .profile-slider input:disabled {
+    @apply cursor-not-allowed opacity-50;
+  }
+
   .preview-panel {
     @apply min-w-0;
   }
 
   .demo-center {
-    @apply min-w-0;
+    @apply order-1 min-w-0 xl:order-2;
   }
 
   .sidebar {
@@ -92,10 +295,6 @@
 
   .sidebar-left {
     @apply order-2 xl:order-1;
-  }
-
-  .demo-center {
-    @apply order-1 xl:order-2;
   }
 
   .sidebar-right {
