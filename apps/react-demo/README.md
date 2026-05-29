@@ -20,13 +20,14 @@ A comprehensive React + TypeScript example showcasing the LuminaJS image process
 ### Installation
 
 ```bash
+# from the repository root
 npm install
 ```
 
 ### Running the Development Server
 
 ```bash
-npm run dev
+npm run dev:react
 ```
 
 The app will open at `http://localhost:5173`
@@ -71,10 +72,10 @@ const { result: asciiText, loading: asciiLoading } = useLumina<string>({
 
 ## Available Scripts
 
-- `npm run dev` - Start the development server with HMR
-- `npm run build` - Build for production
-- `npm run preview` - Preview the production build
-- `npm run lint` - Run ESLint
+- `npm run dev:react` - Start the development server with HMR from the workspace root
+- `npx nx build react-demo` - Build for production
+- `npm --workspace react-demo run preview` - Preview the production build
+- `npx nx lint react-demo` - Run ESLint for this app
 
 ## Technologies Used
 
@@ -85,7 +86,7 @@ const { result: asciiText, loading: asciiLoading } = useLumina<string>({
 
 ## ImageCropper Customization Example
 
-`examples/react/src/App.tsx` includes a production-style cropper example using:
+`apps/react-demo/src/App.tsx` includes a production-style cropper example using:
 
 - `buttonContainerClassName`
 - `applyButtonClassName`, `resetButtonClassName`

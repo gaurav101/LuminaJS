@@ -12,7 +12,6 @@ export default tseslint.config(
       '**/node_modules/**',
       '**/docs/**',
       '**/*.min.js',
-      '**/examples/**',
       '**/build-artifacts/**',
     ],
   },
@@ -50,17 +49,17 @@ export default tseslint.config(
     },
   },
   {
-    // Apply type-aware rules only to src files
-    files: ['src/**/*.{ts,tsx,js,jsx}'],
+    // Apply type-aware rules only to the publishable library source.
+    files: ['packages/luminajs/src/**/*.{ts,tsx,js,jsx}'],
     languageOptions: {
       parserOptions: {
-        project: ['./tsconfig.json'],
+        project: ['./packages/luminajs/tsconfig.json'],
         tsconfigRootDir: import.meta.dirname,
       },
     },
   },
   {
-    files: ['*.config.js', '*.config.ts'],
+    files: ['*.config.js', '*.config.ts', 'tools/scripts/**/*.mjs'],
     languageOptions: {
       globals: globals.node,
     },

@@ -1,87 +1,28 @@
 {
-  "name": "@gks101/luminajs",
-  "version": "2.1.5",
-  "description": "A lightweight browser-first JavaScript and React image-processing library built on HTML5 Canvas and ImageData.",
-  "homepage": "https://gaurav101.github.io/LuminaJS/",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gaurav101/LuminaJS.git"
-  },
-  "bugs": {
-    "url": "https://github.com/gaurav101/LuminaJS/issues"
-  },
+  "name": "luminajs-workspace",
+  "version": "0.0.0",
+  "private": true,
   "type": "module",
-  "sideEffects": [
-    "./dist/lumina-image.css"
+  "workspaces": [
+    "packages/*",
+    "apps/*"
   ],
-  "types": "./dist/index.d.ts",
-  "main": "./dist/lumina.esm.js",
-  "module": "./dist/lumina.esm.js",
-  "browser": "./dist/lumina.esm.js",
-  "unpkg": "./dist/lumina.min.js",
-  "files": [
-    "dist",
-    "!dist/examples",
-    "CHANGELOG.md",
-    "README.md",
-    "PERFORMANCE.md",
-    "Lumina-IMAGE-CSS.md",
-    "IMAGE_CROPPER_GUIDE.md",
-    "WhyLumina.md",
-    "LuminaCanvas.md",
-    "useLumina.md",
-    "LICENSE"
-  ],
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "browser": "./dist/lumina.esm.js",
-      "import": "./dist/lumina.esm.js"
-    },
-    "./filters": {
-      "types": "./dist/filters/index.d.ts",
-      "import": "./dist/filters/index.js"
-    },
-    "./core": {
-      "types": "./dist/core/index.d.ts",
-      "import": "./dist/core/index.js"
-    },
-    "./react": {
-      "types": "./dist/react/index.d.ts",
-      "import": "./dist/react/index.js"
-    },
-    "./lumina-image.css": "./dist/lumina-image.css"
-  },
   "scripts": {
-    "build": "npm run clean && rollup -c && npm run build:minify:css && npm run build:types && npm run generate-docs",
-    "clean": "rm -rf dist",
-    "build:minify:css": "node scripts/minify-lumina-css.mjs",
-    "build:types": "tsc",
-    "dev": "rollup -c -w",
-    "start:demo": "npm run dev --prefix react-demo",
-    "test": "vitest run",
-    "test:exports": "node scripts/test-exports.mjs",
-    "test:examples:react": "npm run build --prefix examples/react",
-    "build:examples-docs": "node scripts/build-examples-docs.mjs",
-    "test:watch": "vitest",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "build": "nx run-many -t build",
+    "build:lib": "nx build @gks101/luminajs",
+    "build:apps": "nx run-many -t build --projects=website,react-demo,vanilla-demo,css-demo",
+    "build:examples-docs": "node tools/scripts/build-examples-docs.mjs",
+    "dev:react": "nx dev react-demo",
+    "dev:website": "nx dev website",
+    "generate-docs": "nx generate-docs @gks101/luminajs",
+    "test": "nx run-many -t test",
+    "test:lib": "nx test @gks101/luminajs",
+    "test:exports": "nx test-exports @gks101/luminajs",
+    "lint": "nx run-many -t lint",
+    "lint:fix": "nx run-many -t lint -- --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "generate-docs": "jsdoc -c jsdoc.json",
     "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky; fi"
-  },
-  "peerDependencies": {
-    "react": ">=16.8.0",
-    "react-dom": ">=16.8.0"
-  },
-  "peerDependenciesMeta": {
-    "react": {
-      "optional": true
-    },
-    "react-dom": {
-      "optional": true
-    }
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",
@@ -101,6 +42,7 @@
     "husky": "^9.1.7",
     "jsdoc": "^4.0.5",
     "jsdoc-babel": "^0.5.0",
+    "nx": "^22.1.2",
     "prettier": "^3.8.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -111,61 +53,7 @@
     "typescript-eslint": "^8.59.2",
     "vitest": "^4.1.5"
   },
-  "keywords": [
-    "react",
-    "react-hooks",
-    "react-component-image-filter",
-    "react-hooks-image-filter",
-    "react-image-processing",
-    "react-filters",
-    "react-canvas",
-    "image-crop",
-    "react-image-cropping",
-    "react-image-resizing",
-    "profile-image-editor",
-    "react-canvas-filters",
-    "react-image-editor",
-    "react-image-editor-hooks",
-    "react-image-editor-components",
-    "image-processing",
-    "canvas",
-    "filter",
-    "grayscale",
-    "sepia",
-    "browser",
-    "lightweight",
-    "blur",
-    "brightness",
-    "contrast",
-    "emboss",
-    "edgeDetection",
-    "gaussianBlur",
-    "sharpen",
-    "watermark",
-    "backgroundBlur",
-    "instagram-filters",
-    "image-manipulation",
-    "fast-blur",
-    "ascii",
-    "crop",
-    "image-crop",
-    "resize",
-    "image-resize",
-    "ascii art",
-    "image-editor",
-    "canvas-filters",
-    "fast-gaussian-blur",
-    "mobile-friendly-cropper",
-    "touch-friendly-cropper",
-    "responsive-cropper",
-    "cross-platform-cropper",
-    "browser-cropper",
-    "lightweight-cropper"
-  ],
-  "author": "LuminaJS and Gaurav",
-  "license": "MIT",
   "engines": {
     "node": ">=20.0.0"
-  },
-  "funding": "https://github.com/sponsors/gaurav101"
+  }
 }

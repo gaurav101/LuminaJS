@@ -60,8 +60,9 @@ import '@gks101/luminajs/lumina-image.css';
 - Primary distribution path: `@gks101/luminajs/lumina-image.css` (kept stable).
 - Packaging decision today: ship CSS with the main `@gks101/luminajs` package.
 - Standalone package decision: **not yet**. `@gks101/lumina-image-css` is a future option if CSS-specific demand or release cadence requires it.
-- Bundler behavior: CSS is explicitly marked in `sideEffects` (`"./dist/lumina-image.css"`) to prevent accidental pruning.
-- CSS size target: minified output target is **<= 18 KB** (`dist/lumina-image.css`), enforced during build.
+- Source location: `packages/luminajs/src/lumina-image.css`.
+- Bundler behavior: CSS is explicitly marked in the package `sideEffects` (`"./dist/lumina-image.css"`) to prevent accidental pruning.
+- CSS size target: minified package output target is **<= 18 KB** (`packages/luminajs/dist/lumina-image.css`), enforced during build.
 
 ## Static HTML Usage
 

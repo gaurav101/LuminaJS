@@ -1,0 +1,105 @@
+{
+  "name": "@gks101/luminajs",
+  "version": "2.1.5",
+  "description": "A lightweight browser-first JavaScript and React image-processing library built on HTML5 Canvas and ImageData.",
+  "homepage": "https://gaurav101.github.io/LuminaJS/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gaurav101/LuminaJS.git",
+    "directory": "packages/luminajs"
+  },
+  "bugs": {
+    "url": "https://github.com/gaurav101/LuminaJS/issues"
+  },
+  "type": "module",
+  "sideEffects": [
+    "./dist/lumina-image.css"
+  ],
+  "types": "./dist/index.d.ts",
+  "main": "./dist/lumina.esm.js",
+  "module": "./dist/lumina.esm.js",
+  "browser": "./dist/lumina.esm.js",
+  "unpkg": "./dist/lumina.min.js",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "browser": "./dist/lumina.esm.js",
+      "import": "./dist/lumina.esm.js"
+    },
+    "./filters": {
+      "types": "./dist/filters/index.d.ts",
+      "import": "./dist/filters/index.js"
+    },
+    "./core": {
+      "types": "./dist/core/index.d.ts",
+      "import": "./dist/core/index.js"
+    },
+    "./react": {
+      "types": "./dist/react/index.d.ts",
+      "import": "./dist/react/index.js"
+    },
+    "./lumina-image.css": "./dist/lumina-image.css"
+  },
+  "scripts": {
+    "build": "npm run clean && rollup -c && npm run build:minify:css && npm run build:types && npm run generate-docs",
+    "clean": "rm -rf dist",
+    "build:minify:css": "node ../../tools/scripts/minify-lumina-css.mjs",
+    "build:types": "tsc -p tsconfig.json",
+    "dev": "rollup -c -w",
+    "test": "vitest run",
+    "test:exports": "node ../../tools/scripts/test-exports.mjs",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "generate-docs": "jsdoc -c jsdoc.json"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
+  },
+  "keywords": [
+    "react",
+    "react-hooks",
+    "react-component-image-filter",
+    "react-hooks-image-filter",
+    "react-image-processing",
+    "react-filters",
+    "react-canvas",
+    "image-crop",
+    "react-image-cropping",
+    "profile-image-editor",
+    "react-canvas-filters",
+    "image-processing",
+    "canvas",
+    "filter",
+    "grayscale",
+    "sepia",
+    "browser",
+    "brightness",
+    "contrast",
+    "gaussianBlur",
+    "watermark",
+    "backgroundBlur",
+    "ascii",
+    "crop",
+    "resize"
+  ],
+  "author": "LuminaJS and Gaurav",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

@@ -6,7 +6,7 @@ export const navigation = [
   { label: 'Demos', href: '#demos' },
   { label: 'Install', href: '#install' },
   { label: 'Docs', href: './docs' },
-  { label: 'Storybook', href: './examples/react/storybook' },
+  { label: 'Storybook', href: './storybook' },
   { label: 'GitHub', href: 'https://github.com/gaurav101/LuminaJS/' },
 ];
 
@@ -27,7 +27,7 @@ export const hero = {
   actions: [
     {
       label: 'Launch React Demo',
-      href: './examples/react',
+      href: './react',
       variant: 'primary',
     },
     {
@@ -225,7 +225,7 @@ export const mediaShowcase = [
 export const playgroundDemos = [
   {
     label: 'Full React Demo',
-    href: './examples/react',
+    href: './react',
     variant: 'primary',
     icon: 'react',
   },
@@ -243,7 +243,7 @@ export const playgroundDemos = [
   },
   {
     label: 'React Storybook',
-    href: './examples/react/storybook',
+    href: './storybook',
     variant: 'secondary',
     icon: 'boxes',
   },
@@ -547,7 +547,7 @@ export const demos = [
     label: 'React',
     title: 'Image editor demo',
     body: 'Live filters, resize, crop, watermark, ASCII, hooks, and components.',
-    href: 'https://gaurav101.github.io/LuminaJS/examples/react',
+    href: 'https://gaurav101.github.io/LuminaJS/react',
     icon: 'react',
   },
   {
@@ -575,7 +575,7 @@ export const demos = [
     label: 'Storybook',
     title: 'React stories',
     body: 'Component examples for React integration and documentation.',
-    href: 'https://gaurav101.github.io/LuminaJS/examples/react/storybook',
+    href: 'https://gaurav101.github.io/LuminaJS/storybook',
     icon: 'boxes',
   },
 ];
@@ -585,7 +585,7 @@ export const reactDemoSpotlight = {
   title: 'See LuminaJS running inside the React image editor.',
   body: 'The React demo shows the library in a real application flow: upload an image, tune visual filters, resize and crop, preview the result, and export from the browser without a backend processing step.',
   video: './react-demo.mp4',
-  href: 'https://gaurav101.github.io/LuminaJS/examples/react',
+  href: 'https://gaurav101.github.io/LuminaJS/react',
 };
 
 export const apiExamples = [

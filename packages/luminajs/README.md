@@ -186,7 +186,7 @@ import '@gks101/luminajs/lumina-image.css';
 
 The repository is an npm workspaces + Nx monorepo. The publishable library
 lives in `packages/luminajs`; demos and documentation apps live in `apps/*`.
-For a directory map, see [`PROJECT_STRUCTURE.md`](./PROJECT_STRUCTURE.md).
+For a directory map, see `PROJECT_STRUCTURE.md` in the repository root.
 
 If you want to generate the optimized distributable files locally:
 

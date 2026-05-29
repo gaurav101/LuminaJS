@@ -1,8 +1,8 @@
-dist
-node_modules
-docs
-examples/react/storybook-static
-*.min.js
-package-lock.json
+node_modules/
+.nx/
+docs/
 build-artifacts/
-.DS_Store
+dist/
+**/dist/
+**/storybook-static/
+*.tgz

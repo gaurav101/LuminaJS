@@ -4,7 +4,7 @@ import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
 
-const distModule = await import('../dist/lumina.esm.js');
+const distModule = await import('../../packages/luminajs/dist/lumina.esm.js');
 assert.equal(typeof distModule.lumina, 'function');
 assert.equal(typeof distModule.loadImage, 'function');
 

@@ -15,9 +15,9 @@ Marketing website for the LuminaJS examples bundle.
 ## Commands
 
 ```bash
-npm run dev
-npm run build
-npm run preview
+npm run dev:website
+npx nx build website
+npm --workspace lumina-website run preview
 ```
 
 The repository-level `npm run build:examples-docs` builds this project first and copies `dist/` to the root of `build-artifacts`.

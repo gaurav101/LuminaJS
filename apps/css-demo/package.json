@@ -1,7 +1,7 @@
 {
-  "name": "vanila-js",
+  "name": "lumina-css-demo",
   "private": true,
-  "version": "0.0.1",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@gks101/luminajs": "^2.1.5"
+    "@gks101/luminajs": "2.1.5"
   },
   "devDependencies": {
     "vite": "^8.0.4"

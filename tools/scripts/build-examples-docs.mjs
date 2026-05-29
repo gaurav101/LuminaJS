@@ -6,7 +6,7 @@ import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const rootDir = path.resolve(__dirname, '..');
+const rootDir = path.resolve(__dirname, '../..');
 const outputDir = path.resolve(rootDir, process.argv[2] ?? 'build-artifacts');
 
 const buildSteps = [
@@ -14,31 +14,31 @@ const buildSteps = [
     name: 'Examples home',
     command: 'npm',
     args: ['run', 'build'],
-    cwd: 'examples/lumina-website',
+    cwd: 'apps/website',
   },
   {
     name: 'React example',
     command: 'npm',
     args: ['run', 'build'],
-    cwd: 'examples/react',
+    cwd: 'apps/react-demo',
   },
   {
     name: 'Vanilla JS example',
     command: 'npm',
     args: ['run', 'build'],
-    cwd: 'examples/vanilla-js',
+    cwd: 'apps/vanilla-demo',
   },
   {
     name: 'CSS demo',
     command: 'npm',
     args: ['run', 'build'],
-    cwd: 'examples/css-demo',
+    cwd: 'apps/css-demo',
   },
   {
     name: 'Storybook',
     command: 'npm',
     args: ['run', 'build-storybook', '--', '--quiet'],
-    cwd: 'examples/react',
+    cwd: 'apps/react-demo',
   },
   {
     name: 'JSDoc docs',
@@ -49,13 +49,13 @@ const buildSteps = [
 ];
 
 const artifacts = [
-  { name: 'examples-home', from: 'examples/lumina-website/dist', to: '.' },
-  { name: 'react', from: 'examples/react/dist', to: 'react' },
-  { name: 'vanilla-js', from: 'examples/vanilla-js/dist', to: 'vanilla-js' },
-  { name: 'css-demo', from: 'examples/css-demo/dist', to: 'css-demo' },
+  { name: 'examples-home', from: 'apps/website/dist', to: '.' },
+  { name: 'react', from: 'apps/react-demo/dist', to: 'react' },
+  { name: 'vanilla-js', from: 'apps/vanilla-demo/dist', to: 'vanilla-js' },
+  { name: 'css-demo', from: 'apps/css-demo/dist', to: 'css-demo' },
   {
     name: 'storybook',
-    from: 'examples/react/storybook-static',
+    from: 'apps/react-demo/storybook-static',
     to: 'storybook',
   },
   { name: 'docs', from: 'docs', to: 'docs' },

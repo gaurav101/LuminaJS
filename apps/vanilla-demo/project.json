@@ -1,0 +1,25 @@
+{
+  "name": "vanilla-demo",
+  "root": "apps/vanilla-demo",
+  "sourceRoot": "apps/vanilla-demo/src",
+  "projectType": "application",
+  "implicitDependencies": ["@gks101/luminajs"],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["@gks101/luminajs:build"],
+      "options": {
+        "command": "cd apps/vanilla-demo && npm run build"
+      },
+      "outputs": ["{projectRoot}/dist"]
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["@gks101/luminajs:build"],
+      "options": {
+        "command": "cd apps/vanilla-demo && npm run dev"
+      }
+    }
+  },
+  "tags": ["scope:demo", "type:app"]
+}

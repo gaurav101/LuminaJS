@@ -1,0 +1,46 @@
+{
+  "name": "react-demo",
+  "root": "apps/react-demo",
+  "sourceRoot": "apps/react-demo/src",
+  "projectType": "application",
+  "implicitDependencies": ["@gks101/luminajs"],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["@gks101/luminajs:build"],
+      "options": {
+        "command": "cd apps/react-demo && npm run build"
+      },
+      "outputs": ["{projectRoot}/dist"]
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["@gks101/luminajs:build"],
+      "options": {
+        "command": "cd apps/react-demo && npm run dev"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cd apps/react-demo && npm run lint"
+      }
+    },
+    "storybook": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["@gks101/luminajs:build"],
+      "options": {
+        "command": "cd apps/react-demo && npm run storybook"
+      }
+    },
+    "build-storybook": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["@gks101/luminajs:build"],
+      "options": {
+        "command": "cd apps/react-demo && npm run build-storybook"
+      },
+      "outputs": ["{projectRoot}/storybook-static"]
+    }
+  },
+  "tags": ["scope:demo", "type:app", "framework:react"]
+}
